@@ -381,10 +381,17 @@ static void insert_kthread_work(struct kthread_worker *worker,
 {
   lockdep_assert_held(&worker->lock);
 
+<<<<<<< HEAD
   list_add_tail(&work->node, pos);
   work->queue_seq++;
   if (likely(worker->task))
     wake_up_process(worker->task);
+=======
+	list_add_tail(&work->node, pos);
+	work->worker = worker;
+	if (likely(worker->task))
+		wake_up_process(worker->task);
+>>>>>>> 13d0b17... kthread_worker: reimplement flush_kthread_work() to allow freeing the work item being executed
 }
 
 /**
@@ -426,6 +433,7 @@ void flush_kthread_work(struct kthread_work *work)
 	};
 	struct kthread_worker *worker;
 	bool noop = false;
+<<<<<<< HEAD
 
 retry:
 	worker = work->worker;
@@ -438,6 +446,20 @@ retry:
 		goto retry;
 	}
 
+=======
+
+retry:
+	worker = work->worker;
+	if (!worker)
+		return;
+
+	spin_lock_irq(&worker->lock);
+	if (work->worker != worker) {
+		spin_unlock_irq(&worker->lock);
+		goto retry;
+	}
+
+>>>>>>> 13d0b17... kthread_worker: reimplement flush_kthread_work() to allow freeing the work item being executed
 	if (!list_empty(&work->node))
 		insert_kthread_work(worker, &fwork.work, work->node.next);
 	else if (worker->current_work == work)
@@ -446,6 +468,9 @@ retry:
 		noop = true;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 13d0b17... kthread_worker: reimplement flush_kthread_work() to allow freeing the work item being executed
 	spin_unlock_irq(&worker->lock);
 
 	if (!noop)
