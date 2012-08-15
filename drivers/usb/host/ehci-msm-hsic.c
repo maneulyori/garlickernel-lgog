@@ -115,8 +115,11 @@ struct msm_hsic_hcd *__mehci;
 static bool debug_bus_voting_enabled = true;
 static u64 ehci_msm_hsic_dma_mask = DMA_BIT_MASK(32);
 
+<<<<<<< HEAD
 static struct platform_driver ehci_msm_hsic_driver;
 
+=======
+>>>>>>> c63b9bc... EHCI: HSIC: Add enhancements to debug logging
 static unsigned int enable_payload_log = 1;
 module_param(enable_payload_log, uint, S_IRUGO | S_IWUSR);
 static unsigned int enable_dbg_log = 1;
@@ -1066,6 +1069,7 @@ static int ehci_hsic_reset(struct usb_hcd *hcd)
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PM
 
 #define RESET_RETRY_LIMIT 3
@@ -1159,6 +1163,8 @@ fail:
 			PM_QOS_DEFAULT_VALUE);
 }
 
+=======
+>>>>>>> c63b9bc... EHCI: HSIC: Add enhancements to debug logging
 static int ehci_hsic_bus_suspend(struct usb_hcd *hcd)
 {
 	struct msm_hsic_hcd *mehci = hcd_to_hsic(hcd);
