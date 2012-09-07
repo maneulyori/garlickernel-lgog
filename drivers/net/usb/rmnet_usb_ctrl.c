@@ -338,8 +338,18 @@ int rmnet_usb_ctrl_start_rx(struct rmnet_ctrl_dev *dev)
 	}
 
 	return retval;
+<<<<<<< HEAD
+=======
 }
 
+int rmnet_usb_ctrl_suspend(struct rmnet_ctrl_dev *dev)
+{
+	if (!flush_work_sync(&dev->get_encap_work))
+		usb_kill_anchored_urbs(&dev->rx_submitted);
+
+	return 0;
+>>>>>>> 5c1976d... net: usb: Prevent suspend if response available notification received
+}
 static int rmnet_usb_ctrl_alloc_rx(struct rmnet_ctrl_dev *dev)
 {
 	int	retval = -ENOMEM;

@@ -89,16 +89,31 @@ static int rmnet_usb_suspend(struct usb_interface *iface, pm_message_t message)
 {
 	struct usbnet		*unet;
 	struct rmnet_ctrl_dev	*dev;
+<<<<<<< HEAD
+=======
+	int			retval = 0;
+>>>>>>> 5c1976d... net: usb: Prevent suspend if response available notification received
 
 	unet = usb_get_intfdata(iface);
 
 	dev = (struct rmnet_ctrl_dev *)unet->data[1];
 
+<<<<<<< HEAD
 	if (work_busy(&dev->get_encap_work))
 		return -EBUSY;
 
 	if (usbnet_suspend(iface, message))
 		return -EBUSY;
+=======
+	retval = usbnet_suspend(iface, message);
+	if (!retval) {
+		retval = rmnet_usb_ctrl_suspend(dev);
+		iface->dev.power.power_state.event = message.event;
+	} else {
+		dev_dbg(&iface->dev,
+			"%s: device is busy can not suspend\n", __func__);
+	}
+>>>>>>> 5c1976d... net: usb: Prevent suspend if response available notification received
 
 	usb_kill_anchored_urbs(&dev->rx_submitted);
 
