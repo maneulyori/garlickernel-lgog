@@ -101,8 +101,11 @@ struct msm_hsic_hcd {
 	struct completion	rt_completion;
 	int			resume_status;
 	int			resume_again;
+<<<<<<< HEAD
 	int			bus_reset;
 	int			reset_again;
+=======
+>>>>>>> 5974363... msm: hsic: Disallow processor idle sleep while driving resume signal
 
 	struct pm_qos_request pm_qos_req_dma;
 };
@@ -1272,9 +1275,15 @@ resume_again:
 				pm_qos_update_request(&mehci->pm_qos_req_dma,
 					pdata->swfi_latency + 1);
 			wait_for_completion(&mehci->gpt0_completion);
+<<<<<<< HEAD
 			if (pdata && pdata->standalone_latency)
 				pm_qos_update_request(&mehci->pm_qos_req_dma,
 					pdata->standalone_latency + 1);
+=======
+			if (pdata && pdata->swfi_latency)
+				pm_qos_update_request(&mehci->pm_qos_req_dma,
+					PM_QOS_DEFAULT_VALUE);
+>>>>>>> 5974363... msm: hsic: Disallow processor idle sleep while driving resume signal
 			spin_lock_irq(&ehci->lock);
 		} else {
 			dbg_log_event(NULL, "FPR: Tightloop", 0);
@@ -2016,9 +2025,15 @@ static int __devinit ehci_hsic_msm_probe(struct platform_device *pdev)
 
 	__mehci = mehci;
 
+<<<<<<< HEAD
 	if (pdata && pdata->standalone_latency)
 		pm_qos_add_request(&mehci->pm_qos_req_dma,
 			PM_QOS_CPU_DMA_LATENCY, pdata->standalone_latency + 1);
+=======
+	if (pdata && pdata->swfi_latency)
+		pm_qos_add_request(&mehci->pm_qos_req_dma,
+			PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
+>>>>>>> 5974363... msm: hsic: Disallow processor idle sleep while driving resume signal
 
 	/*
 	 * This pdev->dev is assigned parent of root-hub by USB core,
@@ -2057,6 +2072,7 @@ static int __devexit ehci_hsic_msm_remove(struct platform_device *pdev)
 	struct msm_hsic_hcd *mehci = hcd_to_hsic(hcd);
 	struct msm_hsic_host_platform_data *pdata = mehci->dev->platform_data;
 
+<<<<<<< HEAD
 	/* If the device was removed no need to call pm_runtime_disable */
 	if (pdev->dev.power.power_state.event != PM_EVENT_INVALID)
 		pm_runtime_disable(&pdev->dev);
@@ -2067,6 +2083,9 @@ static int __devexit ehci_hsic_msm_remove(struct platform_device *pdev)
 	usb_remove_hcd(hcd);
 
 	if (pdata && pdata->standalone_latency)
+=======
+	if (pdata && pdata->swfi_latency)
+>>>>>>> 5974363... msm: hsic: Disallow processor idle sleep while driving resume signal
 		pm_qos_remove_request(&mehci->pm_qos_req_dma);
 
 	if (mehci->peripheral_status_irq)
