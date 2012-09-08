@@ -658,7 +658,10 @@ static void ksb_usb_disconnect(struct usb_interface *ifc)
 	}
 	spin_unlock_irqrestore(&ksb->lock, flags);
 
+<<<<<<< HEAD
 	misc_deregister(ksb->fs_dev);
+=======
+>>>>>>> 0906d64... usb: ks_bridge: Add support for autosuspend
 	ifc->needs_remote_wakeup = 0;
 	usb_put_dev(ksb->udev);
 	ksb->ifc = NULL;
