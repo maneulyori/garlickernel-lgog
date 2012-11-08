@@ -798,11 +798,15 @@ void ctrl_bridge_disconnect(unsigned int id)
 
 	platform_device_unregister(dev->pdev);
 
+<<<<<<< HEAD
 	usb_scuttle_anchored_urbs(&dev->tx_deferred);
 	usb_kill_anchored_urbs(&dev->tx_submitted);
 
 	usb_kill_urb(dev->inturb);
 	usb_kill_urb(dev->readurb);
+=======
+	usb_unlink_anchored_urbs(&dev->tx_submitted);
+>>>>>>> e376a5c... usb: mdm_ctrl_bridge: Do not unlink URB upon cable disconnect
 
 	kfree(dev->in_ctlreq);
 	kfree(dev->readbuf);
