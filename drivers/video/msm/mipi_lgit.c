@@ -19,7 +19,6 @@
  */
 #include <linux/string.h>
 #include <linux/gpio.h>
-#include <linux/earlysuspend.h>
 #include <mach/cpufreq.h>
 
 #include "msm_fb.h"
@@ -27,9 +26,6 @@
 #include "mipi_lgit.h"
 
 #include "mdp4.h"
-
-//the idea is to have this exported to userspace in the future
-#define SUSPEND_FREQ 702000
 
 static struct msm_panel_common_pdata *mipi_lgit_pdata;
 
@@ -61,7 +57,7 @@ int mipi_lgit_lcd_ief_off(void)
 		mutex_lock(&local_mfd0->dma->ov_mutex);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x38, 0x10000000);//HS mode
 		mipi_dsi_cmds_tx(&lgit_tx_buf, mipi_lgit_pdata->power_off_set_ief, mipi_lgit_pdata->power_off_set_ief_size);
-			
+
 		printk("%s, %d\n", __func__,is_ief_on);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x38, 0x14000000);//LP mode
 		mutex_unlock(&local_mfd0->dma->ov_mutex);
@@ -79,7 +75,7 @@ int mipi_lgit_lcd_ief_on(void)
 		mutex_lock(&local_mfd0->dma->ov_mutex);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x38, 0x10000000);//HS mode
 		mipi_dsi_cmds_tx(&lgit_tx_buf, mipi_lgit_pdata->power_on_set_ief, mipi_lgit_pdata->power_on_set_ief_size); 
-							
+
 		printk("%s, %d\n", __func__,is_ief_on);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x38, 0x14000000); //LP mode
 		mutex_unlock(&local_mfd0->dma->ov_mutex);
@@ -97,7 +93,7 @@ int mipi_lgit_lcd_ief_on(void)
 	struct msm_fb_data_type *mfd;
 	int rc = 0;
 	int cnt = 0;
-	
+
 	mfd = platform_get_drvdata(pdev);
 	if (!mfd)
 		return -ENODEV;
@@ -402,34 +398,6 @@ static DEVICE_ATTR(kgamma_ctrl, 0644, kgamma_ctrl_show, kgamma_ctrl_store);
 
 /******************* end sysfs interface *******************/
 
-static void cpulimit_early_suspend(struct early_suspend *handler)
-{
-	int cpu;
-
-	for_each_possible_cpu(cpu) {
-		msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, SUSPEND_FREQ);
-      		pr_info("Cpulimit: Early suspend - limit max frequency to: %d\n", SUSPEND_FREQ);
-    	}
-	return;
-}
-
-static void cpulimit_late_resume(struct early_suspend *handler)
-{
-	int cpu;
-
-	for_each_possible_cpu(cpu) {
-		msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, MSM_CPUFREQ_NO_LIMIT);
-      		pr_info("Cpulimit: Late resume - restore max frequency.\n");
-    	}
-	return;
-}
-
-static struct early_suspend cpulimit_suspend = {
-	.suspend = cpulimit_early_suspend,
-	.resume = cpulimit_late_resume,
-	.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1,
-};
-
 static int mipi_lgit_lcd_probe(struct platform_device *pdev)
 {
 int rc;
@@ -446,8 +414,6 @@ int rc;
 	printk(KERN_INFO "%s: mipi lgit lcd probe start\n", __func__);
 
 	msm_fb_add_device(pdev);
-
-	register_early_suspend(&cpulimit_suspend);
 
 	rc = device_create_file(&pdev->dev, &dev_attr_kgamma_r);
 	if(rc !=0)

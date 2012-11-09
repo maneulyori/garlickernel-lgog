@@ -28,8 +28,6 @@
 
 #include <mach/board_lge.h>
 
-#include <ram_console.h>
-
 #ifdef CONFIG_LGE_PM
 #include CONFIG_BOARD_HEADER_FILE
 #endif
@@ -403,18 +401,14 @@ int lge_get_factory_boot(void)
 
 #ifdef CONFIG_ANDROID_PERSISTENT_RAM
 static struct persistent_ram_descriptor pram_descs[] = {
-#ifdef CONFIG_ANDROID_RAM_CONSOLE
 	{
 		.name = "ram_console",
 		.size = LGE_RAM_CONSOLE_SIZE,
-	},
-#endif
-#ifdef CONFIG_LGE_CRASH_HANDLER
-	{
-		.name = "panic-handler",
-		.size = LGE_CRASH_LOG_SIZE,
-	},
-#endif
+  	},
+  	{
+    		.name = "panic-handler",
+    		.size = LGE_CRASH_LOG_SIZE,
+  	},
 };
 
 static struct persistent_ram lge_persistent_ram = {
@@ -434,37 +428,10 @@ void __init lge_add_persistent_ram(void)
 }
 #endif
 
-void __init lge_reserve(void)
-{
-	lge_add_persistent_ram();
-}
-
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
-static char bootreason[128] = {0,};
-int __init lge_boot_reason(char *s)
-{
-	int n;
-
-	if (*s == '=')
-		s++;
-	n = snprintf(bootreason, sizeof(bootreason),
-		 "Boot info:\n"
-		 "Last boot reason: %s\n", s);
-	bootreason[n] = '\0';
-	return 1;
-}
-__setup("bootreason", lge_boot_reason);
-
-struct ram_console_platform_data ram_console_pdata = {
-	.bootinfo = bootreason,
-};
-
 static struct platform_device ram_console_device = {
-	.name = "ram_console",
-	.id = -1,
-	.dev = {
-		.platform_data = &ram_console_pdata,
-	}
+  	.name = "ram_console",
+  	.id = -1,
 };
 
 void __init lge_add_ramconsole_devices(void)
@@ -485,6 +452,17 @@ void __init lge_add_panic_handler_devices(void)
 }
 #endif /* CONFIG_LGE_CRASH_HANDLER */
 
+#ifdef CONFIG_LGE_ECO_MODE
+static struct platform_device lge_kernel_device = {
+	.name = "lge_kernel_driver",
+	.id = -1,
+};
+
+void __init lge_add_lge_kernel_devices(void)
+{
+	platform_device_register(&lge_kernel_device);
+}
+#endif
 
 #ifdef CONFIG_LGE_QFPROM_INTERFACE
 static struct platform_device qfprom_device = {

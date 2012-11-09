@@ -22,7 +22,6 @@
 #include <linux/cpufreq.h>
 #include <linux/cpu.h>
 #include <linux/regulator/consumer.h>
-#include <linux/module.h> 
 
 #include <asm/mach-types.h>
 #include <asm/cpu.h>
@@ -38,19 +37,23 @@
 #include "acpuclock.h"
 #include "acpuclock-krait.h"
 
+#ifdef CONFIG_LGE_PM_LOW_BATT_CHG
+#include <mach/board_lge.h>
+#endif
+
+#if defined(CONFIG_MACH_APQ8064_GK_KR)	|| defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GVDCM)
+static int PIF_CHECK;
+#endif 
+
 /* MUX source selects. */
 #define PRI_SRC_SEL_SEC_SRC	0
 #define PRI_SRC_SEL_HFPLL	1
 #define PRI_SRC_SEL_HFPLL_DIV2	2
 
-/* PTE EFUSE register offset. */
-#define PTE_EFUSE		0xC0
+#define SECCLKAGD		BIT(4)
 
 static DEFINE_MUTEX(driver_lock);
 static DEFINE_SPINLOCK(l2_lock);
-
-char *cpu_type = "UNKNOWN";
-module_param(cpu_type, charp, 0755);
 
 static struct drv_data {
 	struct acpu_level *acpu_freq_tbl;
@@ -87,10 +90,20 @@ static void __cpuinit set_sec_clk_src(struct scalable *sc, u32 sec_src_sel)
 {
 	u32 regval;
 
+	/* 8064 Errata: disable sec_src clock gating during switch. */
 	regval = get_l2_indirect_reg(sc->l2cpmr_iaddr);
+	regval |= SECCLKAGD;
+	set_l2_indirect_reg(sc->l2cpmr_iaddr, regval);
+
+	/* Program the MUX */
 	regval &= ~(0x3 << 2);
 	regval |= ((sec_src_sel & 0x3) << 2);
 	set_l2_indirect_reg(sc->l2cpmr_iaddr, regval);
+
+	/* 8064 Errata: re-enabled sec_src clock gating. */
+	regval &= ~SECCLKAGD;
+	set_l2_indirect_reg(sc->l2cpmr_iaddr, regval);
+
 	/* Wait for switch to complete. */
 	mb();
 	udelay(1);
@@ -389,12 +402,12 @@ static void decrease_vdd(int cpu, struct vdd_data *data,
 	}
 }
 
-static inline int calculate_vdd_mem(const struct acpu_level *tgt)
+static int calculate_vdd_mem(const struct acpu_level *tgt)
 {
 	return drv.l2_freq_tbl[tgt->l2_level].vdd_mem;
 }
 
-static inline int get_src_dig(const struct core_speed *s)
+static int get_src_dig(const struct core_speed *s)
 {
 	const int *hfpll_vdd = drv.hfpll_data->vdd;
 	const u32 low_vdd_l_max = drv.hfpll_data->low_vdd_l_max;
@@ -410,7 +423,7 @@ static inline int get_src_dig(const struct core_speed *s)
 		return hfpll_vdd[HFPLL_VDD_LOW];
 }
 
-static inline int calculate_vdd_dig(const struct acpu_level *tgt)
+static int calculate_vdd_dig(const struct acpu_level *tgt)
 {
 	int l2_pll_vdd_dig, cpu_pll_vdd_dig;
 
@@ -421,9 +434,12 @@ static inline int calculate_vdd_dig(const struct acpu_level *tgt)
 		   max(l2_pll_vdd_dig, cpu_pll_vdd_dig));
 }
 
-static inline int calculate_vdd_core(const struct acpu_level *tgt)
+static bool enable_boost = true;
+module_param_named(boost, enable_boost, bool, S_IRUGO | S_IWUSR);
+
+static int calculate_vdd_core(const struct acpu_level *tgt)
 {
-	return tgt->vdd_core;
+	return tgt->vdd_core + (enable_boost ? drv.boost_uv : 0);
 }
 
 /* Set the CPU's clock rate and adjust the L2 rate, voltage and BW requests. */
@@ -436,6 +452,16 @@ static int acpuclk_krait_set_rate(int cpu, unsigned long rate,
 	struct vdd_data vdd_data;
 	unsigned long flags;
 	int rc = 0;
+
+#if defined(CONFIG_MACH_APQ8064_GK_KR)	|| defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GVDCM)
+	static int count =0;
+	if(count < 400)count++;	
+	
+	if(PIF_CHECK && rate >= 702000 && count < 400)rate = 702000;
+	else if(rate >= 1134000 && count < 400) rate = 1134000;	
+
+	//printk("PCH_TEST CPU=%d Count=%d, rate=%d\n", cpu, count, (unsigned int)rate);
+#endif
 
 	if (cpu > num_possible_cpus())
 		return -EINVAL;
@@ -516,7 +542,7 @@ static struct acpuclk_data acpuclk_krait_data = {
 };
 
 /* Initialize a HFPLL at a given rate and enable it. */
-static void __cpuinit hfpll_init(struct scalable *sc,
+static void __init hfpll_init(struct scalable *sc,
 			      const struct core_speed *tgt_s)
 {
 	dev_dbg(drv.dev, "Initializing HFPLL%d\n", sc - drv.scalable);
@@ -540,6 +566,7 @@ static void __cpuinit hfpll_init(struct scalable *sc,
 
 	/* Set an initial rate and enable the PLL. */
 	hfpll_set_rate(sc, tgt_s);
+	hfpll_enable(sc, false);
 }
 
 static int __cpuinit rpm_regulator_init(struct scalable *sc, enum vregs vreg,
@@ -702,9 +729,7 @@ static int __cpuinit init_clock_sources(struct scalable *sc,
 	regval &= ~(0x3 << 6);
 	set_l2_indirect_reg(sc->l2cpmr_iaddr, regval);
 
-	/* Enable and switch to the target clock source. */
-  	if (tgt_s->src == HFPLL)
-    		hfpll_enable(sc, false);
+	/* Switch to the target clock source. */
 	set_pri_clk_src(sc, tgt_s->pri_src_sel);
 	sc->cur_speed = tgt_s;
 
@@ -775,16 +800,22 @@ static int __cpuinit per_cpu_init(int cpu)
 	}
 
 	acpu_level = find_cur_acpu_level(cpu);
-	if (!acpu_level) {
+#ifdef CONFIG_LGE_PM_LOW_BATT_CHG
+	/* chargerlogo wants min cpu freq */
+	if(!acpu_level || lge_get_charger_logo_state())
+#else
+	if (!acpu_level)
+#endif
+	{
 		acpu_level = find_min_acpu_level();
 		if (!acpu_level) {
 			ret = -ENODEV;
 			goto err_table;
 		}
-		dev_dbg(drv.dev, "CPU%d is running at an unknown rate. Defaulting to %lu KHz.\n",
+		dev_info(drv.dev, "CPU%d is running at an unknown rate. Defaulting to %lu KHz.\n",
 			cpu, acpu_level->speed.khz);
 	} else {
-		dev_dbg(drv.dev, "CPU%d is running at %lu KHz\n", cpu,
+		dev_info(drv.dev, "CPU%d is running at %lu KHz\n", cpu,
 			acpu_level->speed.khz);
 	}
 
@@ -829,51 +860,51 @@ static void __init bus_init(const struct l2_level *l2_level)
 
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 
-#define HFPLL_MIN_VDD            700000
-#define HFPLL_MAX_VDD           1300000
+#define HFPLL_MIN_VDD		 700000
+#define HFPLL_MAX_VDD		1350000
 
 ssize_t acpuclk_get_vdd_levels_str(char *buf) {
 
-        int i, len = 0;
+	int i, len = 0;
 
-        if (buf) {
-                mutex_lock(&driver_lock);
+	if (buf) {
+		mutex_lock(&driver_lock);
 
-                for (i = 0; drv.acpu_freq_tbl[i].speed.khz; i++) {
-                        /* updated to use uv required by 8x60 architecture - faux123 */
-                        len += sprintf(buf + len, "%8lu: %8d\n", drv.acpu_freq_tbl[i].speed.khz,
-                                drv.acpu_freq_tbl[i].vdd_core );
-                }
+		for (i = 0; drv.acpu_freq_tbl[i].speed.khz; i++) {
+			/* updated to use uv required by 8x60 architecture - faux123 */
+			len += sprintf(buf + len, "%8lu: %8d\n", drv.acpu_freq_tbl[i].speed.khz,
+				drv.acpu_freq_tbl[i].vdd_core );
+		}
 
-                mutex_unlock(&driver_lock);
-        }
-        return len;
+		mutex_unlock(&driver_lock);
+	}
+	return len;
 }
 
 /* updated to use uv required by 8x60 architecture - faux123 */
 void acpuclk_set_vdd(unsigned int khz, int vdd_uv) {
 
-        int i;
-        unsigned int new_vdd_uv;
+	int i;
+	unsigned int new_vdd_uv;
 
-        mutex_lock(&driver_lock);
+	mutex_lock(&driver_lock);
 
-        for (i = 0; drv.acpu_freq_tbl[i].speed.khz; i++) {
-                if (khz == 0)
-                        new_vdd_uv = min(max((unsigned int)(drv.acpu_freq_tbl[i].vdd_core + vdd_uv),
-                                (unsigned int)HFPLL_MIN_VDD), (unsigned int)HFPLL_MAX_VDD);
-                else if ( drv.acpu_freq_tbl[i].speed.khz == khz)
-                        new_vdd_uv = min(max((unsigned int)vdd_uv,
-                                (unsigned int)HFPLL_MIN_VDD), (unsigned int)HFPLL_MAX_VDD);
-                else 
-                        continue;
+	for (i = 0; drv.acpu_freq_tbl[i].speed.khz; i++) {
+		if (khz == 0)
+			new_vdd_uv = min(max((unsigned int)(drv.acpu_freq_tbl[i].vdd_core + vdd_uv),
+				(unsigned int)HFPLL_MIN_VDD), (unsigned int)HFPLL_MAX_VDD);
+		else if ( drv.acpu_freq_tbl[i].speed.khz == khz)
+			new_vdd_uv = min(max((unsigned int)vdd_uv,
+				(unsigned int)HFPLL_MIN_VDD), (unsigned int)HFPLL_MAX_VDD);
+		else 
+			continue;
 
-                drv.acpu_freq_tbl[i].vdd_core = new_vdd_uv;
-        }
-        pr_warn("faux123: user voltage table modified!\n");
-        mutex_unlock(&driver_lock);
+		drv.acpu_freq_tbl[i].vdd_core = new_vdd_uv;
+	}
+	pr_warn("faux123: user voltage table modified!\n");
+	mutex_unlock(&driver_lock);
 }
-#endif  /* CONFIG_CPU_VOTALGE_TABLE */
+#endif	/* CONFIG_CPU_VOTALGE_TABLE */
 
 #ifdef CONFIG_CPU_FREQ_MSM
 static struct cpufreq_frequency_table freq_table[NR_CPUS][35];
@@ -881,12 +912,11 @@ static struct cpufreq_frequency_table freq_table[NR_CPUS][35];
 static void __init cpufreq_table_init(void)
 {
 	int cpu;
-	int freq_cnt = 0;
 
 	for_each_possible_cpu(cpu) {
-		int i;
+		int i, freq_cnt = 0;
 		/* Construct the freq_table tables from acpu_freq_tbl. */
-		for (i = 0, freq_cnt = 0; drv.acpu_freq_tbl[i].speed.khz != 0
+		for (i = 0; drv.acpu_freq_tbl[i].speed.khz != 0
 				&& freq_cnt < ARRAY_SIZE(*freq_table); i++) {
 			if (drv.acpu_freq_tbl[i].use_for_scaling) {
 				freq_table[cpu][freq_cnt].index = freq_cnt;
@@ -901,11 +931,12 @@ static void __init cpufreq_table_init(void)
 		freq_table[cpu][freq_cnt].index = freq_cnt;
 		freq_table[cpu][freq_cnt].frequency = CPUFREQ_TABLE_END;
 
+		dev_info(drv.dev, "CPU%d: %d frequencies supported\n",
+			cpu, freq_cnt);
+
 		/* Register table with CPUFreq. */
 		cpufreq_frequency_table_get_attr(freq_table[cpu], cpu);
 	}
-
-	dev_info(drv.dev, "CPU Frequencies Supported: %d\n", freq_cnt);
 }
 #else
 static void __init cpufreq_table_init(void) {}
@@ -953,7 +984,7 @@ static struct notifier_block __cpuinitdata acpuclk_cpu_notifier = {
 	.notifier_call = acpuclk_cpu_callback,
 };
 
-static const int __init krait_needs_vmin(void)
+static const int krait_needs_vmin(void)
 {
 	switch (read_cpuid_id()) {
 	case 0x511F04D0: /* KR28M2A20 */
@@ -965,66 +996,75 @@ static const int __init krait_needs_vmin(void)
 	};
 }
 
-static void __init krait_apply_vmin(struct acpu_level *tbl)
+static void krait_apply_vmin(struct acpu_level *tbl)
 {
-	for (; tbl->speed.khz != 0; tbl++)
+	for (; tbl->speed.khz != 0; tbl++) 
 		if (tbl->vdd_core < 1150000)
 			tbl->vdd_core = 1150000;
 }
 
-static int __init select_freq_plan(u32 qfprom_phys)
+static int __init get_speed_bin(u32 pte_efuse)
 {
-	void __iomem *qfprom_base;
-	u32 pte_efuse, pvs, tbl_idx;
-	char *pvs_names[] = { "Slow", "Nominal", "Fast", "Faster", "Unknown" };
+	uint32_t speed_bin;
 
-	qfprom_base = ioremap(qfprom_phys, SZ_256);
-	/* Select frequency tables. */
-	if (qfprom_base) {
-		pte_efuse = readl_relaxed(qfprom_base + PTE_EFUSE);
-		pvs = (pte_efuse >> 10) & 0x7;
-		iounmap(qfprom_base);
-		if (pvs == 0x7)
-			pvs = (pte_efuse >> 13) & 0x7;
+	speed_bin = pte_efuse & 0xF;
+	if (speed_bin == 0xF)
+		speed_bin = (pte_efuse >> 4) & 0xF;
 
-		switch (pvs) {
-		case 0x0:
-		case 0x7:
-			tbl_idx = PVS_SLOW;
-			break;
-		case 0x1:
-			tbl_idx = PVS_NOMINAL;
-			break;
-		case 0x3:
-			tbl_idx = PVS_FAST;
-			break;
-		case 0x4:
-			tbl_idx = PVS_FASTER;
-			break;
-		default:
-			tbl_idx = PVS_UNKNOWN;
-			break;
-		}
+	if (speed_bin == 0xF) {
+		speed_bin = 0;
+		dev_warn(drv.dev, "SPEED BIN: Defaulting to %d\n", speed_bin);
 	} else {
-		tbl_idx = PVS_UNKNOWN;
+		dev_info(drv.dev, "SPEED BIN: %d\n", speed_bin);
+	}
+
+	return speed_bin;
+}
+
+static int __init get_pvs_bin(u32 pte_efuse)
+{
+	uint32_t pvs_bin;
+
+	pvs_bin = (pte_efuse >> 10) & 0x7;
+	if (pvs_bin == 0x7)
+		pvs_bin = (pte_efuse >> 13) & 0x7;
+
+	if (pvs_bin == 0x7) {
+		pvs_bin = 0;
+		dev_warn(drv.dev, "ACPU PVS: Defaulting to %d\n", pvs_bin);
+	} else {
+		dev_info(drv.dev, "ACPU PVS: %d\n", pvs_bin);
+	}
+
+	return pvs_bin;
+}
+
+static struct pvs_table * __init select_freq_plan(u32 pte_efuse_phys,
+			struct pvs_table (*pvs_tables)[NUM_PVS])
+{
+	void __iomem *pte_efuse;
+	u32 pte_efuse_val, tbl_idx, bin_idx;
+
+	pte_efuse = ioremap(pte_efuse_phys, 4);
+	if (!pte_efuse) {
 		dev_err(drv.dev, "Unable to map QFPROM base\n");
-	}
-	if (tbl_idx == PVS_UNKNOWN) {
-		tbl_idx = PVS_SLOW;
-		dev_warn(drv.dev, "ACPU PVS: Defaulting to %s\n",
-			 pvs_names[tbl_idx]);
-	} else {
-		cpu_type = pvs_names[tbl_idx];
-		dev_info(drv.dev, "ACPU PVS: %s\n", pvs_names[tbl_idx]);
+		return NULL;
 	}
 
-	return tbl_idx;
+	pte_efuse_val = readl_relaxed(pte_efuse);
+	iounmap(pte_efuse);
+
+	/* Select frequency tables. */
+	bin_idx = get_speed_bin(pte_efuse_val);
+	tbl_idx = get_pvs_bin(pte_efuse_val);
+
+	return &pvs_tables[bin_idx][tbl_idx];
 }
 
 static void __init drv_data_init(struct device *dev,
 				 const struct acpuclk_krait_params *params)
 {
-	int tbl_idx;
+	struct pvs_table *pvs;
 
 	drv.dev = dev;
 	drv.scalable = kmemdup(params->scalable, params->scalable_size,
@@ -1047,12 +1087,12 @@ static void __init drv_data_init(struct device *dev,
 		GFP_KERNEL);
 	BUG_ON(!drv.bus_scale->usecase);
 
-	tbl_idx = select_freq_plan(params->qfprom_phys_base);
-	drv.acpu_freq_tbl = kmemdup(params->pvs_tables[tbl_idx].table,
-				    params->pvs_tables[tbl_idx].size,
-				    GFP_KERNEL);
+	pvs = select_freq_plan(params->pte_efuse_phys, params->pvs_tables);
+	BUG_ON(!pvs->table);
+
+	drv.acpu_freq_tbl = kmemdup(pvs->table, pvs->size, GFP_KERNEL);
 	BUG_ON(!drv.acpu_freq_tbl);
-	drv.boost_uv = params->pvs_tables[tbl_idx].boost_uv;
+	drv.boost_uv = pvs->boost_uv;
 
 	acpuclk_krait_data.power_collapse_khz = params->stby_khz;
 	acpuclk_krait_data.wait_for_irq_khz = params->stby_khz;
@@ -1073,6 +1113,7 @@ static void __init hw_init(void)
 	rc = rpm_regulator_init(l2, VREG_HFPLL_A,
 				l2->vreg[VREG_HFPLL_A].max_vdd, false);
 	BUG_ON(rc);
+
 	rc = rpm_regulator_init(l2, VREG_HFPLL_B,
 				l2->vreg[VREG_HFPLL_B].max_vdd, false);
 	BUG_ON(rc);
@@ -1093,6 +1134,7 @@ static void __init hw_init(void)
 	for_each_online_cpu(cpu) {
 		rc = per_cpu_init(cpu);
 		BUG_ON(rc);
+
 	}
 
 	bus_init(l2_level);
@@ -1101,6 +1143,11 @@ static void __init hw_init(void)
 int __init acpuclk_krait_init(struct device *dev,
 			      const struct acpuclk_krait_params *params)
 {
+#if defined(CONFIG_MACH_APQ8064_GK_KR)	|| defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GVDCM)
+	if (lge_get_factory_boot()) PIF_CHECK=1;
+  else PIF_CHECK=0;
+#endif
+
 	drv_data_init(dev, params);
 	hw_init();
 

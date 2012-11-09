@@ -104,7 +104,7 @@ static int input_boost_freq;
  * dynamic tunables scaling flag linked to the 
  * hotplug driver 
  */ 
-static bool dynamic_scaling = true;
+static bool dynamic_scaling = false;
 
 static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 		unsigned int event);
