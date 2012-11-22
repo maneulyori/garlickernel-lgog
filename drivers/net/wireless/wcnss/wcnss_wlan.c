@@ -27,7 +27,6 @@
 #include <linux/of.h>
 #include <linux/of_gpio.h>
 #include <mach/peripheral-loader.h>
-<<<<<<< HEAD
 #include <mach/msm_iomap.h> 
 #include <mach/msm_smd.h>
 #include <linux/clk.h>
@@ -35,13 +34,6 @@
 #include <mach/msm_iomap.h>
 #ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
 #include "wcnss_prealloc.h"
-=======
-#include <mach/msm_smd.h>
-#include <mach/msm_iomap.h>
-#include <linux/mfd/pm8xxx/misc.h>
-#ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
-	#include "wcnss_prealloc.h"
->>>>>>> 9543b12... wcnss: Pre-alloc memory for WLAN driver
 #endif
 
 #define DEVICE "wcnss_wlan"
