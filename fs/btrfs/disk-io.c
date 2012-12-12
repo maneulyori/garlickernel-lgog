@@ -3211,7 +3211,7 @@ void btrfs_btree_balance_dirty(struct btrfs_root *root, unsigned long nr)
 
 	if (num_dirty > thresh) {
 		balance_dirty_pages_ratelimited(
-           			root->fs_info->btree_inode->i_mapping);
+				   root->fs_info->btree_inode->i_mapping);
 	}
 	return;
 }
@@ -3232,7 +3232,11 @@ void __btrfs_btree_balance_dirty(struct btrfs_root *root, unsigned long nr)
 
 	if (num_dirty > thresh) {
 		balance_dirty_pages_ratelimited(
+<<<<<<< HEAD
            			root->fs_info->btree_inode->i_mapping);
+=======
+				   root->fs_info->btree_inode->i_mapping);
+>>>>>>> 1fcf04d... writeback: remove nr_pages_dirtied arg from balance_dirty_pages_ratelimited_nr()
 	}
 	return;
 }
