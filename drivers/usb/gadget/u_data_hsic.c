@@ -663,8 +663,11 @@ static int ghsic_data_remove(struct platform_device *pdev)
 	/* cancel pending writes to MDM */
 	cancel_work_sync(&port->write_tomdm_w);
 
+<<<<<<< HEAD
 	ghsic_data_free_buffers(port);
 
+=======
+>>>>>>> a47aec2... USB: mdm_bridge: Fix a possible freed memory access
 	cancel_work_sync(&port->connect_w);
 	if (test_and_clear_bit(CH_OPENED, &port->bridge_sts))
 		data_bridge_close(port->brdg.ch_id);
