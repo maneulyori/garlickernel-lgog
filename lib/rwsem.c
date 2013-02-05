@@ -4,7 +4,10 @@
  * Derived from arch/i386/kernel/semaphore.c
  *
  * Writer lock-stealing by Alex Shi <alex.shi@intel.com>
+<<<<<<< HEAD
  * and Michel Lespinasse <walken@google.com>
+=======
+>>>>>>> 744e0eb... rwsem: Implement writer lock-stealing for better scalability
  */
 #include <linux/rwsem.h>
 #include <linux/sched.h>
@@ -64,7 +67,11 @@ __rwsem_do_wake(struct rw_semaphore *sem, enum rwsem_wake_type wake_type)
 	struct rwsem_waiter *waiter;
 	struct task_struct *tsk;
 	struct list_head *next;
+<<<<<<< HEAD
 	long oldcount, woken, loop, adjustment;
+=======
+	signed long woken, loop, adjustment;
+>>>>>>> 744e0eb... rwsem: Implement writer lock-stealing for better scalability
 
 	waiter = list_entry(sem->wait_list.next, struct rwsem_waiter, list);
 	if (waiter->type == RWSEM_WAITING_FOR_WRITE) {
@@ -78,6 +85,7 @@ __rwsem_do_wake(struct rw_semaphore *sem, enum rwsem_wake_type wake_type)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	/* Writers might steal the lock before we grant it to the next reader.
 	 * We prefer to do the first reader grant before counting readers
 	 * so we can bail out early if a writer stole the lock.
@@ -96,6 +104,31 @@ __rwsem_do_wake(struct rw_semaphore *sem, enum rwsem_wake_type wake_type)
 			goto try_reader_grant;
 		}
 	}
+=======
+	/* Wake up the writing waiter and let the task grab the sem: */
+	wake_up_process(waiter->task);
+	goto out;
+
+ readers_only:
+	/* If we come here from up_xxxx(), another thread might have reached
+	 * rwsem_down_failed_common() before we acquired the spinlock and
+	 * woken up a waiter, making it now active.  We prefer to check for
+	 * this first in order to not spend too much time with the spinlock
+	 * held if we're not going to be able to wake up readers in the end.
+	 *
+	 * Note that we do not need to update the rwsem count: any writer
+	 * trying to acquire rwsem will run rwsem_down_write_failed() due
+	 * to the waiting threads and block trying to acquire the spinlock.
+	 *
+	 * We use a dummy atomic update in order to acquire the cache line
+	 * exclusively since we expect to succeed and run the final rwsem
+	 * count adjustment pretty soon.
+	 */
+	if (wake_type == RWSEM_WAKE_ANY &&
+	    rwsem_atomic_update(0, sem) < RWSEM_WAITING_BIAS)
+		/* Someone grabbed the sem for write already */
+		goto out;
+>>>>>>> 744e0eb... rwsem: Implement writer lock-stealing for better scalability
 
 	/* Grant an infinite number of read locks to the readers at the front
 	 * of the queue.  Note we increment the 'active part' of the count by
@@ -138,6 +171,44 @@ __rwsem_do_wake(struct rw_semaphore *sem, enum rwsem_wake_type wake_type)
 
  out:
 	return sem;
+<<<<<<< HEAD
+=======
+}
+
+/* Try to get write sem, caller holds sem->wait_lock: */
+static int try_get_writer_sem(struct rw_semaphore *sem,
+					struct rwsem_waiter *waiter)
+{
+	struct rwsem_waiter *fwaiter;
+	long oldcount, adjustment;
+
+	/* only steal when first waiter is writing */
+	fwaiter = list_entry(sem->wait_list.next, struct rwsem_waiter, list);
+	if (!(fwaiter->flags & RWSEM_WAITING_FOR_WRITE))
+		return 0;
+
+	adjustment = RWSEM_ACTIVE_WRITE_BIAS;
+	/* Only one waiter in the queue: */
+	if (fwaiter == waiter && waiter->list.next == &sem->wait_list)
+		adjustment -= RWSEM_WAITING_BIAS;
+
+try_again_write:
+	oldcount = rwsem_atomic_update(adjustment, sem) - adjustment;
+	if (!(oldcount & RWSEM_ACTIVE_MASK)) {
+		/* No active lock: */
+		struct task_struct *tsk = waiter->task;
+
+		list_del(&waiter->list);
+		smp_mb();
+		put_task_struct(tsk);
+		tsk->state = TASK_RUNNING;
+		return 1;
+	}
+	/* some one grabbed the sem already */
+	if (rwsem_atomic_update(-adjustment, sem) & RWSEM_ACTIVE_MASK)
+		return 0;
+	goto try_again_write;
+>>>>>>> 744e0eb... rwsem: Implement writer lock-stealing for better scalability
 }
 
 /*
@@ -179,6 +250,15 @@ struct rw_semaphore __sched *rwsem_down_read_failed(struct rw_semaphore *sem)
 		set_task_state(tsk, TASK_UNINTERRUPTIBLE);
 		if (!waiter.task)
 			break;
+
+		raw_spin_lock_irq(&sem->wait_lock);
+		/* Try to get the writer sem, may steal from the head writer: */
+		if (flags == RWSEM_WAITING_FOR_WRITE)
+			if (try_get_writer_sem(sem, &waiter)) {
+				raw_spin_unlock_irq(&sem->wait_lock);
+				return sem;
+			}
+		raw_spin_unlock_irq(&sem->wait_lock);
 		schedule();
 	}
 
