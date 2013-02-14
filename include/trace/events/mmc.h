@@ -1,15 +1,26 @@
 /*
+<<<<<<< HEAD
  * Copyright (C) 2013 Google, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
  * may be copied, distributed, and modified under those terms.
+=======
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+>>>>>>> e6bbfbd... mmc: core: Log MMC clock frequency transitions
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+<<<<<<< HEAD
  *
+=======
+>>>>>>> e6bbfbd... mmc: core: Log MMC clock frequency transitions
  */
 
 #undef TRACE_SYSTEM
@@ -19,6 +30,7 @@
 #define _TRACE_MMC_H
 
 #include <linux/tracepoint.h>
+<<<<<<< HEAD
 #include <linux/mmc/mmc.h>
 #include <linux/mmc/core.h>
 
@@ -86,6 +98,28 @@ DEFINE_EVENT_CONDITION(mmc_blk_rw_class, mmc_blk_rw_end,
 		      (cmd == MMC_WRITE_MULTIPLE_BLOCK)) &&
 		      data));
 #endif /* _TRACE_MMC_H */
+=======
+
+TRACE_EVENT(mmc_clk,
+		TP_PROTO(char *print_info),
+
+		TP_ARGS(print_info),
+
+		TP_STRUCT__entry(
+			__string(print_info, print_info)
+		),
+
+		TP_fast_assign(
+			__assign_str(print_info, print_info);
+		),
+
+		TP_printk("%s",
+			__get_str(print_info)
+		)
+);
+
+#endif /* if !defined(_TRACE_MMC_H) || defined(TRACE_HEADER_MULTI_READ) */
+>>>>>>> e6bbfbd... mmc: core: Log MMC clock frequency transitions
 
 /* This part must be outside protection */
 #include <trace/define_trace.h>
