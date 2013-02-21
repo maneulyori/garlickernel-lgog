@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2013, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+>>>>>>> bb8ac06... msm: pm-data: Enable powercollapse/suspend_enabled for non-boot cpus
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -46,7 +50,7 @@ struct msm_pm_platform_data msm_pm_sleep_modes[] = {
 		.idle_supported = 0,
 		.suspend_supported = 1,
 		.idle_enabled = 0,
-		.suspend_enabled = 0,
+		.suspend_enabled = 1,
 	},
 
 	[MSM_PM_MODE(1, MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE)] = {
@@ -74,7 +78,7 @@ struct msm_pm_platform_data msm_pm_sleep_modes[] = {
 		.idle_supported = 0,
 		.suspend_supported = 1,
 		.idle_enabled = 0,
-		.suspend_enabled = 0,
+		.suspend_enabled = 1,
 	},
 
 	[MSM_PM_MODE(2, MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE)] = {
@@ -102,7 +106,7 @@ struct msm_pm_platform_data msm_pm_sleep_modes[] = {
 		.idle_supported = 0,
 		.suspend_supported = 1,
 		.idle_enabled = 0,
-		.suspend_enabled = 0,
+		.suspend_enabled = 1,
 	},
 
 	[MSM_PM_MODE(3, MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE)] = {

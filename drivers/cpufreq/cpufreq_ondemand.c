@@ -25,7 +25,6 @@
 #include <linux/input.h>
 #include <linux/workqueue.h>
 #include <linux/slab.h>
-#include <linux/hotplug.h>
 
 /*
  * dbs is used in this file as a shortform for demandbased switching
@@ -34,7 +33,6 @@
 
 #define DEF_FREQUENCY_UP_THRESHOLD		(80)
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
-#define DEF_GRAD_UP_THRESHOLD			(50)
 #define MAX_SAMPLING_DOWN_FACTOR		(100000)
 #define MICRO_FREQUENCY_UP_THRESHOLD		(95)
 #define MICRO_FREQUENCY_MIN_SAMPLE_RATE		(10000)
@@ -93,7 +91,6 @@ struct cpu_dbs_info_s {
 	unsigned int rate_mult;
 	int cpu;
 	unsigned int sample_type:1;
-	unsigned int prev_load;
 	/*
 	 * percpu mutex that serializes governor limit change with
 	 * do_dbs_timer invocation. We do not want do_dbs_timer to run
@@ -113,24 +110,22 @@ static unsigned int dbs_enable;	/* number of CPUs using this policy */
  */
 static DEFINE_MUTEX(dbs_mutex);
 
+static struct workqueue_struct *input_wq;
+
 static DEFINE_PER_CPU(struct work_struct, dbs_refresh_work);
 
 static struct dbs_tuners {
 	unsigned int sampling_rate;
 	unsigned int up_threshold;
-	unsigned int grad_up_threshold;
 	unsigned int ignore_nice;
 	unsigned int sampling_down_factor;
 	int          powersave_bias;
 	unsigned int io_is_busy;
-	unsigned int early_demand;
 } dbs_tuners_ins = {
 	.up_threshold = DEF_FREQUENCY_UP_THRESHOLD,
 	.sampling_down_factor = DEF_SAMPLING_DOWN_FACTOR,
-	.grad_up_threshold = DEF_GRAD_UP_THRESHOLD,
 	.ignore_nice = 0,
 	.powersave_bias = 0,
-	.early_demand = 0,
 };
 
 static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
@@ -281,8 +276,6 @@ show_one(io_is_busy, io_is_busy);
 show_one(up_threshold, up_threshold);
 show_one(sampling_down_factor, sampling_down_factor);
 show_one(ignore_nice_load, ignore_nice);
-show_one(grad_up_threshold, grad_up_threshold);
-show_one(early_demand, early_demand);
 
 static ssize_t show_powersave_bias
 (struct kobject *kobj, struct attribute *attr, char *buf)
@@ -555,44 +548,12 @@ skip_this_cpu_bypass:
 	return count;
 }
 
-static ssize_t store_grad_up_threshold(struct kobject *a, struct attribute *b,
-					const char *buf, size_t count)
-{
-	unsigned int input;
-	int ret;
-	ret = sscanf(buf, "%u", &input);
-
-	if (ret != 1 || input > MAX_FREQUENCY_UP_THRESHOLD ||
-		input < MIN_FREQUENCY_UP_THRESHOLD) {
-		return -EINVAL;
-	}
-
-	dbs_tuners_ins.grad_up_threshold = input;
-	return count;
-}
-
-static ssize_t store_early_demand(struct kobject *a, struct attribute *b,
-				const char *buf, size_t count)
-{
-	unsigned int input;
-	int ret;
-
-	ret = sscanf(buf, "%u", &input);
-	if (ret != 1)
-		return -EINVAL;
-
-	dbs_tuners_ins.early_demand = !!input;
-	return count;
-}
-
 define_one_global_rw(sampling_rate);
 define_one_global_rw(io_is_busy);
 define_one_global_rw(up_threshold);
 define_one_global_rw(sampling_down_factor);
 define_one_global_rw(ignore_nice_load);
 define_one_global_rw(powersave_bias);
-define_one_global_rw(grad_up_threshold);
-define_one_global_rw(early_demand);
 
 static struct attribute *dbs_attributes[] = {
 	&sampling_rate_min.attr,
@@ -602,8 +563,6 @@ static struct attribute *dbs_attributes[] = {
 	&ignore_nice_load.attr,
 	&powersave_bias.attr,
 	&io_is_busy.attr,
-	&grad_up_threshold.attr,
-	&early_demand.attr,
 	NULL
 };
 
@@ -632,7 +591,6 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 	unsigned int max_load;
 	/* Current load across this CPU */
 	unsigned int cur_load = 0;
-	int boost_freq = 0;
 
 	struct cpufreq_policy *policy;
 	unsigned int j;
@@ -704,92 +662,16 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 
 	cpufreq_notify_utilization(policy, load_at_max_freq);
 
-	/* we want cpu0 to be the only core blocked for freq changes while
-<<<<<<< HEAD
-     	   we are touching the screen for UI interaction */
-  	if (is_touching && policy->cpu == 0) 
-  	{
-    		if (ktime_to_ms(ktime_get()) - freq_boosted_time >= 1000)
-      			is_touching = false;
-    		return;
-  	}
-
-	/*
-	 * Calculate the gradient of load. If it is too steep we assume
-	 * that the load will go over up_threshold in next iteration(s) and
-	 * we increase the frequency immediately
-	 */
-	if (dbs_tuners_ins.early_demand) {
-		if (max_load > this_dbs_info->prev_load &&
-		   (max_load - this_dbs_info->prev_load >
-		    dbs_tuners_ins.grad_up_threshold * policy->cur))
-			boost_freq = 1;
-
-		this_dbs_info->prev_load = max_load;
-=======
-	   we are touching the screen for UI interaction */
-	if (is_touching) 
-	{
-		if (ktime_to_ms(ktime_get()) - freq_boosted_time >= 1000)
-			is_touching = false;
->>>>>>> d15fa99... cpufreq: ondemand: improve input_boost_freq logic in case users prefer to use ondemand.
-	}
-
 	/* Check for frequency increase */
-	if (boost_freq || max_load > dbs_tuners_ins.up_threshold) {
+	if (max_load > dbs_tuners_ins.up_threshold) {
 		/* If switching to max speed, apply sampling_down_factor */
 		if (policy->cur < policy->max)
 			this_dbs_info->rate_mult =
 				dbs_tuners_ins.sampling_down_factor;
 		dbs_freq_increase(policy, policy->max);
 		return;
-<<<<<<< HEAD
 	} else {
 		/* Calculate the next frequency proportional to load */
-=======
-	}
-
-	if (num_online_cpus() > 1) {
-
-		if (max_load_other_cpu >
-				dbs_tuners_ins.up_threshold_any_cpu_load) {
-			if (policy->cur < dbs_tuners_ins.sync_freq)
-				dbs_freq_increase(policy,
-						dbs_tuners_ins.sync_freq);
-			return;
-		}
-
-		if (max_load_freq > dbs_tuners_ins.up_threshold_multi_core *
-								policy->cur) {
-			if (policy->cur < dbs_tuners_ins.optimal_freq)
-				dbs_freq_increase(policy,
-						dbs_tuners_ins.optimal_freq);
-			return;
-		}
-	}
-
-	/* if the there is a input detected we want to go through this check so 
-	   that the frequency stays >= input_boost_freq and doesn't go down */
-	if (is_touching && policy->cpu == 0) 
-	{
-		if (policy->cur >= get_input_boost_freq())
-			return;
-	} 
-
-	/* Check for frequency decrease */
-	/* if we cannot reduce the frequency anymore, break out early */
-	if (policy->cur == policy->min)
-		return;
-
-	/*
-	 * The optimal frequency is the frequency that is the lowest that
-	 * can support the current CPU usage without triggering the up
-	 * policy. To be safe, we focus 10 points under the threshold.
-	 */
-	if (max_load_freq <
-	    (dbs_tuners_ins.up_threshold - dbs_tuners_ins.down_differential) *
-	     policy->cur) {
->>>>>>> d15fa99... cpufreq: ondemand: improve input_boost_freq logic in case users prefer to use ondemand.
 		unsigned int freq_next;
 		freq_next = max_load * policy->cpuinfo.max_freq / 100;
 
@@ -927,6 +809,72 @@ bail_acq_sema_failed:
 	return;
 }
 
+static void dbs_input_event(struct input_handle *handle, unsigned int type,
+		unsigned int code, int value)
+{
+	int i;
+
+	if ((dbs_tuners_ins.powersave_bias == POWERSAVE_BIAS_MAXLEVEL) ||
+		(dbs_tuners_ins.powersave_bias == POWERSAVE_BIAS_MINLEVEL)) {
+		/* nothing to do */
+		return;
+	}
+
+	for_each_online_cpu(i) {
+		queue_work_on(i, input_wq, &per_cpu(dbs_refresh_work, i));
+	}
+}
+
+static int dbs_input_connect(struct input_handler *handler,
+		struct input_dev *dev, const struct input_device_id *id)
+{
+	struct input_handle *handle;
+	int error;
+
+	handle = kzalloc(sizeof(struct input_handle), GFP_KERNEL);
+	if (!handle)
+		return -ENOMEM;
+
+	handle->dev = dev;
+	handle->handler = handler;
+	handle->name = "cpufreq";
+
+	error = input_register_handle(handle);
+	if (error)
+		goto err2;
+
+	error = input_open_device(handle);
+	if (error)
+		goto err1;
+
+	return 0;
+err1:
+	input_unregister_handle(handle);
+err2:
+	kfree(handle);
+	return error;
+}
+
+static void dbs_input_disconnect(struct input_handle *handle)
+{
+	input_close_device(handle);
+	input_unregister_handle(handle);
+	kfree(handle);
+}
+
+static const struct input_device_id dbs_ids[] = {
+	{ .driver_info = 1 },
+	{ },
+};
+
+static struct input_handler dbs_input_handler = {
+	.event		= dbs_input_event,
+	.connect	= dbs_input_connect,
+	.disconnect	= dbs_input_disconnect,
+	.name		= "cpufreq_ond",
+	.id_table	= dbs_ids,
+};
+
 static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 				   unsigned int event)
 {
@@ -960,7 +908,6 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		}
 		this_dbs_info->cpu = cpu;
 		this_dbs_info->rate_mult = 1;
-		this_dbs_info->prev_load = 0;
 		ondemand_powersave_bias_init_cpu(cpu);
 		/*
 		 * Start the timerschedule work, when this governor
@@ -988,7 +935,8 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 				    latency * LATENCY_MULTIPLIER);
 			dbs_tuners_ins.io_is_busy = io_busy;
 		}
-		
+		if (!cpu)
+			rc = input_register_handler(&dbs_input_handler);
 		mutex_unlock(&dbs_mutex);
 
 
@@ -1008,6 +956,8 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		/* If device is being removed, policy is no longer
 		 * valid. */
 		this_dbs_info->cur_policy = NULL;
+		if (!cpu)
+			input_unregister_handler(&dbs_input_handler);
 		mutex_unlock(&dbs_mutex);
 		if (!dbs_enable)
 			sysfs_remove_group(cpufreq_global_kobject,
@@ -1058,6 +1008,11 @@ static int __init cpufreq_gov_dbs_init(void)
 			MIN_SAMPLING_RATE_RATIO * jiffies_to_usecs(10);
 	}
 
+	input_wq = create_workqueue("iewq");
+	if (!input_wq) {
+		printk(KERN_ERR "Failed to create iewq workqueue\n");
+		return -EFAULT;
+	}
 	for_each_possible_cpu(i) {
 		struct cpu_dbs_info_s *this_dbs_info =
 			&per_cpu(od_cpu_dbs_info, i);
@@ -1071,6 +1026,7 @@ static int __init cpufreq_gov_dbs_init(void)
 static void __exit cpufreq_gov_dbs_exit(void)
 {
 	cpufreq_unregister_governor(&cpufreq_gov_ondemand);
+	destroy_workqueue(input_wq);
 }
 
 
