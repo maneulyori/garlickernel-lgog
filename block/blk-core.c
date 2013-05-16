@@ -1124,10 +1124,14 @@ int blk_reinsert_request(struct request_queue *q, struct request *rq)
 		 * down.
 		 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 		pr_debug("%s(): reinserting an URGENT request", __func__);
 =======
 		pr_err("%s(): reinserting an URGENT request", __func__);
 >>>>>>> 1b3f9e5... block: urgent: Fix dispatching of URGENT mechanism
+=======
+		pr_debug("%s(): reinserting an URGENT request", __func__);
+>>>>>>> 1ac207e... block: Remove "requeuing urgent req" error messages
 		WARN_ON(!q->dispatched_urgent);
 		q->dispatched_urgent = false;
 	}
