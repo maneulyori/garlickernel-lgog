@@ -325,7 +325,11 @@ static inline int ext4_jbd2_file_inode(handle_t *handle, struct inode *inode)
 		}
 		return jbd2_journal_file_inode(handle, EXT4_I(inode)->jinode);
 	}
+<<<<<<< HEAD
  	return 0;
+=======
+	return 0;
+>>>>>>> 9b812f3... ext4: prevent kernel panic in case of uninitialized jinode
 }
 
 static inline void ext4_update_inode_fsync_trans(handle_t *handle,
