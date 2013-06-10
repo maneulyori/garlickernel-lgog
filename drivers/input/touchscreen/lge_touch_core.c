@@ -2143,6 +2143,7 @@ static void touch_input_report(struct lge_touch_data *ts)
 }
 
 #define TOUCH_BOOST_FREQ get_input_boost_freq()
+static struct cpufreq_policy *policy;
 
 /*
  * Touch work function
@@ -2156,11 +2157,18 @@ static void touch_work_func_c(struct work_struct *work)
 	int next_work = 0;
 	int ret;
 	int int_pin = 0;
-	int cpu;
-  	struct cpufreq_policy policy;
 		//static unsigned int x = 0;
   		//static unsigned int y = 0;
   		//static bool xy_lock = false;
+
+		if (policy->cur < TOUCH_BOOST_FREQ)
+  		{
+    			__cpufreq_driver_target(policy, TOUCH_BOOST_FREQ, 
+        			CPUFREQ_RELATION_H);
+  		}
+
+  		is_touching = true;
+  		freq_boosted_time = ktime_to_ms(ktime_get());
 
 	atomic_dec(&ts->next_work);
 	ts->ts_data.total_num = 0;
@@ -2209,19 +2217,6 @@ static void touch_work_func_c(struct work_struct *work)
                 accuracy_filter_func(ts);
 
 	touch_input_report(ts);
-
-	for_each_online_cpu(cpu)
-  	{
-    	if (cpu < 2)
-    	{
-      		cpufreq_get_policy(&policy, cpu);
-      		__cpufreq_driver_target(&policy, TOUCH_BOOST_FREQ, 
-        	  CPUFREQ_RELATION_H);
-    	}
-  }
-
-  is_touching = true;
-  freq_boosted_time = ktime_to_ms(ktime_get());
 
 /*
 	if (ts->ts_data.curr_data[0].status == ABS_PRESS) 
@@ -3587,6 +3582,8 @@ static int touch_probe(struct i2c_client *client, const struct i2c_device_id *id
 	int ret = 0;
 	int one_sec = 0;
 
+	policy = cpufreq_cpu_get(0);
+
 	if (unlikely(touch_debug_mask & DEBUG_TRACE))
 		TOUCH_DEBUG_MSG("\n");
 
@@ -3805,7 +3802,7 @@ static int touch_probe(struct i2c_client *client, const struct i2c_device_id *id
 	ts->accuracy_filter.ignore_pressure_gap = 0;
 	ts->accuracy_filter.delta_max = 0;
 	ts->accuracy_filter.max_pressure = 0;
-	ts->accuracy_filter.time_to_max_pressure = 0;
+	ts->accuracy_filter.time_to_max_pressure = 200;
 	ts->accuracy_filter.direction_count = 20;
 	ts->accuracy_filter.touch_max_count = 40;
 
