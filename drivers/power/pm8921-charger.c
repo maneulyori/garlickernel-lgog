@@ -347,15 +347,7 @@ struct pm8921_chg_chip {
 	enum pm8921_chg_hot_thr		hot_thr;
 	int				rconn_mohm;
 	enum pm8921_chg_led_src_config	led_src_config;
-<<<<<<< HEAD
 	bool				has_dc_supply;
-=======
-	bool				host_mode;
-	bool				has_dc_supply;
-	u8				active_path;
-	int				ext_batt_health;
-	int				ext_batt_temp_monitor;
->>>>>>> aff062a... power: pm8921-charger: report DC online for some platforms.
 	int				recent_reported_soc;
 	bool			host_mode;
 	u8				active_path;
@@ -6456,21 +6448,9 @@ static bool pm_is_chg_charge_dis_bit_set(struct pm8921_chg_chip *chip)
 {
 	u8 temp = 0;
 
-<<<<<<< HEAD
 	pm8xxx_readb(chip->dev->parent, CHG_CNTRL, &temp);
 	return !!(temp & CHG_CHARGE_DIS_BIT);
 }
-=======
-	chip->cold_thr = pdata->cold_thr;
-	chip->hot_thr = pdata->hot_thr;
-	chip->rconn_mohm = pdata->rconn_mohm;
-	chip->led_src_config = pdata->led_src_config;
-        chip->has_dc_supply = pdata->has_dc_supply;
-	chip->ext_batt_temp_monitor = pdata->ext_batt_temp_monitor;
-	chip->eoc_check_soc = pdata->eoc_check_soc;
-	if (chip->ext_batt_temp_monitor)
-		chip->ext_batt_health = POWER_SUPPLY_HEALTH_GOOD;
->>>>>>> aff062a... power: pm8921-charger: report DC online for some platforms.
 
 
 static bool wireless_get_backlight_on(void)
