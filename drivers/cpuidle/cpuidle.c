@@ -394,23 +394,18 @@ static int __cpuidle_register_device(struct cpuidle_device *dev)
 	ret = cpuidle_add_sysfs(cpu_dev);
 	if (ret)
 		goto err_sysfs;
-<<<<<<< HEAD
 
 	ret = cpuidle_coupled_register_device(dev);
 	if (ret)
 		goto err_coupled;
-=======
->>>>>>> 2dc9f91... cpuidle: fix error handling in __cpuidle_register_device
 
 	dev->registered = 1;
 	return 0;
 
-<<<<<<< HEAD
 err_coupled:
 	cpuidle_remove_sysfs(cpu_dev);
 	wait_for_completion(&dev->kobj_unregister);
-=======
->>>>>>> 2dc9f91... cpuidle: fix error handling in __cpuidle_register_device
+
 err_sysfs:
 	list_del(&dev->device_list);
 	per_cpu(cpuidle_devices, dev->cpu) = NULL;
