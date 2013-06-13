@@ -615,7 +615,7 @@ blk_init_allocated_queue(struct request_queue *q, request_fn_proc *rfn,
 	q->request_fn		= rfn;
 	q->prep_rq_fn		= NULL;
 	q->unprep_rq_fn		= NULL;
-	q->queue_flags		|= QUEUE_FLAG_DEFAULT;
+	q->queue_flags		= QUEUE_FLAG_DEFAULT;
 
 	/* Override internal queue lock with supplied lock pointer */
 	if (lock)
@@ -1123,15 +1123,7 @@ int blk_reinsert_request(struct request_queue *q, struct request *rq)
 		 * urgent requests. We want to be able to track this
 		 * down.
 		 */
-<<<<<<< HEAD
-<<<<<<< HEAD
 		pr_debug("%s(): reinserting an URGENT request", __func__);
-=======
-		pr_err("%s(): reinserting an URGENT request", __func__);
->>>>>>> 1b3f9e5... block: urgent: Fix dispatching of URGENT mechanism
-=======
-		pr_debug("%s(): reinserting an URGENT request", __func__);
->>>>>>> 1ac207e... block: Remove "requeuing urgent req" error messages
 		WARN_ON(!q->dispatched_urgent);
 		q->dispatched_urgent = false;
 	}
