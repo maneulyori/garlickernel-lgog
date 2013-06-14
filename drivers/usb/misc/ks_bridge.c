@@ -58,7 +58,6 @@ struct ks_bridge {
 	struct list_head	to_mdm_list;
 	struct list_head	to_ks_list;
 	wait_queue_head_t	ks_wait_q;
-	struct miscdevice	*fs_dev;
 
 	/* usb specific */
 	struct usb_device	*udev;
@@ -262,8 +261,6 @@ static void ksb_tomdm_work(struct work_struct *w)
 			return;
 		}
 
-		usb_free_urb(urb);
-
 		spin_lock_irqsave(&ksb->lock, flags);
 	}
 	spin_unlock_irqrestore(&ksb->lock, flags);
@@ -443,13 +440,8 @@ static void ksb_rx_cb(struct urb *urb)
 
 	pr_debug("status:%d actual:%d", urb->status, urb->actual_length);
 
-	/*non zero len of data received while unlinking urb*/
-	if (urb->status == -ENOENT && urb->actual_length > 0)
-		goto add_to_list;
-
 	if (urb->status < 0) {
-		if (urb->status != -ESHUTDOWN && urb->status != -ENOENT
-				&& urb->status != -EPROTO)
+		if (urb->status != -ESHUTDOWN && urb->status != -ENOENT)
 			pr_err_ratelimited("urb failed with err:%d",
 					urb->status);
 		ksb_free_data_pkt(pkt);
@@ -463,7 +455,6 @@ static void ksb_rx_cb(struct urb *urb)
 		goto resubmit_urb;
 	}
 
-add_to_list:
 	spin_lock(&ksb->lock);
 	pkt->len = urb->actual_length;
 	list_add_tail(&pkt->list, &ksb->to_ks_list);
@@ -540,6 +531,7 @@ ksb_usb_probe(struct usb_interface *ifc, const struct usb_device_id *id)
 	struct usb_endpoint_descriptor	*ep_desc;
 	int				i;
 	struct ks_bridge		*ksb;
+	struct miscdevice		*fs_dev;
 
 	ifc_num = ifc->cur_altsetting->desc.bInterfaceNumber;
 
@@ -593,8 +585,8 @@ ksb_usb_probe(struct usb_interface *ifc, const struct usb_device_id *id)
 
 	dbg_log_event(ksb, "PID-ATT", id->idProduct, 0);
 
-	ksb->fs_dev = (struct miscdevice *)id->driver_info;
-	misc_register(ksb->fs_dev);
+	fs_dev = (struct miscdevice *)id->driver_info;
+	misc_register(fs_dev);
 
 	ifc->needs_remote_wakeup = 1;
 	usb_enable_autosuspend(ksb->udev);
@@ -610,7 +602,7 @@ static int ksb_usb_suspend(struct usb_interface *ifc, pm_message_t message)
 
 	dbg_log_event(ksb, "SUSPEND", 0, 0);
 
-	pr_debug("read cnt: %d", ksb->alloced_read_pkts);
+	pr_info("read cnt: %d", ksb->alloced_read_pkts);
 
 	usb_kill_anchored_urbs(&ksb->submitted);
 
@@ -658,10 +650,6 @@ static void ksb_usb_disconnect(struct usb_interface *ifc)
 	}
 	spin_unlock_irqrestore(&ksb->lock, flags);
 
-<<<<<<< HEAD
-	misc_deregister(ksb->fs_dev);
-=======
->>>>>>> 0906d64... usb: ks_bridge: Add support for autosuspend
 	ifc->needs_remote_wakeup = 0;
 	usb_put_dev(ksb->udev);
 	ksb->ifc = NULL;
@@ -727,8 +715,7 @@ static int __init ksb_init(void)
 		ksb = kzalloc(sizeof(struct ks_bridge), GFP_KERNEL);
 		if (!ksb) {
 			pr_err("unable to allocat mem for ks_bridge");
-			ret =  -ENOMEM;
-			goto dev_free;
+			return -ENOMEM;
 		}
 		__ksb[i] = ksb;
 
