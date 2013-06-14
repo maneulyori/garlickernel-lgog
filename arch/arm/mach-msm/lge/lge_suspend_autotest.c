@@ -159,14 +159,6 @@ static int suspend_autotest_resume(struct device *dev)
 	/* if test isn't enabled, no need to proceed below code */
 	if (!test_enable)
 		return 0;
-
-	/* check if suspend is envoked by rtc alarm event */
-	if (wake_lock_active_name("alarm_rtc") && test_alarm_set) {
-		pr_info("%s: test alarm expired and report power event\n", __func__);
-		report_pwr_event();
-	}
-
-	return 0;
 }
 
 void suspend_test_start(void)
