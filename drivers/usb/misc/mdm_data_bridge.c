@@ -394,8 +394,8 @@ void data_bridge_close(unsigned int id)
 	cancel_work_sync(&dev->process_rx_w);
 
 	usb_kill_anchored_urbs(&dev->tx_active);
-  	usb_kill_anchored_urbs(&dev->rx_active);
-  	usb_kill_anchored_urbs(&dev->delayed);
+	usb_kill_anchored_urbs(&dev->rx_active);
+	usb_kill_anchored_urbs(&dev->delayed);
 
 	spin_lock_irqsave(&dev->rx_done.lock, flags);
 	while ((skb = __skb_dequeue(&dev->rx_done)))
