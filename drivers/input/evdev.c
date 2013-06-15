@@ -695,10 +695,7 @@ static int evdev_disable_suspend_block(struct evdev *evdev,
 	client->use_wake_lock = false;
 	spin_unlock_irq(&client->buffer_lock);
 	wake_lock_destroy(&client->wake_lock);
-<<<<<<< HEAD
-=======
 
->>>>>>> a531b3d... input: evdev: Move wake_lock_destroy call
 	return 0;
 }
 
