@@ -393,9 +393,9 @@ void data_bridge_close(unsigned int id)
 	cancel_work_sync(&dev->kevent);
 	cancel_work_sync(&dev->process_rx_w);
 
-	usb_unlink_anchored_urbs(&dev->tx_active);
-	usb_unlink_anchored_urbs(&dev->rx_active);
-	usb_unlink_anchored_urbs(&dev->delayed);
+	usb_kill_anchored_urbs(&dev->tx_active);
+  	usb_kill_anchored_urbs(&dev->rx_active);
+  	usb_kill_anchored_urbs(&dev->delayed);
 
 	spin_lock_irqsave(&dev->rx_done.lock, flags);
 	while ((skb = __skb_dequeue(&dev->rx_done)))
@@ -1049,19 +1049,7 @@ static void bridge_disconnect(struct usb_interface *intf)
 	platform_device_unregister(dev->pdev);
 	usb_set_intfdata(intf, NULL);
 
-<<<<<<< HEAD
 	free_rx_urbs(dev);
-=======
-	/*free rx urbs*/
-	head = &dev->rx_idle;
-	spin_lock_irqsave(&dev->rx_done.lock, flags);
-	while (!list_empty(head)) {
-		rx_urb = list_entry(head->next, struct urb, urb_list);
-		list_del(&rx_urb->urb_list);
-		usb_free_urb(rx_urb);
-	}
-	spin_unlock_irqrestore(&dev->rx_done.lock, flags);
->>>>>>> a47aec2... USB: mdm_bridge: Fix a possible freed memory access
 
 	usb_put_dev(dev->udev);
 
