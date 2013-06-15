@@ -386,7 +386,6 @@ struct msm_hsic_host_platform_data {
 
 	struct msm_bus_scale_pdata *bus_scale_table;
 	unsigned log2_irq_thresh;
-<<<<<<< HEAD
 
 	/* gpio used to resume peripheral */
 	unsigned resume_gpio;
@@ -396,9 +395,6 @@ struct msm_hsic_host_platform_data {
 
 	/*standalone latency is required when HSCI is active*/
 	u32 standalone_latency;
-=======
-	u32 swfi_latency;
->>>>>>> 5974363... msm: hsic: Disallow processor idle sleep while driving resume signal
 };
 
 struct msm_usb_host_platform_data {
