@@ -705,6 +705,7 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 	cpufreq_notify_utilization(policy, load_at_max_freq);
 
 	/* we want cpu0 to be the only core blocked for freq changes while
+<<<<<<< HEAD
      	   we are touching the screen for UI interaction */
   	if (is_touching && policy->cpu == 0) 
   	{
@@ -725,6 +726,13 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 			boost_freq = 1;
 
 		this_dbs_info->prev_load = max_load;
+=======
+	   we are touching the screen for UI interaction */
+	if (is_touching) 
+	{
+		if (ktime_to_ms(ktime_get()) - freq_boosted_time >= 1000)
+			is_touching = false;
+>>>>>>> d15fa99... cpufreq: ondemand: improve input_boost_freq logic in case users prefer to use ondemand.
 	}
 
 	/* Check for frequency increase */
@@ -735,8 +743,53 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 				dbs_tuners_ins.sampling_down_factor;
 		dbs_freq_increase(policy, policy->max);
 		return;
+<<<<<<< HEAD
 	} else {
 		/* Calculate the next frequency proportional to load */
+=======
+	}
+
+	if (num_online_cpus() > 1) {
+
+		if (max_load_other_cpu >
+				dbs_tuners_ins.up_threshold_any_cpu_load) {
+			if (policy->cur < dbs_tuners_ins.sync_freq)
+				dbs_freq_increase(policy,
+						dbs_tuners_ins.sync_freq);
+			return;
+		}
+
+		if (max_load_freq > dbs_tuners_ins.up_threshold_multi_core *
+								policy->cur) {
+			if (policy->cur < dbs_tuners_ins.optimal_freq)
+				dbs_freq_increase(policy,
+						dbs_tuners_ins.optimal_freq);
+			return;
+		}
+	}
+
+	/* if the there is a input detected we want to go through this check so 
+	   that the frequency stays >= input_boost_freq and doesn't go down */
+	if (is_touching && policy->cpu == 0) 
+	{
+		if (policy->cur >= get_input_boost_freq())
+			return;
+	} 
+
+	/* Check for frequency decrease */
+	/* if we cannot reduce the frequency anymore, break out early */
+	if (policy->cur == policy->min)
+		return;
+
+	/*
+	 * The optimal frequency is the frequency that is the lowest that
+	 * can support the current CPU usage without triggering the up
+	 * policy. To be safe, we focus 10 points under the threshold.
+	 */
+	if (max_load_freq <
+	    (dbs_tuners_ins.up_threshold - dbs_tuners_ins.down_differential) *
+	     policy->cur) {
+>>>>>>> d15fa99... cpufreq: ondemand: improve input_boost_freq logic in case users prefer to use ondemand.
 		unsigned int freq_next;
 		freq_next = max_load * policy->cpuinfo.max_freq / 100;
 
