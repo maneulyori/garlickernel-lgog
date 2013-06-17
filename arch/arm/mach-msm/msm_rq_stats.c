@@ -153,7 +153,6 @@ static int update_average_load(unsigned int freq, unsigned int cpu)
 	return 0;
 }
 
-extern unsigned int report_load_at_max_freq(void);
 unsigned int report_load_at_max_freq(void)
 {
 	int cpu = 0;
@@ -161,11 +160,11 @@ unsigned int report_load_at_max_freq(void)
 	unsigned int total_load = 0;
 
 	pcpu = &per_cpu(cpuload, cpu);
-  	mutex_lock(&pcpu->cpu_load_mutex);
-  	update_average_load(pcpu->cur_freq, cpu);
-  	total_load = pcpu->avg_load_maxfreq;
-  	pcpu->avg_load_maxfreq = 0;
-  	mutex_unlock(&pcpu->cpu_load_mutex);
+	mutex_lock(&pcpu->cpu_load_mutex);
+	update_average_load(pcpu->cur_freq, cpu);
+	total_load = pcpu->avg_load_maxfreq;
+	pcpu->avg_load_maxfreq = 0;
+	mutex_unlock(&pcpu->cpu_load_mutex);
 
 	return total_load;
 }
@@ -182,7 +181,6 @@ static int cpufreq_transition_handler(struct notifier_block *nb,
 		for_each_cpu(j, this_cpu->related_cpus) {
 			struct cpu_load_data *pcpu = &per_cpu(cpuload, j);
 			mutex_lock(&pcpu->cpu_load_mutex);
-			update_average_load(freqs->old, freqs->cpu);
 			pcpu->cur_freq = freqs->new;
 			mutex_unlock(&pcpu->cpu_load_mutex);
 		}
@@ -214,9 +212,7 @@ static int system_suspend_handler(struct notifier_block *nb,
 	switch (val) {
 	case PM_POST_HIBERNATION:
 	case PM_POST_SUSPEND:
-	case PM_POST_RESTORE:
 		rq_info.hotplug_disabled = 0;
-		break;
 	case PM_HIBERNATION_PREPARE:
 	case PM_SUSPEND_PREPARE:
 		rq_info.hotplug_disabled = 1;
@@ -228,19 +224,20 @@ static int system_suspend_handler(struct notifier_block *nb,
 }
 
 static int freq_policy_handler(struct notifier_block *nb,
-      		unsigned long event, void *data)
+			unsigned long event, void *data)
 {
-  	struct cpufreq_policy *policy = data;
-  	struct cpu_load_data *this_cpu = &per_cpu(cpuload, policy->cpu);
-  	if (event != CPUFREQ_NOTIFY)
-    		goto out;
+	struct cpufreq_policy *policy = data;
+	struct cpu_load_data *this_cpu = &per_cpu(cpuload, policy->cpu);
 
-  		this_cpu->policy_max = policy->max;
+	if (event != CPUFREQ_NOTIFY)
+		goto out;
 
-  	pr_debug("Policy max changed from %u to %u, event %lu\n",
-      		this_cpu->policy_max, policy->max, event);
+	this_cpu->policy_max = policy->max;
+
+	pr_debug("Policy max changed from %u to %u, event %lu\n",
+			this_cpu->policy_max, policy->max, event);
 out:
-  	return NOTIFY_DONE;
+	return NOTIFY_DONE;
 }
 
 static ssize_t hotplug_disable_show(struct kobject *kobj,
@@ -252,24 +249,6 @@ static ssize_t hotplug_disable_show(struct kobject *kobj,
 }
 
 static struct kobj_attribute hotplug_disabled_attr = __ATTR_RO(hotplug_disable);
-
-#ifdef CONFIG_MSM_MPDEC
-unsigned int get_rq_info(void)
-{
- 	unsigned long flags = 0;
-        	unsigned int rq = 0;
-
-        	spin_lock_irqsave(&rq_lock, flags);
-
-       		rq = rq_info.rq_avg;
-        	rq_info.rq_avg = 0;
-
-        	spin_unlock_irqrestore(&rq_lock, flags);
-
-        	return rq;
-}
-EXPORT_SYMBOL(get_rq_info);
-#endif
 
 static void def_work_fn(struct work_struct *work)
 {
@@ -445,7 +424,7 @@ static int __init msm_rq_stats_init(void)
 					CPUFREQ_TRANSITION_NOTIFIER);
 	register_hotcpu_notifier(&cpu_hotplug);
 	cpufreq_register_notifier(&freq_policy,
-			CPUFREQ_POLICY_NOTIFIER);
+					CPUFREQ_POLICY_NOTIFIER);
 
 	return ret;
 }

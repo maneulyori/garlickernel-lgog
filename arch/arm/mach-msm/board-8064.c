@@ -1758,27 +1758,6 @@ static struct msm_bus_vectors qseecom_enable_sfpb_vectors[] = {
 	},
 };
 
-static struct msm_bus_vectors qseecom_enable_dfab_sfpb_vectors[] = {
-	{
-		.src = MSM_BUS_MASTER_ADM_PORT0,
-		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab = 70000000UL,
-		.ib = 70000000UL,
-	},
-	{
-		.src = MSM_BUS_MASTER_ADM_PORT1,
-		.dst = MSM_BUS_SLAVE_GSBI1_UART,
-		.ab = 2480000000UL,
-		.ib = 2480000000UL,
-	},
-	{
-		.src = MSM_BUS_MASTER_SPDM,
-		.dst = MSM_BUS_SLAVE_SPDM,
-		.ib = (64 * 8) * 1000000UL,
-		.ab = (64 * 8) *  100000UL,
-	},
-};
-
 static struct msm_bus_paths qseecom_hw_bus_scale_usecases[] = {
 	{
 		ARRAY_SIZE(qseecom_clks_init_vectors),
@@ -1791,10 +1770,6 @@ static struct msm_bus_paths qseecom_hw_bus_scale_usecases[] = {
 	{
 		ARRAY_SIZE(qseecom_enable_sfpb_vectors),
 		qseecom_enable_sfpb_vectors,
-	},
-	{
-		ARRAY_SIZE(qseecom_enable_dfab_sfpb_vectors),
-		qseecom_enable_dfab_sfpb_vectors,
 	},
 };
 
@@ -3386,7 +3361,6 @@ static void __init apq8064_common_init(void)
 	rpmrs_level =
 		msm_rpmrs_levels[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE];
 	msm_hsic_pdata.standalone_latency = rpmrs_level.latency_us;
-
 	if (machine_is_apq8064_mtp()) {
 		msm_hsic_pdata.log2_irq_thresh = 5,
 		apq8064_device_hsic_host.dev.platform_data = &msm_hsic_pdata;
