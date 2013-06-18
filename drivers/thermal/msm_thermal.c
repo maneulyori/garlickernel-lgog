@@ -57,7 +57,7 @@ static void check_temp(struct work_struct *work)
 
 	policy = cpufreq_cpu_get(0);
 	max_freq = policy->max;
-
+	
 	if (freq_buffer == 0)
 		freq_buffer = max_freq;
 
