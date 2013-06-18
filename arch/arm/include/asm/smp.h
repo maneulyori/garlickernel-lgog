@@ -128,4 +128,5 @@ int  (*cpu_disable)(unsigned int cpu);
  */
 
 extern void smp_set_ops(struct smp_operations *);
+
 #endif /* ifndef __ASM_ARM_SMP_H */
