@@ -104,8 +104,8 @@
 #define MSM8064_RPM_MASTER_STATS_BASE	0x10BB00
 
 static struct msm_watchdog_pdata msm_watchdog_pdata = {
-	.pet_time = 10000,
-	.bark_time = 16000,  //adjust bark time  11000,
+	.pet_time = 20000,
+	.bark_time = 21000,  //adjust bark time  11000,
 	.has_secure = true,
 	.needs_expired_enable = true,
 	.base = MSM_TMR0_BASE + WDT0_OFFSET,
