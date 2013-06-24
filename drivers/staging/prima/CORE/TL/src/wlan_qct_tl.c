@@ -8718,7 +8718,8 @@ WLANTL_Translate8023To80211Header
     for ( ucIndex = 0; ucIndex < WLAN_MAX_STA_COUNT ; ucIndex++)
     {
       if ( ucIndex != ucStaId && pTLCb->atlSTAClients[ucIndex] && pTLCb->atlSTAClients[ucIndex]->ucExists &&
-          !pTLCb->atlSTAClients[ucIndex]->ucTxSuspended &&
+          (pTLCb->atlSTAClients[ucIndex]->tlState == WLANTL_STA_AUTHENTICATED) &&
+          (!pTLCb->atlSTAClients[ucIndex]->ucTxSuspended) &&
           vos_mem_compare( (void*)pTLCb->atlSTAClients[ucIndex]->wSTADesc.vSTAMACAddress.bytes,
             (void*)w8023Header.vDA, 6) )
       {
@@ -10519,24 +10520,36 @@ WLANTL_EnableUAPSDForAC
 
   /*Set this flag in order to remember that this is a trigger enabled AC*/
   pTLCb->atlSTAClients[ucSTAId]->wUAPSDInfo[ucAC].ucSet = 1;
-  
-  TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
-             "WLAN TL:Enabling U-APSD in FW for STA: %d AC: %d SI: %d SPI: %d "
-             "DI: %d",
-             ucSTAId, ucAC, uServiceInt, uSuspendInt,
-             pTLCb->tlConfigInfo.uDelayedTriggerFrmInt));
 
-  /*Save all info for HAL*/
-  halUAPSDInfo.staidx         = ucSTAId; 
-  halUAPSDInfo.ac             = ucAC;   
-  halUAPSDInfo.up             = ucUP;   
-  halUAPSDInfo.srvInterval    = uServiceInt;  
-  halUAPSDInfo.susInterval    = uSuspendInt;
-  halUAPSDInfo.delayInterval  = pTLCb->tlConfigInfo.uDelayedTriggerFrmInt; 
+#ifdef FEATURE_WLAN_TDLS
+  if(pTLCb->atlSTAClients[ucSTAId]->wSTADesc.wSTAType != WLAN_STA_TDLS)
+#endif
+  {
+    if( 0 == uServiceInt )
+    {
+      TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+               "WLAN TL:Invalid input params on WLANTL_EnableUAPSDForAC"
+               " SI: %d", uServiceInt ));
+      return VOS_STATUS_E_FAULT;
+    }
 
-  /*Notify HAL*/
-  vosStatus = WDA_EnableUapsdAcParams(pvosGCtx, ucSTAId, &halUAPSDInfo);
+    TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+               "WLAN TL:Enabling U-APSD in FW for STA: %d AC: %d SI: %d SPI: %d "
+               "DI: %d",
+               ucSTAId, ucAC, uServiceInt, uSuspendInt,
+               pTLCb->tlConfigInfo.uDelayedTriggerFrmInt));
 
+    /*Save all info for HAL*/
+    halUAPSDInfo.staidx         = ucSTAId;
+    halUAPSDInfo.ac             = ucAC;
+    halUAPSDInfo.up             = ucUP;
+    halUAPSDInfo.srvInterval    = uServiceInt;
+    halUAPSDInfo.susInterval    = uSuspendInt;
+    halUAPSDInfo.delayInterval  = pTLCb->tlConfigInfo.uDelayedTriggerFrmInt;
+
+    /*Notify HAL*/
+    vosStatus = WDA_EnableUapsdAcParams(pvosGCtx, ucSTAId, &halUAPSDInfo);
+  }
   return vosStatus;
 
 }/*WLANTL_EnableUAPSDForAC*/
@@ -11776,3 +11789,131 @@ void WLANTL_UpdateRssiBmps(v_PVOID_t pvosGCtx, v_U8_t staId, v_S7_t rssi)
     pTLCb->atlSTAClients[staId]->rssiAvgBmps = rssi;
   }
 }
+
+/*===============================================================================
+  FUNCTION       WLANTL_UpdateLinkCapacity
+
+  DESCRIPTION    This function updates the STA's Link Capacity in TL
+
+  DEPENDENCIES   None
+
+  PARAMETERS
+
+    pvosGCtx         VOS context          VOS Global context
+    staId            Station ID           Station ID
+    linkCapacity     linkCapacity         Link Capacity
+
+  RETURN         None
+
+  SIDE EFFECTS   none
+ ===============================================================================*/
+
+void WLANTL_UpdateLinkCapacity(v_PVOID_t pvosGCtx, v_U8_t staId, v_U32_t linkCapacity)
+{
+    WLANTL_CbType* pTLCb = VOS_GET_TL_CB(pvosGCtx);
+
+    if (NULL != pTLCb && NULL != pTLCb->atlSTAClients[staId])
+    {
+        pTLCb->atlSTAClients[staId]->linkCapacity = linkCapacity;
+    }
+}
+
+
+/*===========================================================================
+
+  FUNCTION    WLANTL_GetSTALinkCapacity
+
+  DESCRIPTION
+
+    Returns Link Capacity of a particular STA.
+
+  DEPENDENCIES
+
+    A station must have been registered before its state can be retrieved.
+
+
+  PARAMETERS
+
+    IN
+    pvosGCtx:       pointer to the global vos context; a handle to TL's
+                    control block can be extracted from its context
+    ucSTAId:        identifier of the station
+
+    OUT
+    plinkCapacity:  the current link capacity the connection to
+                    the given station
+
+
+  RETURN VALUE
+
+    The result code associated with performing the operation
+
+    VOS_STATUS_E_INVAL:  Input parameters are invalid
+    VOS_STATUS_E_FAULT:  Station ID is outside array boundaries or pointer to
+                         TL cb is NULL ; access would cause a page fault
+    VOS_STATUS_E_EXISTS: Station was not registered
+    VOS_STATUS_SUCCESS:  Everything is good :)
+
+  SIDE EFFECTS
+
+============================================================================*/
+VOS_STATUS
+WLANTL_GetSTALinkCapacity
+(
+    v_PVOID_t             pvosGCtx,
+    v_U8_t                ucSTAId,
+    v_U32_t               *plinkCapacity
+)
+{
+    WLANTL_CbType*  pTLCb = NULL;
+    /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+
+    /*------------------------------------------------------------------------
+      Sanity check
+     ------------------------------------------------------------------------*/
+    if ( NULL == plinkCapacity )
+    {
+        TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                         FL("WLAN TL:Invalid parameter")));
+        return VOS_STATUS_E_INVAL;
+    }
+
+    if ( WLANTL_STA_ID_INVALID( ucSTAId ) )
+    {
+        TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                         FL("WLAN TL:Invalid station id")));
+        return VOS_STATUS_E_FAULT;
+    }
+
+    /*------------------------------------------------------------------------
+      Extract TL control block and check existance
+     ------------------------------------------------------------------------*/
+    pTLCb = VOS_GET_TL_CB(pvosGCtx);
+    if ( NULL == pTLCb )
+    {
+         TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                          FL("WLAN TL:Invalid TL pointer from pvosGCtx")));
+         return VOS_STATUS_E_FAULT;
+    }
+
+    if ( NULL == pTLCb->atlSTAClients[ucSTAId] )
+    {
+        TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                         FL("WLAN TL:Client Memory was not allocated")));
+        return VOS_STATUS_E_FAILURE;
+    }
+
+    if ( 0 == pTLCb->atlSTAClients[ucSTAId]->ucExists )
+    {
+        TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_WARN,
+                         FL("WLAN TL:Station was not previously registered")));
+        return VOS_STATUS_E_EXISTS;
+    }
+
+    /*------------------------------------------------------------------------
+      Get STA state
+     ------------------------------------------------------------------------*/
+    *plinkCapacity = pTLCb->atlSTAClients[ucSTAId]->linkCapacity;
+
+    return VOS_STATUS_SUCCESS;
+}/* WLANTL_GetSTALinkCapacity */
