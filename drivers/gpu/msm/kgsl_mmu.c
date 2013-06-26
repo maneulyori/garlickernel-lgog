@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2013, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -331,6 +335,35 @@ kgsl_mmu_get_ptname_from_ptbase(struct kgsl_mmu *mmu, unsigned int pt_base)
 }
 EXPORT_SYMBOL(kgsl_mmu_get_ptname_from_ptbase);
 
+unsigned int
+kgsl_mmu_log_fault_addr(struct kgsl_mmu *mmu, unsigned int pt_base,
+					unsigned int addr)
+{
+	struct kgsl_pagetable *pt;
+	unsigned int ret = 0;
+
+	if (!mmu->mmu_ops || !mmu->mmu_ops->mmu_pt_equal)
+		return KGSL_MMU_GLOBAL_PT;
+	spin_lock(&kgsl_driver.ptlock);
+	list_for_each_entry(pt, &kgsl_driver.pagetable_list, list) {
+		if (mmu->mmu_ops->mmu_pt_equal(mmu, pt, pt_base)) {
+			if ((addr & ~(PAGE_SIZE-1)) == pt->fault_addr) {
+				ret = 1;
+				break;
+			} else {
+				pt->fault_addr = (addr & ~(PAGE_SIZE-1));
+				ret = 0;
+				break;
+			}
+
+		}
+	}
+	spin_unlock(&kgsl_driver.ptlock);
+
+	return ret;
+}
+EXPORT_SYMBOL(kgsl_mmu_log_fault_addr);
+
 int kgsl_mmu_init(struct kgsl_device *device)
 {
 	int status = 0;
@@ -436,6 +469,7 @@ static struct kgsl_pagetable *kgsl_mmu_createpagetableobject(
 
 	pagetable->name = name;
 	pagetable->max_entries = KGSL_PAGETABLE_ENTRIES(ptsize);
+	pagetable->fault_addr = 0xFFFFFFFF;
 
 	/*
 	 * create a separate kgsl pool for IOMMU, global mappings can be mapped
@@ -513,7 +547,15 @@ struct kgsl_pagetable *kgsl_mmu_getpagetable(unsigned long name)
 	if (KGSL_MMU_TYPE_NONE == kgsl_mmu_type)
 		return (void *)(-1);
 
+<<<<<<< HEAD
 	if (!kgsl_mmu_is_perprocess())
+=======
+#ifndef CONFIG_KGSL_PER_PROCESS_PAGE_TABLE
+	name = KGSL_MMU_GLOBAL_PT;
+#endif
+	/* We presently do not support per-process for IOMMU-v2 */
+	if (!msm_soc_version_supports_iommu_v1())
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		name = KGSL_MMU_GLOBAL_PT;
 
 	pt = kgsl_get_pagetable(name);
@@ -576,6 +618,18 @@ void kgsl_mh_start(struct kgsl_device *device)
 	 */
 }
 
+<<<<<<< HEAD
+=======
+static inline struct gen_pool *
+_get_pool(struct kgsl_pagetable *pagetable, unsigned int flags)
+{
+	if (pagetable->kgsl_pool &&
+		(KGSL_MEMDESC_GLOBAL & flags))
+		return pagetable->kgsl_pool;
+	return pagetable->pool;
+}
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 int
 kgsl_mmu_map(struct kgsl_pagetable *pagetable,
 				struct kgsl_memdesc *memdesc)
@@ -584,7 +638,10 @@ kgsl_mmu_map(struct kgsl_pagetable *pagetable,
 	struct gen_pool *pool = NULL;
 	int size;
 	int page_align = ilog2(PAGE_SIZE);
+<<<<<<< HEAD
 	unsigned int protflags = kgsl_memdesc_protflags(memdesc);
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	if (kgsl_mmu_type == KGSL_MMU_TYPE_NONE) {
 		if (memdesc->sglen == 1) {
@@ -606,6 +663,7 @@ kgsl_mmu_map(struct kgsl_pagetable *pagetable,
 
 	size = kgsl_sg_size(memdesc->sg, memdesc->sglen);
 
+<<<<<<< HEAD
 	pool = pagetable->pool;
 
 	if (KGSL_MMU_TYPE_IOMMU == kgsl_mmu_get_mmutype()) {
@@ -652,6 +710,30 @@ kgsl_mmu_map(struct kgsl_pagetable *pagetable,
 					pagetable->stats.entries);
 			return -ENOMEM;
 		}
+=======
+	/* Allocate from kgsl pool if it exists for global mappings */
+	pool = _get_pool(pagetable, memdesc->priv);
+
+	/* Allocate aligned virtual addresses for iommu. This allows
+	 * more efficient pagetable entries if the physical memory
+	 * is also aligned. Don't do this for GPUMMU, because
+	 * the address space is so small.
+	 */
+	if (KGSL_MMU_TYPE_IOMMU == kgsl_mmu_get_mmutype() &&
+	    kgsl_memdesc_get_align(memdesc) > 0)
+		page_align = kgsl_memdesc_get_align(memdesc);
+
+	memdesc->gpuaddr = gen_pool_alloc_aligned(pool, size, page_align);
+	if (memdesc->gpuaddr == 0) {
+		KGSL_CORE_ERR("gen_pool_alloc(%d) failed from pool: %s\n",
+			size,
+			(pool == pagetable->kgsl_pool) ?
+			"kgsl_pool" : "general_pool");
+		KGSL_CORE_ERR(" [%d] allocated=%d, entries=%d\n",
+				pagetable->name, pagetable->stats.mapped,
+				pagetable->stats.entries);
+		return -ENOMEM;
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	}
 
 	if (KGSL_MMU_TYPE_IOMMU != kgsl_mmu_get_mmutype())
@@ -691,6 +773,8 @@ kgsl_mmu_unmap(struct kgsl_pagetable *pagetable,
 {
 	struct gen_pool *pool;
 	int size;
+	unsigned int start_addr = 0;
+	unsigned int end_addr = 0;
 
 	if (memdesc->size == 0 || memdesc->gpuaddr == 0)
 		return 0;
@@ -702,10 +786,19 @@ kgsl_mmu_unmap(struct kgsl_pagetable *pagetable,
 
 	size = kgsl_sg_size(memdesc->sg, memdesc->sglen);
 
+	start_addr = memdesc->gpuaddr;
+	end_addr = (memdesc->gpuaddr + size);
+
 	if (KGSL_MMU_TYPE_IOMMU != kgsl_mmu_get_mmutype())
 		spin_lock(&pagetable->lock);
 	pagetable->pt_ops->mmu_unmap(pagetable->priv, memdesc,
 					&pagetable->tlb_flags);
+
+	/* If buffer is unmapped 0 fault addr */
+	if ((pagetable->fault_addr >= start_addr) &&
+		(pagetable->fault_addr < end_addr))
+		pagetable->fault_addr = 0;
+
 	if (KGSL_MMU_TYPE_IOMMU == kgsl_mmu_get_mmutype())
 		spin_lock(&pagetable->lock);
 	/* Remove the statistics */
@@ -729,7 +822,11 @@ kgsl_mmu_unmap(struct kgsl_pagetable *pagetable,
 	 * Don't clear the gpuaddr on global mappings because they
 	 * may be in use by other pagetables
 	 */
+<<<<<<< HEAD
 	if (!kgsl_memdesc_is_global(memdesc))
+=======
+	if (!(memdesc->priv & KGSL_MEMDESC_GLOBAL))
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		memdesc->gpuaddr = 0;
 	return 0;
 }

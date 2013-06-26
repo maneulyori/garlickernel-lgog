@@ -16,6 +16,11 @@
 #include <linux/module.h>
 #include <kgsl_device.h>
 
+<<<<<<< HEAD
+=======
+#include "kgsl_trace.h"
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 static void _add_event_to_list(struct list_head *head, struct kgsl_event *event)
 {
 	struct list_head *n;
@@ -71,6 +76,10 @@ int kgsl_add_event(struct kgsl_device *device, u32 id, u32 ts,
 	 */
 
 	if (timestamp_cmp(cur_ts, ts) >= 0) {
+<<<<<<< HEAD
+=======
+		trace_kgsl_fire_event(id, ts, 0);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		cb(device, priv, id, ts);
 		return 0;
 	}
@@ -84,6 +93,12 @@ int kgsl_add_event(struct kgsl_device *device, u32 id, u32 ts,
 	event->priv = priv;
 	event->func = cb;
 	event->owner = owner;
+<<<<<<< HEAD
+=======
+	event->created = jiffies;
+
+	trace_kgsl_register_event(id, ts);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	/* inc refcount to avoid race conditions in cleanup */
 	if (context)
@@ -106,6 +121,16 @@ int kgsl_add_event(struct kgsl_device *device, u32 id, u32 ts,
 	} else
 		_add_event_to_list(&device->events, event);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Increase the active count on the device to avoid going into power
+	 * saving modes while events are pending
+	 */
+
+	device->active_cnt++;
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	queue_work(device->work_queue, &device->ts_expired_ws);
 	return 0;
 }
@@ -126,6 +151,18 @@ void kgsl_cancel_events_ctxt(struct kgsl_device *device,
 	cur = kgsl_readtimestamp(device, context, KGSL_TIMESTAMP_RETIRED);
 	id = context->id;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Increment the refcount to avoid freeing the context while
+	 * cancelling its events
+	 */
+	kgsl_context_get(context);
+
+	/* Remove ourselves from the master pending list */
+	list_del_init(&context->events_list);
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	list_for_each_entry_safe(event, event_tmp, &context->events, list) {
 		/*
 		 * "cancel" the events by calling their callback.
@@ -136,17 +173,31 @@ void kgsl_cancel_events_ctxt(struct kgsl_device *device,
 		 * Send the current timestamp so the event knows how far the
 		 * system got before the event was canceled
 		 */
+<<<<<<< HEAD
+=======
+		list_del(&event->list);
+
+		trace_kgsl_fire_event(id, cur, jiffies - event->created);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 		if (event->func)
 			event->func(device, event->priv, id, cur);
 
 		kgsl_context_put(context);
+<<<<<<< HEAD
 		list_del(&event->list);
 		kfree(event);
 	}
 
 	/* Remove ourselves from the master pending list */
 	list_del_init(&context->events_list);
+=======
+		kfree(event);
+
+		kgsl_active_count_put(device);
+	}
+	kgsl_context_put(context);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 }
 
 /**
@@ -175,15 +226,29 @@ void kgsl_cancel_events(struct kgsl_device *device,
 		 * the callback knows how far the GPU made it before things went
 		 * explosion
 		 */
+<<<<<<< HEAD
+=======
+		list_del(&event->list);
+
+		trace_kgsl_fire_event(KGSL_MEMSTORE_GLOBAL, cur,
+			jiffies - event->created);
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		if (event->func)
 			event->func(device, event->priv, KGSL_MEMSTORE_GLOBAL,
 				cur);
 
 		if (event->context)
 			kgsl_context_put(event->context);
+<<<<<<< HEAD
 
 		list_del(&event->list);
 		kfree(event);
+=======
+		kfree(event);
+
+		kgsl_active_count_put(device);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	}
 }
 EXPORT_SYMBOL(kgsl_cancel_events);
@@ -206,15 +271,28 @@ static void _process_event_list(struct kgsl_device *device,
 		 * confused if they don't bother comparing the current timetamp
 		 * to the timestamp they wanted
 		 */
+<<<<<<< HEAD
+=======
+		list_del(&event->list);
+
+		trace_kgsl_fire_event(id, event->timestamp,
+			jiffies - event->created);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 		if (event->func)
 			event->func(device, event->priv, id, event->timestamp);
 
 		if (event->context)
 			kgsl_context_put(event->context);
+<<<<<<< HEAD
 
 		list_del(&event->list);
 		kfree(event);
+=======
+		kfree(event);
+
+		kgsl_active_count_put(device);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	}
 }
 
@@ -231,7 +309,12 @@ static inline int _mark_next_event(struct kgsl_device *device,
 		 * timestamp on the event has passed - return that up a layer
 		 */
 
+<<<<<<< HEAD
 		return device->ftbl->next_event(device, event);
+=======
+		if (device->ftbl->next_event)
+			return device->ftbl->next_event(device, event);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	}
 
 	return 0;
@@ -283,12 +366,24 @@ void kgsl_process_events(struct work_struct *work)
 		events_list) {
 
 		/*
+<<<<<<< HEAD
+=======
+		 * Increment the refcount to make sure that the list_del_init
+		 * is called with a valid context's list
+		 */
+		kgsl_context_get(context);
+		/*
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		 * If kgsl_timestamp_expired_context returns 0 then it no longer
 		 * has any pending events and can be removed from the list
 		 */
 
 		if (kgsl_process_context_events(device, context) == 0)
 			list_del_init(&context->events_list);
+<<<<<<< HEAD
+=======
+		kgsl_context_put(context);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	}
 
 	mutex_unlock(&device->mutex);

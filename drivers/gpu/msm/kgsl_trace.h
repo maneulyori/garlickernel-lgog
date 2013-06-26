@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -317,6 +317,7 @@ TRACE_EVENT(kgsl_mem_alloc,
 		__field(unsigned int, size)
 		__field(unsigned int, tgid)
 		__array(char, usage, 16)
+<<<<<<< HEAD
 		__field(unsigned int, id)
 		__field(unsigned int, flags)
 	),
@@ -351,12 +352,15 @@ TRACE_EVENT(kgsl_mem_mmap,
 		__array(char, usage, 16)
 		__field(unsigned int, id)
 		__field(unsigned int, flags)
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	),
 
 	TP_fast_assign(
 		__entry->useraddr = mem_entry->memdesc.useraddr;
 		__entry->gpuaddr = mem_entry->memdesc.gpuaddr;
 		__entry->size = mem_entry->memdesc.size;
+<<<<<<< HEAD
 		kgsl_get_memory_usage(__entry->usage, sizeof(__entry->usage),
 				     mem_entry->memdesc.flags);
 		__entry->id = mem_entry->id;
@@ -397,6 +401,17 @@ TRACE_EVENT(kgsl_mem_unmapped_area_collision,
 	TP_printk(
 		"id=%d hint=0x%lx len=%ld addr=0x%lx",
 		__entry->id, __entry->hint, __entry->len, __entry->addr
+=======
+		__entry->tgid = mem_entry->priv->pid;
+		kgsl_get_memory_usage(__entry->usage, sizeof(__entry->usage),
+				     mem_entry->memdesc.flags);
+	),
+
+	TP_printk(
+		"gpuaddr=0x%08x size=%d tgid=%d usage=%s",
+		__entry->gpuaddr, __entry->size, __entry->tgid,
+		__entry->usage
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	)
 );
 
@@ -413,7 +428,10 @@ TRACE_EVENT(kgsl_mem_map,
 		__field(int, type)
 		__field(unsigned int, tgid)
 		__array(char, usage, 16)
+<<<<<<< HEAD
 		__field(unsigned int, id)
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	),
 
 	TP_fast_assign(
@@ -424,6 +442,7 @@ TRACE_EVENT(kgsl_mem_map,
 		__entry->tgid = mem_entry->priv->pid;
 		kgsl_get_memory_usage(__entry->usage, sizeof(__entry->usage),
 				     mem_entry->memdesc.flags);
+<<<<<<< HEAD
 		__entry->id = mem_entry->id;
 	),
 
@@ -432,6 +451,15 @@ TRACE_EVENT(kgsl_mem_map,
 		__entry->gpuaddr, __entry->size,
 		__entry->type, __entry->fd, __entry->tgid,
 		__entry->usage, __entry->id
+=======
+	),
+
+	TP_printk(
+		"gpuaddr=0x%08x size=%d type=%d fd=%d tgid=%d usage %s",
+		__entry->gpuaddr, __entry->size,
+		__entry->type, __entry->fd, __entry->tgid,
+		__entry->usage
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	)
 );
 
@@ -448,7 +476,10 @@ TRACE_EVENT(kgsl_mem_free,
 		__field(int, fd)
 		__field(unsigned int, tgid)
 		__array(char, usage, 16)
+<<<<<<< HEAD
 		__field(unsigned int, id)
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	),
 
 	TP_fast_assign(
@@ -458,6 +489,7 @@ TRACE_EVENT(kgsl_mem_free,
 		__entry->tgid = mem_entry->priv->pid;
 		kgsl_get_memory_usage(__entry->usage, sizeof(__entry->usage),
 				     mem_entry->memdesc.flags);
+<<<<<<< HEAD
 		__entry->id = mem_entry->id;
 	),
 
@@ -465,6 +497,14 @@ TRACE_EVENT(kgsl_mem_free,
 		"gpuaddr=0x%08x size=%d type=%d tgid=%d usage=%s id=%d",
 		__entry->gpuaddr, __entry->size, __entry->type,
 		__entry->tgid, __entry->usage, __entry->id
+=======
+	),
+
+	TP_printk(
+		"gpuaddr=0x%08x size=%d type=%d tgid=%d usage=%s",
+		__entry->gpuaddr, __entry->size, __entry->type,
+		__entry->tgid, __entry->usage
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	)
 );
 
@@ -481,7 +521,10 @@ DECLARE_EVENT_CLASS(kgsl_mem_timestamp_template,
 		__field(unsigned int, size)
 		__field(int, type)
 		__array(char, usage, 16)
+<<<<<<< HEAD
 		__field(unsigned int, id)
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		__field(unsigned int, drawctxt_id)
 		__field(unsigned int, curr_ts)
 		__field(unsigned int, free_ts)
@@ -493,7 +536,10 @@ DECLARE_EVENT_CLASS(kgsl_mem_timestamp_template,
 		__entry->size = mem_entry->memdesc.size;
 		kgsl_get_memory_usage(__entry->usage, sizeof(__entry->usage),
 				     mem_entry->memdesc.flags);
+<<<<<<< HEAD
 		__entry->id = mem_entry->id;
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		__entry->drawctxt_id = id;
 		__entry->type = mem_entry->memtype;
 		__entry->curr_ts = curr_ts;
@@ -501,14 +547,21 @@ DECLARE_EVENT_CLASS(kgsl_mem_timestamp_template,
 	),
 
 	TP_printk(
+<<<<<<< HEAD
 		"d_name=%s gpuaddr=0x%08x size=%d type=%d usage=%s id=%d ctx=%u"
+=======
+		"d_name=%s gpuaddr=0x%08x size=%d type=%d usage=%s ctx=%u"
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		" curr_ts=0x%x free_ts=0x%x",
 		__get_str(device_name),
 		__entry->gpuaddr,
 		__entry->size,
 		__entry->type,
 		__entry->usage,
+<<<<<<< HEAD
 		__entry->id,
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		__entry->drawctxt_id,
 		__entry->curr_ts,
 		__entry->free_ts
@@ -602,10 +655,45 @@ TRACE_EVENT(kgsl_mmu_pagefault,
 	),
 
 	TP_printk(
-		"d_name=%s page=0x%08x pt=%d op=%s\n",
+		"d_name=%s page=0x%08x pt=%d op=%s",
 		__get_str(device_name), __entry->page, __entry->pt,
 		__get_str(op)
 	)
+);
+
+TRACE_EVENT(kgsl_register_event,
+		TP_PROTO(unsigned int id, unsigned int timestamp),
+		TP_ARGS(id, timestamp),
+		TP_STRUCT__entry(
+			__field(unsigned int, id)
+			__field(unsigned int, timestamp)
+		),
+		TP_fast_assign(
+			__entry->id = id;
+			__entry->timestamp = timestamp;
+		),
+		TP_printk(
+			"ctx=%d ts=%d",
+			__entry->id, __entry->timestamp)
+);
+
+TRACE_EVENT(kgsl_fire_event,
+		TP_PROTO(unsigned int id, unsigned int ts,
+			unsigned int age),
+		TP_ARGS(id, ts, age),
+		TP_STRUCT__entry(
+			__field(unsigned int, id)
+			__field(unsigned int, ts)
+			__field(unsigned int, age)
+		),
+		TP_fast_assign(
+			__entry->id = id;
+			__entry->ts = ts;
+			__entry->age = age;
+		),
+		TP_printk(
+			"ctx=%d ts=%d age=%u",
+			__entry->id, __entry->ts, __entry->age)
 );
 
 #endif /* _KGSL_TRACE_H */

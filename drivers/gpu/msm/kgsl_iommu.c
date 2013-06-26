@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -39,6 +39,10 @@ static struct kgsl_iommu_register_list kgsl_iommuv1_reg[KGSL_IOMMU_REG_MAX] = {
 	{ 0x14, 0x0003FFFF, 14 },		/* TTBR1 */
 	{ 0x20, 0, 0 },				/* FSR */
 	{ 0x800, 0, 0 },			/* TLBIALL */
+<<<<<<< HEAD
+=======
+	{ 0x820, 0, 0 },			/* RESUME */
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 };
 
 static struct kgsl_iommu_register_list kgsl_iommuv2_reg[KGSL_IOMMU_REG_MAX] = {
@@ -46,7 +50,12 @@ static struct kgsl_iommu_register_list kgsl_iommuv2_reg[KGSL_IOMMU_REG_MAX] = {
 	{ 0x20, 0x00FFFFFF, 14 },		/* TTBR0 */
 	{ 0x28, 0x00FFFFFF, 14 },		/* TTBR1 */
 	{ 0x58, 0, 0 },				/* FSR */
+<<<<<<< HEAD
 	{ 0x618, 0, 0 }				/* TLBIALL */
+=======
+	{ 0x618, 0, 0 },			/* TLBIALL */
+	{ 0x008, 0, 0 }				/* RESUME */
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 };
 
 struct remote_iommu_petersons_spinlock kgsl_iommu_sync_lock_vars;
@@ -107,6 +116,16 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 	struct kgsl_iommu_unit *iommu_unit;
 	struct kgsl_iommu_device *iommu_dev;
 	unsigned int ptbase, fsr;
+<<<<<<< HEAD
+=======
+	struct kgsl_device *device;
+	struct adreno_device *adreno_dev;
+	unsigned int no_page_fault_log = 0;
+	unsigned int curr_context_id = 0;
+	unsigned int curr_global_ts = 0;
+	static struct adreno_context *curr_context;
+	static struct kgsl_context *context;
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	ret = get_iommu_unit(dev, &mmu, &iommu_unit);
 	if (ret)
@@ -118,6 +137,11 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 		goto done;
 	}
 	iommu = mmu->priv;
+<<<<<<< HEAD
+=======
+	device = mmu->device;
+	adreno_dev = ADRENO_DEVICE(device);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	ptbase = KGSL_IOMMU_GET_CTX_REG(iommu, iommu_unit,
 					iommu_dev->ctx_id, TTBR0);
@@ -125,15 +149,58 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 	fsr = KGSL_IOMMU_GET_CTX_REG(iommu, iommu_unit,
 		iommu_dev->ctx_id, FSR);
 
+<<<<<<< HEAD
 	KGSL_MEM_CRIT(iommu_dev->kgsldev,
 		"GPU PAGE FAULT: addr = %lX pid = %d\n",
 		addr, kgsl_mmu_get_ptname_from_ptbase(mmu, ptbase));
 	KGSL_MEM_CRIT(iommu_dev->kgsldev, "context = %d FSR = %X\n",
 		iommu_dev->ctx_id, fsr);
+=======
+	if (adreno_dev->ft_pf_policy & KGSL_FT_PAGEFAULT_LOG_ONE_PER_PAGE)
+		no_page_fault_log = kgsl_mmu_log_fault_addr(mmu, ptbase, addr);
+
+	if (!no_page_fault_log) {
+		KGSL_MEM_CRIT(iommu_dev->kgsldev,
+			"GPU PAGE FAULT: addr = %lX pid = %d\n",
+			addr, kgsl_mmu_get_ptname_from_ptbase(mmu, ptbase));
+		KGSL_MEM_CRIT(iommu_dev->kgsldev, "context = %d FSR = %X\n",
+			iommu_dev->ctx_id, fsr);
+	}
+
+	mmu->fault = 1;
+	iommu_dev->fault = 1;
+
+	kgsl_sharedmem_readl(&device->memstore, &curr_context_id,
+		KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL, current_context));
+	context = idr_find(&device->context_idr, curr_context_id);
+	if (context != NULL)
+			curr_context = context->devctxt;
+
+	kgsl_sharedmem_readl(&device->memstore, &curr_global_ts,
+		KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL, eoptimestamp));
+
+	/*
+	 * Store pagefault's timestamp and ib1 addr in context,
+	 * this information is used in GFT
+	 */
+	curr_context->pagefault = 1;
+	curr_context->pagefault_ts = curr_global_ts;
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	trace_kgsl_mmu_pagefault(iommu_dev->kgsldev, addr,
 			kgsl_mmu_get_ptname_from_ptbase(mmu, ptbase), 0);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * We do not want the h/w to resume fetching data from an iommu unit
+	 * that has faulted, this is better for debugging as it will stall
+	 * the GPU and trigger a snapshot. To stall the transaction return
+	 * EBUSY error.
+	 */
+	if (adreno_dev->ft_pf_policy & KGSL_FT_PAGEFAULT_GPUHALT_ENABLE)
+		ret = -EBUSY;
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 done:
 	return ret;
 }
@@ -1009,6 +1076,12 @@ done:
 static int kgsl_iommu_setup_defaultpagetable(struct kgsl_mmu *mmu)
 {
 	int status = 0;
+<<<<<<< HEAD
+=======
+	int i = 0;
+	struct kgsl_iommu *iommu = mmu->priv;
+	struct kgsl_pagetable *pagetable = NULL;
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	/* If chip is not 8960 then we use the 2nd context bank for pagetable
 	 * switching on the 3D side for which a separate table is allocated */
@@ -1019,9 +1092,12 @@ static int kgsl_iommu_setup_defaultpagetable(struct kgsl_mmu *mmu)
 			status = -ENOMEM;
 			goto err;
 		}
+<<<<<<< HEAD
 		status = kgsl_iommu_setup_regs(mmu, mmu->priv_bank_table);
 		if (status)
 			goto err;
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	}
 	mmu->defaultpagetable = kgsl_mmu_getpagetable(KGSL_MMU_GLOBAL_PT);
 	/* Return error if the default pagetable doesn't exist */
@@ -1029,8 +1105,35 @@ static int kgsl_iommu_setup_defaultpagetable(struct kgsl_mmu *mmu)
 		status = -ENOMEM;
 		goto err;
 	}
+<<<<<<< HEAD
 	return status;
 err:
+=======
+	pagetable = mmu->priv_bank_table ? mmu->priv_bank_table :
+				mmu->defaultpagetable;
+	/* Map the IOMMU regsiters to only defaultpagetable */
+	if (msm_soc_version_supports_iommu_v1()) {
+		for (i = 0; i < iommu->unit_count; i++) {
+			iommu->iommu_units[i].reg_map.priv |=
+						KGSL_MEMDESC_GLOBAL;
+			status = kgsl_mmu_map(pagetable,
+				&(iommu->iommu_units[i].reg_map),
+				GSL_PT_PAGE_RV | GSL_PT_PAGE_WV);
+			if (status) {
+				iommu->iommu_units[i].reg_map.priv &=
+							~KGSL_MEMDESC_GLOBAL;
+				goto err;
+			}
+		}
+	}
+	return status;
+err:
+	for (i--; i >= 0; i--) {
+		kgsl_mmu_unmap(pagetable,
+				&(iommu->iommu_units[i].reg_map));
+		iommu->iommu_units[i].reg_map.priv &= ~KGSL_MEMDESC_GLOBAL;
+	}
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	if (mmu->priv_bank_table) {
 		kgsl_iommu_cleanup_regs(mmu, mmu->priv_bank_table);
 		kgsl_mmu_putpagetable(mmu->priv_bank_table);
@@ -1073,7 +1176,12 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 		kgsl_regwrite(mmu->device, MH_MMU_CONFIG, 0x00000001);
 
 		kgsl_regwrite(mmu->device, MH_MMU_MPU_END,
+<<<<<<< HEAD
 			mh->mpu_base + mh->mpu_range);
+=======
+			mh->mpu_base +
+			iommu->iommu_units[0].reg_map.gpuaddr);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	} else {
 		kgsl_regwrite(mmu->device, MH_MMU_CONFIG, 0x00000000);
 	}
@@ -1102,12 +1210,17 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 	 */
 	for (i = 0; i < iommu->unit_count; i++) {
 		struct kgsl_iommu_unit *iommu_unit = &iommu->iommu_units[i];
+<<<<<<< HEAD
 		for (j = 0; j < iommu_unit->dev_count; j++)
+=======
+		for (j = 0; j < iommu_unit->dev_count; j++) {
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 			iommu_unit->dev[j].pt_lsb = KGSL_IOMMMU_PT_LSB(iommu,
 						KGSL_IOMMU_GET_CTX_REG(iommu,
 						iommu_unit,
 						iommu_unit->dev[j].ctx_id,
 						TTBR0));
+		}
 	}
 
 	kgsl_iommu_disable_clk_on_ts(mmu, 0, false);
@@ -1149,7 +1262,11 @@ kgsl_iommu_unmap(void *mmu_specific_pt,
 	 * Flushing only required if per process pagetables are used. With
 	 * global case, flushing will happen inside iommu_map function
 	 */
+<<<<<<< HEAD
 	if (!ret && kgsl_mmu_is_perprocess())
+=======
+	if (!ret && msm_soc_version_supports_iommu_v1())
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		*tlb_flags = UINT_MAX;
 	return 0;
 }
@@ -1186,6 +1303,7 @@ kgsl_iommu_map(void *mmu_specific_pt,
 static void kgsl_iommu_stop(struct kgsl_mmu *mmu)
 {
 	struct kgsl_iommu *iommu = mmu->priv;
+	int i, j;
 	/*
 	 *  stop device mmu
 	 *
@@ -1198,8 +1316,25 @@ static void kgsl_iommu_stop(struct kgsl_mmu *mmu)
 		mmu->hwpagetable = NULL;
 
 		mmu->flags &= ~KGSL_FLAGS_STARTED;
-	}
 
+		if (mmu->fault) {
+			for (i = 0; i < iommu->unit_count; i++) {
+				struct kgsl_iommu_unit *iommu_unit =
+					&iommu->iommu_units[i];
+				for (j = 0; j < iommu_unit->dev_count; j++) {
+					if (iommu_unit->dev[j].fault) {
+						kgsl_iommu_enable_clk(mmu, j);
+						KGSL_IOMMU_SET_CTX_REG(iommu,
+						iommu_unit,
+						iommu_unit->dev[j].ctx_id,
+						RESUME, 1);
+						iommu_unit->dev[j].fault = 0;
+					}
+				}
+			}
+			mmu->fault = 0;
+		}
+	}
 	/* switch off MMU clocks and cancel any events it has queued */
 	iommu->clk_event_queued = false;
 	kgsl_cancel_events(mmu->device, mmu);
@@ -1281,10 +1416,13 @@ static void kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 	/* Mask off the lsb of the pt base address since lsb will not change */
 	pt_base &= (iommu->iommu_reg_list[KGSL_IOMMU_CTX_TTBR0].reg_mask <<
 			iommu->iommu_reg_list[KGSL_IOMMU_CTX_TTBR0].reg_shift);
+<<<<<<< HEAD
 
 	/* For v1 SMMU GPU needs to be idle for tlb invalidate as well */
 	if (msm_soc_version_supports_iommu_v1())
 		kgsl_idle(mmu->device);
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	/* For v1 SMMU GPU needs to be idle for tlb invalidate as well */
 	if (msm_soc_version_supports_iommu_v1())
@@ -1373,9 +1511,12 @@ struct kgsl_mmu_ops iommu_ops = {
 	.mmu_get_num_iommu_units = kgsl_iommu_get_num_iommu_units,
 	.mmu_pt_equal = kgsl_iommu_pt_equal,
 	.mmu_get_pt_base_addr = kgsl_iommu_get_pt_base_addr,
+<<<<<<< HEAD
 	/* These callbacks will be set on some chipsets */
 	.mmu_setup_pt = NULL,
 	.mmu_cleanup_pt = NULL,
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	.mmu_sync_lock = kgsl_iommu_sync_lock,
 	.mmu_sync_unlock = kgsl_iommu_sync_unlock,
 };

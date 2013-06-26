@@ -2845,20 +2845,38 @@ static struct msm_dcvs_freq_entry apq8064_freq[] = {
 
 static struct msm_dcvs_core_info apq8064_core_info = {
 	.freq_tbl = &apq8064_freq[0],
-	.core_param = {
-		.max_time_us = 100000,
-		.num_freq = ARRAY_SIZE(apq8064_freq),
+	.core_param	= {
+		.core_type	= MSM_DCVS_CORE_TYPE_GPU,
 	},
-	.algo_param = {
-		.slack_time_us = 58000,
-		.scale_slack_time = 0,
-		.scale_slack_time_pct = 0,
-		.disable_pc_threshold = 1458000,
-		.em_window_size = 100000,
-		.em_max_util_pct = 97,
-		.ss_window_size = 1000000,
-		.ss_util_pct = 95,
-		.ss_iobusy_conv = 100,
+	.algo_param	= {
+		.disable_pc_threshold		= 0,
+		.em_win_size_min_us		= 100000,
+		.em_win_size_max_us		= 300000,
+		.em_max_util_pct		= 97,
+		.group_id			= 0,
+		.max_freq_chg_time_us		= 100000,
+		.slack_mode_dynamic		= 0,
+		.slack_weight_thresh_pct	= 0,
+		.slack_time_min_us		= 39000,
+		.slack_time_max_us		= 39000,
+		.ss_win_size_min_us		= 1000000,
+		.ss_win_size_max_us		= 1000000,
+		.ss_util_pct			= 95,
+		.ss_no_corr_below_freq		= 0,
+	},
+	.energy_coeffs	= {
+		.active_coeff_a		= 2492,
+		.active_coeff_b		= 0,
+		.active_coeff_c		= 0,
+
+		.leakage_coeff_a	= -17720,
+		.leakage_coeff_b	= 37,
+		.leakage_coeff_c	= 2729,
+		.leakage_coeff_d	= -277,
+	},
+	.power_param	= {
+		.current_temp	= 25,
+		.num_freq	= ARRAY_SIZE(apq8064_freq),
 	},
 };
 

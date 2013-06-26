@@ -20,6 +20,11 @@
 #define KGSL_CONTEXT_TRASH_STATE	0x00000020
 #define KGSL_CONTEXT_PER_CONTEXT_TS	0x00000040
 #define KGSL_CONTEXT_USER_GENERATED_TS	0x00000080
+<<<<<<< HEAD
+=======
+#define KGSL_CONTEXT_NO_FAULT_TOLERANCE 0x00000200
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 #define KGSL_CONTEXT_INVALID 0xffffffff
 
@@ -74,6 +79,44 @@
 
 /* --- generic KGSL flag values --- */
 
+<<<<<<< HEAD
+=======
+#define KGSL_MEMTYPE_MASK		0x0000FF00
+#define KGSL_MEMTYPE_SHIFT		8
+
+/* Memory types for which allocations are made */
+#define KGSL_MEMTYPE_OBJECTANY			0
+#define KGSL_MEMTYPE_FRAMEBUFFER		1
+#define KGSL_MEMTYPE_RENDERBUFFER		2
+#define KGSL_MEMTYPE_ARRAYBUFFER		3
+#define KGSL_MEMTYPE_ELEMENTARRAYBUFFER		4
+#define KGSL_MEMTYPE_VERTEXARRAYBUFFER		5
+#define KGSL_MEMTYPE_TEXTURE			6
+#define KGSL_MEMTYPE_SURFACE			7
+#define KGSL_MEMTYPE_EGL_SURFACE		8
+#define KGSL_MEMTYPE_GL				9
+#define KGSL_MEMTYPE_CL				10
+#define KGSL_MEMTYPE_CL_BUFFER_MAP		11
+#define KGSL_MEMTYPE_CL_BUFFER_NOMAP		12
+#define KGSL_MEMTYPE_CL_IMAGE_MAP		13
+#define KGSL_MEMTYPE_CL_IMAGE_NOMAP		14
+#define KGSL_MEMTYPE_CL_KERNEL_STACK		15
+#define KGSL_MEMTYPE_COMMAND			16
+#define KGSL_MEMTYPE_2D				17
+#define KGSL_MEMTYPE_EGL_IMAGE			18
+#define KGSL_MEMTYPE_EGL_SHADOW			19
+#define KGSL_MEMTYPE_MULTISAMPLE		20
+#define KGSL_MEMTYPE_KERNEL			255
+
+/*
+ * Alignment hint, passed as the power of 2 exponent.
+ * i.e 4k (2^12) would be 12, 64k (2^16)would be 16.
+ */
+#define KGSL_MEMALIGN_MASK		0x00FF0000
+#define KGSL_MEMALIGN_SHIFT		16
+
+/* generic flag values */
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 #define KGSL_FLAGS_NORMALMODE  0x00000000
 #define KGSL_FLAGS_SAFEMODE    0x00000001
 #define KGSL_FLAGS_INITIALIZED0 0x00000002
