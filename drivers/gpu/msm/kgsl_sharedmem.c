@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -377,8 +377,16 @@ static void kgsl_page_alloc_free(struct kgsl_memdesc *memdesc)
 		kgsl_driver.stats.vmalloc -= memdesc->size;
 	}
 	if (memdesc->sg)
+<<<<<<< HEAD
 		for_each_sg(memdesc->sg, sg, sglen, i)
 			__free_pages(sg_page(sg), get_order(sg->length));
+=======
+		for_each_sg(memdesc->sg, sg, sglen, i){
+			if (sg->length == 0)
+				break;
+			__free_pages(sg_page(sg), get_order(sg->length));
+		}
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 }
 
 static int kgsl_contiguous_vmflags(struct kgsl_memdesc *memdesc)
@@ -548,6 +556,7 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	struct page **pages = NULL;
 	pgprot_t page_prot = pgprot_writecombine(PAGE_KERNEL);
 	void *ptr;
+<<<<<<< HEAD
 	struct sysinfo si;
 	unsigned int align;
 
@@ -566,13 +575,21 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	if (size >= (si.freeram << PAGE_SHIFT))
 		return -ENOMEM;
 
+=======
+	unsigned int align;
+
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	align = (memdesc->flags & KGSL_MEMALIGN_MASK) >> KGSL_MEMALIGN_SHIFT;
 
 	page_size = (align >= ilog2(SZ_64K) && size >= SZ_64K)
 			? SZ_64K : PAGE_SIZE;
 	/* update align flags for what we actually use */
+<<<<<<< HEAD
 	if (page_size != PAGE_SIZE)
 		kgsl_memdesc_set_align(memdesc, ilog2(page_size));
+=======
+	kgsl_memdesc_set_align(memdesc, ilog2(page_size));
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	/*
 	 * There needs to be enough room in the sg structure to be able to
@@ -593,11 +610,18 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	memdesc->pagetable = pagetable;
 	memdesc->ops = &kgsl_page_alloc_ops;
 
+<<<<<<< HEAD
 	memdesc->sg = kgsl_sg_alloc(sglen_alloc);
 
 	if (memdesc->sg == NULL) {
 		KGSL_CORE_ERR("vmalloc(%d) failed\n",
 			sglen_alloc * sizeof(struct scatterlist));
+=======
+	memdesc->sglen_alloc = sglen_alloc;
+	memdesc->sg = kgsl_sg_alloc(memdesc->sglen_alloc);
+
+	if (memdesc->sg == NULL) {
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		ret = -ENOMEM;
 		goto done;
 	}
@@ -609,17 +633,25 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	 * two pages; well within the acceptable limits for using kmalloc.
 	 */
 
+<<<<<<< HEAD
 	pages = kmalloc(sglen_alloc * sizeof(struct page *), GFP_KERNEL);
 
 	if (pages == NULL) {
 		KGSL_CORE_ERR("kmalloc (%d) failed\n",
 			sglen_alloc * sizeof(struct page *));
+=======
+	pages = kmalloc(memdesc->sglen_alloc * sizeof(struct page *),
+		GFP_KERNEL);
+
+	if (pages == NULL) {
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		ret = -ENOMEM;
 		goto done;
 	}
 
 	kmemleak_not_leak(memdesc->sg);
 
+<<<<<<< HEAD
 	memdesc->sglen_alloc = sglen_alloc;
 	sg_init_table(memdesc->sg, sglen_alloc);
 
@@ -645,6 +677,45 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 				page_size = PAGE_SIZE;
 				continue;
 			}
+=======
+	sg_init_table(memdesc->sg, memdesc->sglen_alloc);
+
+	len = size;
+
+	while (len > 0) {
+		struct page *page;
+		unsigned int gfp_mask = __GFP_HIGHMEM;
+		int j;
+
+		/* don't waste space at the end of the allocation*/
+		if (len < page_size)
+			page_size = PAGE_SIZE;
+
+		/*
+		 * Don't do some of the more aggressive memory recovery
+		 * techniques for large order allocations
+		 */
+		if (page_size != PAGE_SIZE)
+			gfp_mask |= __GFP_COMP | __GFP_NORETRY |
+				__GFP_NO_KSWAPD | __GFP_NOWARN;
+		else
+			gfp_mask |= GFP_KERNEL;
+
+		page = alloc_pages(gfp_mask, get_order(page_size));
+
+		if (page == NULL) {
+			if (page_size != PAGE_SIZE) {
+				page_size = PAGE_SIZE;
+				continue;
+			}
+
+			KGSL_CORE_ERR(
+				"Out of memory: only allocated %dKB of %dKB requested\n",
+				(size - len) >> 10, size >> 10);
+
+			ret = -ENOMEM;
+			goto done;
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		}
 
 		for (j = 0; j < page_size >> PAGE_SHIFT; j++)
@@ -755,7 +826,21 @@ kgsl_sharedmem_page_alloc_user(struct kgsl_memdesc *memdesc,
 			    struct kgsl_pagetable *pagetable,
 			    size_t size)
 {
+<<<<<<< HEAD
 	return _kgsl_sharedmem_page_alloc(memdesc, pagetable, PAGE_ALIGN(size));
+=======
+	unsigned int protflags;
+
+	if (size == 0)
+		return -EINVAL;
+
+	protflags = GSL_PT_PAGE_RV;
+	if (!(memdesc->flags & KGSL_MEMFLAGS_GPUREADONLY))
+		protflags |= GSL_PT_PAGE_WV;
+
+	return _kgsl_sharedmem_page_alloc(memdesc, pagetable, size,
+		protflags);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 }
 EXPORT_SYMBOL(kgsl_sharedmem_page_alloc_user);
 

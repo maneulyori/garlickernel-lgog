@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2013, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -20,6 +24,8 @@
 #include <linux/slab.h>
 #include <linux/kmemleak.h>
 #include <linux/iommu.h>
+
+#include "kgsl_log.h"
 
 #include "kgsl_log.h"
 
@@ -84,6 +90,7 @@ kgsl_memdesc_get_align(const struct kgsl_memdesc *memdesc)
 }
 
 /*
+<<<<<<< HEAD
  * kgsl_memdesc_get_cachemode - Get cache mode of a memdesc
  * @memdesc: the memdesc
  *
@@ -96,6 +103,8 @@ kgsl_memdesc_get_cachemode(const struct kgsl_memdesc *memdesc)
 }
 
 /*
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
  * kgsl_memdesc_set_align - Set alignment flags of a memdesc
  * @memdesc - the memdesc
  * @align - alignment requested, as a power of 2 exponent.
@@ -140,8 +149,13 @@ static inline void *kgsl_sg_alloc(unsigned int sglen)
 {
 	if ((sglen * sizeof(struct scatterlist)) <  PAGE_SIZE)
 		return kzalloc(sglen * sizeof(struct scatterlist), GFP_KERNEL);
-	else
-		return vmalloc(sglen * sizeof(struct scatterlist));
+	else {
+		void *ptr = vmalloc(sglen * sizeof(struct scatterlist));
+		if (ptr)
+			memset(ptr, 0, sglen * sizeof(struct scatterlist));
+
+		return ptr;
+	}
 }
 
 static inline void kgsl_sg_free(void *ptr, unsigned int sglen)
@@ -254,6 +268,7 @@ kgsl_allocate(struct kgsl_memdesc *memdesc,
 	memdesc->priv |= (KGSL_MEMTYPE_KERNEL << KGSL_MEMTYPE_SHIFT);
 	if (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_NONE)
 		return kgsl_sharedmem_ebimem(memdesc, pagetable, size);
+<<<<<<< HEAD
 
 	ret = kgsl_sharedmem_page_alloc(memdesc, pagetable, size);
 	if (ret)
@@ -262,6 +277,10 @@ kgsl_allocate(struct kgsl_memdesc *memdesc,
 	if (ret)
 		kgsl_sharedmem_free(memdesc);
 	return ret;
+=======
+	memdesc->flags |= (KGSL_MEMTYPE_KERNEL << KGSL_MEMTYPE_SHIFT);
+	return kgsl_sharedmem_page_alloc(memdesc, pagetable, size);
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 }
 
 static inline int
@@ -271,9 +290,12 @@ kgsl_allocate_user(struct kgsl_memdesc *memdesc,
 {
 	int ret;
 
+<<<<<<< HEAD
 	if (size == 0)
 		return -EINVAL;
 
+=======
+>>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	memdesc->flags = flags;
 
 	if (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_NONE)
