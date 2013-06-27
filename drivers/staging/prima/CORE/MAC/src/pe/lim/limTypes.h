@@ -1109,7 +1109,5 @@ typedef struct sSetLinkCbackParams
     void * cbackDataPtr;
 } tSetLinkCbackParams;
 #endif
-
-void limProcessRxScanEvent(tpAniSirGlobal mac, void *buf);
 #endif /* __LIM_TYPES_H */
 

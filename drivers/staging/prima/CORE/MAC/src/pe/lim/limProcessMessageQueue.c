@@ -670,13 +670,11 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
         return;
     }
 
-    if (!pMac->fScanOffload)
+
+    if (limIsSystemInScanState(pMac))
     {
-        if (limIsSystemInScanState(pMac))
-        {
-            limHandleFramesInScanState(pMac, limMsg, pRxPacketInfo, pDeferMsg, psessionEntry);
-            return;
-        }
+        limHandleFramesInScanState(pMac, limMsg, pRxPacketInfo, pDeferMsg, psessionEntry);
+        return;
     }
 
 /* Chance of crashing : to be done BT-AMP ........happens when broadcast probe req is received */
@@ -1933,11 +1931,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             break;
         }
 #endif
-
-    case WDA_RX_SCAN_EVENT:
-        limProcessRxScanEvent(pMac, limMsg->bodyptr);
-        break;
-
     default:
         vos_mem_free((v_VOID_t*)limMsg->bodyptr);
         limMsg->bodyptr = NULL;
