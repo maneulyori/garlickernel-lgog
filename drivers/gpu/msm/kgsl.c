@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2008-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -53,7 +53,6 @@ MODULE_PARM_DESC(ksgl_mmu_type,
 
 static struct ion_client *kgsl_ion_client;
 
-<<<<<<< HEAD
 int kgsl_memfree_hist_init(void)
 {
 	void *base;
@@ -100,8 +99,6 @@ void kgsl_memfree_hist_set_event(unsigned int pid, unsigned int gpuaddr,
 }
 
 
-=======
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 /* kgsl_get_mem_entry - get the mem_entry structure for the specified object
  * @device - Pointer to the device structure
  * @ptbase - the pagetable base of the object
@@ -422,7 +419,7 @@ static void kgsl_check_idle_locked(struct kgsl_device *device)
 	    device->state == KGSL_STATE_ACTIVE &&
 		device->requested_state == KGSL_STATE_NONE) {
 		kgsl_pwrctrl_request_state(device, KGSL_STATE_NAP);
-		kgsl_pwrscale_idle(device);
+		kgsl_pwrscale_idle(device, 1);
 		if (kgsl_pwrctrl_sleep(device) != 0)
 			mod_timer(&device->idle_timer,
 				  jiffies +
@@ -470,24 +467,6 @@ static struct kgsl_device *kgsl_get_minor(int minor)
 	return ret;
 }
 
-int kgsl_register_ts_notifier(struct kgsl_device *device,
-			      struct notifier_block *nb)
-{
-	BUG_ON(device == NULL);
-	return atomic_notifier_chain_register(&device->ts_notifier_list,
-					      nb);
-}
-EXPORT_SYMBOL(kgsl_register_ts_notifier);
-
-int kgsl_unregister_ts_notifier(struct kgsl_device *device,
-				struct notifier_block *nb)
-{
-	BUG_ON(device == NULL);
-	return atomic_notifier_chain_unregister(&device->ts_notifier_list,
-						nb);
-}
-EXPORT_SYMBOL(kgsl_unregister_ts_notifier);
-
 int kgsl_check_timestamp(struct kgsl_device *device,
 	struct kgsl_context *context, unsigned int timestamp)
 {
@@ -519,7 +498,7 @@ static int kgsl_suspend_device(struct kgsl_device *device, pm_message_t state)
 	kgsl_pwrctrl_request_state(device, KGSL_STATE_SUSPEND);
 	/* Make sure no user process is waiting for a timestamp *
 	 * before supending */
-	if (device->state == KGSL_STATE_ACTIVE && device->active_cnt != 0) {
+	if (device->active_cnt != 0) {
 		mutex_unlock(&device->mutex);
 		wait_for_completion(&device->suspend_gate);
 		mutex_lock(&device->mutex);
@@ -564,32 +543,23 @@ end:
 
 static int kgsl_resume_device(struct kgsl_device *device)
 {
+	int status = -EINVAL;
+
 	if (!device)
 		return -EINVAL;
 
 	KGSL_PWR_WARN(device, "resume start\n");
 	mutex_lock(&device->mutex);
 	if (device->state == KGSL_STATE_SUSPEND) {
+		kgsl_pwrctrl_set_state(device, KGSL_STATE_SLUMBER);
+		status = 0;
 		complete_all(&device->hwaccess_gate);
-	} else {
-		/*
-		 * This is an error situation,so wait for the device
-		 * to idle and then put the device to SLUMBER state.
-		 * This will put the device to the right state when
-		 * we resume.
-		 */
-		device->ftbl->idle(device);
-		kgsl_pwrctrl_request_state(device, KGSL_STATE_SLUMBER);
-		kgsl_pwrctrl_sleep(device);
-		KGSL_PWR_ERR(device,
-			"resume invoked without a suspend\n");
 	}
-	kgsl_pwrctrl_set_state(device, KGSL_STATE_SLUMBER);
 	kgsl_pwrctrl_request_state(device, KGSL_STATE_NONE);
 
 	mutex_unlock(&device->mutex);
 	KGSL_PWR_WARN(device, "resume end\n");
-	return 0;
+	return status;
 }
 
 static int kgsl_suspend(struct device *dev)
@@ -742,24 +712,11 @@ kgsl_put_process_private(struct kgsl_device *device,
 	list_del(&private->list);
 
 	while (1) {
-<<<<<<< HEAD
 		rcu_read_lock();
 		entry = idr_get_next(&private->mem_idr, &next);
 		rcu_read_unlock();
 		if (entry == NULL)
 			break;
-=======
-		spin_lock(&private->mem_lock);
-		node = rb_first(&private->mem_rb);
-		if (!node) {
-			spin_unlock(&private->mem_lock);
-			break;
-		}
-		entry = rb_entry(node, struct kgsl_mem_entry, node);
-
-		rb_erase(&entry->node, &private->mem_rb);
-		spin_unlock(&private->mem_lock);
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		kgsl_mem_entry_detach_process(entry);
 		/*
 		 * Always start back at the beginning, to
@@ -1136,7 +1093,10 @@ static long _device_waittimestamp(struct kgsl_device_private *dev_priv,
 				      result);
 
 	/* Fire off any pending suspend operations that are in flight */
-	kgsl_active_count_put(dev_priv->device);
+
+	INIT_COMPLETION(dev_priv->device->suspend_gate);
+	dev_priv->device->active_cnt--;
+	complete(&dev_priv->device->suspend_gate);
 
 	return result;
 }
@@ -1288,10 +1248,6 @@ static long kgsl_ioctl_cmdstream_readtimestamp_ctxtid(struct kgsl_device_private
 	context = kgsl_find_context(dev_priv, param->context_id);
 	if (context == NULL)
 		return -EINVAL;
-<<<<<<< HEAD
-=======
-
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	return _cmdstream_readtimestamp(dev_priv, context,
 			param->type, &param->timestamp);
@@ -1831,7 +1787,6 @@ static long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 	else
 		memtype = param->memtype;
 
-<<<<<<< HEAD
 	/*
 	 * Mask off unknown flags from userspace. This way the caller can
 	 * check if a flag is supported by looking at the returned flags.
@@ -1846,9 +1801,6 @@ static long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 	entry->memdesc.flags = param->flags;
 	if (!can_use_cpu_map())
 		entry->memdesc.flags &= ~KGSL_MEMFLAGS_USE_CPU_MAP;
-=======
-	entry->memdesc.flags = param->flags;
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	switch (memtype) {
 	case KGSL_USER_MEM_TYPE_PMEM:
@@ -1913,13 +1865,6 @@ static long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 		kgsl_memdesc_set_align(&entry->memdesc, ilog2(SZ_1M));
 	else if (entry->memdesc.size >= SZ_64K)
 		kgsl_memdesc_set_align(&entry->memdesc, ilog2(SZ_64));
-<<<<<<< HEAD
-=======
-
-	result = kgsl_mmu_map(private->pagetable,
-			      &entry->memdesc,
-			      GSL_PT_PAGE_RV | GSL_PT_PAGE_WV);
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 
 	result = kgsl_mmu_map(private->pagetable, &entry->memdesc);
 	if (result)
@@ -3020,17 +2965,18 @@ int kgsl_postmortem_dump(struct kgsl_device *device, int manual)
 			kgsl_idle(device);
 
 	}
+	KGSL_LOG_DUMP(device, "|%s| Dump Started\n", device->name);
+	KGSL_LOG_DUMP(device, "POWER: FLAGS = %08lX | ACTIVE POWERLEVEL = %08X",
+			pwr->power_flags, pwr->active_pwrlevel);
 
-	if (device->pm_dump_enable) {
+	KGSL_LOG_DUMP(device, "POWER: INTERVAL TIMEOUT = %08X ",
+		pwr->interval_timeout);
 
-		KGSL_LOG_DUMP(device,
-				"POWER: FLAGS = %08lX | ACTIVE POWERLEVEL = %08X",
-				pwr->power_flags, pwr->active_pwrlevel);
+	KGSL_LOG_DUMP(device, "GRP_CLK = %lu ",
+				  kgsl_get_clkrate(pwr->grp_clks[0]));
 
-		KGSL_LOG_DUMP(device, "POWER: INTERVAL TIMEOUT = %08X ",
-				pwr->interval_timeout);
-
-	}
+	KGSL_LOG_DUMP(device, "BUS CLK = %lu ",
+		kgsl_get_clkrate(pwr->ebi1_clk));
 
 	/* Disable the idle timer so we don't get interrupted */
 	del_timer_sync(&device->idle_timer);
@@ -3058,7 +3004,7 @@ int kgsl_postmortem_dump(struct kgsl_device *device, int manual)
 	/* On a manual trigger, turn on the interrupts and put
 	   the clocks to sleep.  They will recover themselves
 	   on the next event.  For a hang, leave things as they
-	   are until fault tolerance kicks in. */
+	   are until recovery kicks in. */
 
 	if (manual) {
 		kgsl_pwrctrl_irq(device, KGSL_PWRFLAGS_ON);
@@ -3067,6 +3013,8 @@ int kgsl_postmortem_dump(struct kgsl_device *device, int manual)
 		kgsl_pwrctrl_request_state(device, KGSL_STATE_SLEEP);
 		kgsl_pwrctrl_sleep(device);
 	}
+
+	KGSL_LOG_DUMP(device, "|%s| Dump Finished\n", device->name);
 
 	return 0;
 }

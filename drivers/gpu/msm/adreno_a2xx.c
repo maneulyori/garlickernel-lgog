@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2007-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1706,7 +1706,6 @@ static void a2xx_cp_intrcallback(struct kgsl_device *device)
 		return;
 	}
 
-<<<<<<< HEAD
 	if (status & CP_INT_CNTL__RB_INT_MASK) {
 		/* signal intr completion event */
 		unsigned int context_id, timestamp;
@@ -1735,8 +1734,6 @@ static void a2xx_cp_intrcallback(struct kgsl_device *device)
 				context_id, timestamp);
 	}
 
-=======
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	for (i = 0; i < ARRAY_SIZE(kgsl_cp_error_irqs); i++) {
 		if (status & kgsl_cp_error_irqs[i].mask) {
 			KGSL_CMD_CRIT(rb->device, "%s\n",
@@ -1758,9 +1755,6 @@ static void a2xx_cp_intrcallback(struct kgsl_device *device)
 	if (status & (CP_INT_CNTL__IB1_INT_MASK | CP_INT_CNTL__RB_INT_MASK)) {
 		queue_work(device->work_queue, &device->ts_expired_ws);
 		wake_up_interruptible_all(&device->wait_queue);
-		atomic_notifier_call_chain(&(device->ts_notifier_list),
-					   device->id,
-					   NULL);
 	}
 }
 
@@ -1844,19 +1838,6 @@ static void a2xx_irq_control(struct adreno_device *adreno_dev, int state)
 
 	/* Force the writes to post before touching the IRQ line */
 	wmb();
-}
-
-static unsigned int a2xx_irq_pending(struct adreno_device *adreno_dev)
-{
-	struct kgsl_device *device = &adreno_dev->dev;
-	unsigned int status;
-
-	adreno_regread(device, REG_MASTER_INT_SIGNAL, &status);
-
-	return (status &
-		(MASTER_INT_SIGNAL__MH_INT_STAT |
-		 MASTER_INT_SIGNAL__CP_INT_STAT |
-		 MASTER_INT_SIGNAL__RBBM_INT_STAT)) ? 1 : 0;
 }
 
 static void a2xx_rb_init(struct adreno_device *adreno_dev,
@@ -2054,7 +2035,6 @@ struct adreno_gpudev adreno_a2xx_gpudev = {
 	.ctxt_draw_workaround = a2xx_drawctxt_draw_workaround,
 	.irq_handler = a2xx_irq_handler,
 	.irq_control = a2xx_irq_control,
-	.irq_pending = a2xx_irq_pending,
 	.snapshot = a2xx_snapshot,
 	.rb_init = a2xx_rb_init,
 	.busy_cycles = a2xx_busy_cycles,

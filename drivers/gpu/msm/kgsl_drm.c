@@ -1,4 +1,4 @@
-/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -247,7 +247,6 @@ kgsl_gem_alloc_memory(struct drm_gem_object *obj)
 	if (TYPE_IS_PMEM(priv->type)) {
 		if (priv->type == DRM_KGSL_GEM_TYPE_EBI ||
 		    priv->type & DRM_KGSL_GEM_PMEM_EBI) {
-<<<<<<< HEAD
 			priv->ion_handle = ion_alloc(kgsl_drm_ion_phys_client,
 				obj->size * priv->bufcount, PAGE_SIZE,
 				ION_HEAP(ION_SF_HEAP_ID), 0);
@@ -291,17 +290,6 @@ kgsl_gem_alloc_memory(struct drm_gem_object *obj)
 				priv->ion_handle = NULL;
 				return result;
 			}
-=======
-				result = kgsl_sharedmem_ebimem_user(
-						&priv->memdesc,
-						priv->pagetable,
-						obj->size * priv->bufcount);
-				if (result) {
-					DRM_ERROR(
-					"Unable to allocate PMEM memory\n");
-					return result;
-				}
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 		}
 		else
 			return -EINVAL;
