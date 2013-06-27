@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -155,8 +155,6 @@ int adreno_drawctxt_create(struct kgsl_device *device,
 	if (drawctxt == NULL)
 		return -ENOMEM;
 
-	drawctxt->pid = task_pid_nr(current);
-	strlcpy(drawctxt->pid_name, current->comm, TASK_COMM_LEN);
 	drawctxt->pagetable = pagetable;
 	drawctxt->bin_base_offset = 0;
 	drawctxt->id = context->id;
@@ -179,12 +177,6 @@ int adreno_drawctxt_create(struct kgsl_device *device,
 		drawctxt->flags |= CTXT_FLAGS_USER_GENERATED_TS;
 	}
 
-<<<<<<< HEAD
-=======
-	if (flags & KGSL_CONTEXT_NO_FAULT_TOLERANCE)
-		drawctxt->flags |= CTXT_FLAGS_NO_FAULT_TOLERANCE;
-
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
 	ret = adreno_dev->gpudev->ctxt_create(adreno_dev, drawctxt);
 	if (ret)
 		goto err;

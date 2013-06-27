@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
-=======
-/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
->>>>>>> 59b6f44... New GPU driver from JB2.5 tree. This is currently a test.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
