@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -159,25 +159,22 @@ static void ghsic_data_free_requests(struct usb_ep *ep, struct list_head *head)
 static int ghsic_data_alloc_requests(struct usb_ep *ep, struct list_head *head,
 		int num,
 		void (*cb)(struct usb_ep *ep, struct usb_request *),
-		spinlock_t *lock)
+		gfp_t flags)
 {
 	int			i;
 	struct usb_request	*req;
-	unsigned long		flags;
 
 	pr_debug("%s: ep:%s head:%p num:%d cb:%p", __func__,
 			ep->name, head, num, cb);
 
 	for (i = 0; i < num; i++) {
-		req = usb_ep_alloc_request(ep, GFP_KERNEL);
+		req = usb_ep_alloc_request(ep, flags);
 		if (!req) {
 			pr_debug("%s: req allocated:%d\n", __func__, i);
 			return list_empty(head) ? -ENOMEM : 0;
 		}
 		req->complete = cb;
-		spin_lock_irqsave(lock, flags);
 		list_add(&req->list, head);
-		spin_unlock_irqrestore(lock, flags);
 	}
 
 	return 0;
@@ -463,23 +460,20 @@ static void ghsic_data_start_rx(struct gdata_port *port)
 
 		req = list_first_entry(&port->rx_idle,
 					struct usb_request, list);
-		list_del(&req->list);
-		spin_unlock_irqrestore(&port->rx_lock, flags);
 
 		created = get_timestamp();
-		skb = alloc_skb(ghsic_data_rx_req_size, GFP_KERNEL);
-		if (!skb) {
-			spin_lock_irqsave(&port->rx_lock, flags);
-			list_add(&req->list, &port->rx_idle);
+		skb = alloc_skb(ghsic_data_rx_req_size, GFP_ATOMIC);
+		if (!skb)
 			break;
-		}
 		info = (struct timestamp_info *)skb->cb;
 		info->created = created;
+		list_del(&req->list);
 		req->buf = skb->data;
 		req->length = ghsic_data_rx_req_size;
 		req->context = skb;
 
 		info->rx_queued = get_timestamp();
+		spin_unlock_irqrestore(&port->rx_lock, flags);
 		ret = usb_ep_queue(ep, req, GFP_KERNEL);
 		spin_lock_irqsave(&port->rx_lock, flags);
 		if (ret) {
@@ -510,36 +504,36 @@ static void ghsic_data_start_io(struct gdata_port *port)
 
 	spin_lock_irqsave(&port->rx_lock, flags);
 	ep = port->out;
-	spin_unlock_irqrestore(&port->rx_lock, flags);
-	if (!ep)
-		return;
-
-	ret = ghsic_data_alloc_requests(ep, &port->rx_idle,
-		port->rx_q_size, ghsic_data_epout_complete, &port->rx_lock);
-	if (ret) {
-		pr_err("%s: rx req allocation failed\n", __func__);
+	if (!ep) {
+		spin_unlock_irqrestore(&port->rx_lock, flags);
 		return;
 	}
 
+	ret = ghsic_data_alloc_requests(ep, &port->rx_idle,
+		port->rx_q_size, ghsic_data_epout_complete, GFP_ATOMIC);
+	if (ret) {
+		pr_err("%s: rx req allocation failed\n", __func__);
+		spin_unlock_irqrestore(&port->rx_lock, flags);
+		return;
+	}
+	spin_unlock_irqrestore(&port->rx_lock, flags);
+
 	spin_lock_irqsave(&port->tx_lock, flags);
 	ep = port->in;
-	spin_unlock_irqrestore(&port->tx_lock, flags);
 	if (!ep) {
-		spin_lock_irqsave(&port->rx_lock, flags);
-		ghsic_data_free_requests(ep, &port->rx_idle);
-		spin_unlock_irqrestore(&port->rx_lock, flags);
+		spin_unlock_irqrestore(&port->tx_lock, flags);
 		return;
 	}
 
 	ret = ghsic_data_alloc_requests(ep, &port->tx_idle,
-		port->tx_q_size, ghsic_data_epin_complete, &port->tx_lock);
+		port->tx_q_size, ghsic_data_epin_complete, GFP_ATOMIC);
 	if (ret) {
 		pr_err("%s: tx req allocation failed\n", __func__);
-		spin_lock_irqsave(&port->rx_lock, flags);
 		ghsic_data_free_requests(ep, &port->rx_idle);
-		spin_unlock_irqrestore(&port->rx_lock, flags);
+		spin_unlock_irqrestore(&port->tx_lock, flags);
 		return;
 	}
+	spin_unlock_irqrestore(&port->tx_lock, flags);
 
 	/* queue out requests */
 	ghsic_data_start_rx(port);
@@ -660,15 +654,12 @@ static int ghsic_data_remove(struct platform_device *pdev)
 	if (ep_out)
 		usb_ep_fifo_flush(ep_out);
 
-	/* cancel pending writes to MDM */
-	cancel_work_sync(&port->write_tomdm_w);
-
 	ghsic_data_free_buffers(port);
 
-	cancel_work_sync(&port->connect_w);
-	if (test_and_clear_bit(CH_OPENED, &port->bridge_sts))
-		data_bridge_close(port->brdg.ch_id);
+	data_bridge_close(port->brdg.ch_id);
+
 	clear_bit(CH_READY, &port->bridge_sts);
+	clear_bit(CH_OPENED, &port->bridge_sts);
 
 	return 0;
 }

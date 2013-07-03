@@ -12,3 +12,5 @@ obj-$(CONFIG_LGE_KCAL_QLUT) += kcal_qlut.o
 obj-$(CONFIG_LGE_CRASH_HANDLER) += lge_panic_handler.o
 obj-$(CONFIG_LGE_SUSPEND_AUTOTEST) += lge_suspend_autotest.o
 obj-$(CONFIG_MACH_LGE) += lge_blocking_monitor.o
+
+CFLAGS_devices_lge.o += -Idrivers/staging/android

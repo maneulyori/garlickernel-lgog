@@ -107,8 +107,6 @@ struct ci13xxx_ep {
 	spinlock_t                            *lock;
 	struct device                         *device;
 	struct dma_pool                       *td_pool;
-	struct ci13xxx_td                     *last_zptr;
-	dma_addr_t                            last_zdma;
 	unsigned long dTD_update_fail_count;
 	unsigned long			      prime_fail_count;
 	int				      prime_timer_count;
@@ -132,6 +130,8 @@ struct ci13xxx_udc_driver {
 #define CI13XXX_CONTROLLER_REMOTE_WAKEUP_EVENT	3
 #define CI13XXX_CONTROLLER_RESUME_EVENT	        4
 #define CI13XXX_CONTROLLER_DISCONNECT_EVENT	    5
+#define CI13XXX_CONTROLLER_UDC_STARTED_EVENT	    6
+
 	void	(*notify_event) (struct ci13xxx *udc, unsigned event);
 };
 
@@ -143,7 +143,6 @@ struct ci13xxx {
 	struct dma_pool           *qh_pool;   /* DMA pool for queue heads */
 	struct dma_pool           *td_pool;   /* DMA pool for transfer descs */
 	struct usb_request        *status;    /* ep0 status request */
-	void                      *status_buf;/* GET_STATUS buffer */
 
 	struct usb_gadget          gadget;     /* USB slave device */
 	struct ci13xxx_ep          ci13xxx_ep[ENDPT_MAX]; /* extended endpts */
@@ -163,9 +162,6 @@ struct ci13xxx {
 	int                        softconnect; /* is pull-up enable allowed */
 	unsigned long dTD_update_fail_count;
 	struct usb_phy            *transceiver; /* Transceiver struct */
-	bool                      skip_flush; /* skip flushing remaining EP
-						upon flush timeout for the
-						first EP. */
 };
 
 struct ci13xxx_platform_data {
