@@ -2,7 +2,11 @@ VERSION = 3
 PATCHLEVEL = 4
 SUBLEVEL = 52
 EXTRAVERSION = +
-NAME = 
+<<<<<<< HEAD
+NAME = AK+
+=======
+NAME = StS.Ak.Faux
+>>>>>>> a766176... Linux 3.4.52
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
