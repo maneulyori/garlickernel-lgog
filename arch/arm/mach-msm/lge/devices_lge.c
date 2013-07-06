@@ -485,17 +485,6 @@ void __init lge_add_panic_handler_devices(void)
 }
 #endif /* CONFIG_LGE_CRASH_HANDLER */
 
-#ifdef CONFIG_LGE_ECO_MODE
-static struct platform_device lge_kernel_device = {
-	.name = "lge_kernel_driver",
-	.id = -1,
-};
-
-void __init lge_add_lge_kernel_devices(void)
-{
-	platform_device_register(&lge_kernel_device);
-}
-#endif
 
 #ifdef CONFIG_LGE_QFPROM_INTERFACE
 static struct platform_device qfprom_device = {
