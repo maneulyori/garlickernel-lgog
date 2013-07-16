@@ -77,10 +77,6 @@ obj-$(CONFIG_PMIC8058_XOADC) += pmic8058-xoadc.o
 obj-$(CONFIG_QSEECOM) += qseecom.o
 obj-$(CONFIG_QFP_FUSE) += qfp_fuse.o
 obj-$(CONFIG_SLIMPORT_ANX7808)	+= slimport_anx7808/
-<<<<<<< HEAD
 obj-$(CONFIG_BU52031NVX) += pm8xxx-cradle.o
 obj-$(CONFIG_LGE_FTT_CHARGER) += ftt-charger.o
 obj-y += mako_hotplug_control.o
-=======
-obj-$(CONFIG_BLX)    += blx.o
->>>>>>> c1b6e0a... blx: Battery Life eXtender (BLX)
