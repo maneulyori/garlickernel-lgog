@@ -527,21 +527,12 @@ static bool elv_attempt_insert_merge(struct request_queue *q,
 		__rq = elv_rqhash_find(q, blk_rq_pos(rq));
 		if (!__rq || !blk_attempt_req_merge(q, __rq, rq))
 			break;
-<<<<<<< HEAD
 
 		/* The merged request could be merged with others, try again */
 		ret = true;
 		rq = __rq;
 	}
 
-=======
-
-		/* The merged request could be merged with others, try again */
-		ret = true;
-		rq = __rq;
-	}
-
->>>>>>> ca85310... block: recursive merge requests
 	return ret;
 }
 
