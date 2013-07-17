@@ -20,6 +20,7 @@
 #include <linux/mutex.h>
 #include <linux/module.h>
 #include <linux/rq_stats.h>
+#include <linux/slab.h>
 
 //#define DEBUG_INTELLI_PLUG
 #undef DEBUG_INTELLI_PLUG
@@ -37,6 +38,8 @@
 #define RUN_QUEUE_THRESHOLD		38
 
 #define CPU_DOWN_FACTOR			3
+
+#define RQ_AVG_TIMER_RATE	        5
 
 static DEFINE_MUTEX(intelli_plug_mutex);
 
@@ -72,6 +75,88 @@ static unsigned int nr_run_last;
 
 static unsigned int NwNs_Threshold[] = { 19, 30,  19,  11,  19,  11, 0,  11};
 static unsigned int TwTs_Threshold[] = {140,  0, 140, 190, 140, 190, 0, 190};
+
+struct runqueue_data {
+	unsigned int nr_run_avg;
+	unsigned int update_rate;
+	int64_t last_time;
+	int64_t total_time;
+	struct delayed_work work;
+	struct workqueue_struct *nr_run_wq;
+	spinlock_t lock;
+};
+
+static struct runqueue_data *rq_data;
+static void rq_work_fn(struct work_struct *work);
+
+static void start_rq_work(void)
+{
+	rq_data->nr_run_avg = 0;
+	rq_data->last_time = 0;
+	rq_data->total_time = 0;
+	if (rq_data->nr_run_wq == NULL)
+		rq_data->nr_run_wq =
+			create_singlethread_workqueue("nr_run_avg");
+
+	queue_delayed_work(rq_data->nr_run_wq, &rq_data->work,
+			   msecs_to_jiffies(rq_data->update_rate));
+	return;
+}
+
+static void stop_rq_work(void)
+{
+	if (rq_data->nr_run_wq)
+		cancel_delayed_work(&rq_data->work);
+	return;
+}
+
+static int __init init_rq_avg(void)
+{
+	rq_data = kzalloc(sizeof(struct runqueue_data), GFP_KERNEL);
+	if (rq_data == NULL) {
+		pr_err("%s cannot allocate memory\n", __func__);
+		return -ENOMEM;
+	}
+	spin_lock_init(&rq_data->lock);
+	rq_data->update_rate = RQ_AVG_TIMER_RATE;
+	INIT_DELAYED_WORK_DEFERRABLE(&rq_data->work, rq_work_fn);
+
+	return 0;
+}
+
+static void rq_work_fn(struct work_struct *work)
+{
+	int64_t time_diff = 0;
+	int64_t nr_run = 0;
+	unsigned long flags = 0;
+	int64_t cur_time = ktime_to_ns(ktime_get());
+
+	spin_lock_irqsave(&rq_data->lock, flags);
+
+	if (rq_data->last_time == 0)
+		rq_data->last_time = cur_time;
+	if (rq_data->nr_run_avg == 0)
+		rq_data->total_time = 0;
+
+	nr_run = nr_running() << 10;
+	time_diff = cur_time - rq_data->last_time;
+	do_div(time_diff, 1000 * 1000);
+
+	if (time_diff != 0 && rq_data->total_time != 0) {
+		nr_run = (nr_run * time_diff) +
+			(rq_data->nr_run_avg * rq_data->total_time);
+		do_div(nr_run, rq_data->total_time + time_diff);
+	}
+	rq_data->nr_run_avg = nr_run;
+	rq_data->total_time += time_diff;
+	rq_data->last_time = cur_time;
+
+	if (rq_data->update_rate != 0)
+		queue_delayed_work(rq_data->nr_run_wq, &rq_data->work,
+				   msecs_to_jiffies(rq_data->update_rate));
+
+	spin_unlock_irqrestore(&rq_data->lock, flags);
+}
 
 static int mp_decision(void)
 {
@@ -119,9 +204,23 @@ static int mp_decision(void)
 	return new_state;
 }
 
+static unsigned int get_nr_run_avg(void)
+{
+	unsigned int nr_run_avg;
+	unsigned long flags = 0;
+
+	spin_lock_irqsave(&rq_data->lock, flags);
+	nr_run_avg = rq_data->nr_run_avg;
+	rq_data->nr_run_avg = 0;
+	spin_unlock_irqrestore(&rq_data->lock, flags);
+
+	return nr_run_avg;
+}
+
 static unsigned int calculate_thread_stats(void)
 {
-	unsigned int avg_nr_run = avg_nr_running();
+	unsigned int avg_nr_run = get_nr_run_avg();
+
 	unsigned int nr_run;
 	unsigned int threshold_size;
 
@@ -152,10 +251,12 @@ static unsigned int calculate_thread_stats(void)
 		if (nr_run_last <= nr_run)
 			nr_threshold += nr_run_hysteresis;
 		if (avg_nr_run <= (nr_threshold << (FSHIFT - nr_fshift)))
+		{
 			break;
+		}
 	}
 	nr_run_last = nr_run;
-
+	
 	return nr_run;
 }
 
@@ -278,6 +379,8 @@ static void intelli_plug_early_suspend(struct early_suspend *handler)
 	suspended = true;
 	mutex_unlock(&intelli_plug_mutex);
 
+	stop_rq_work();
+
 	// put rest of the cores to sleep!
 	for (i = num_of_active_cores - 1; i > 0; i--) {
 		cpu_down(i);
@@ -301,6 +404,8 @@ static void __cpuinit intelli_plug_late_resume(struct early_suspend *handler)
 	else
 		num_of_active_cores = 4;
 
+	start_rq_work();
+
 	for (i = 1; i < num_of_active_cores; i++) {
 		cpu_up(i);
 	}
@@ -318,8 +423,15 @@ static struct early_suspend intelli_plug_early_suspend_struct_driver = {
 
 int __init intelli_plug_init(void)
 {
+	int ret, delay;
+
+	ret = init_rq_avg();
+	if (ret) return ret;
+
+	start_rq_work();
+
 	/* We want all CPUs to do sampling nearly on same jiffy */
-	int delay = usecs_to_jiffies(DEF_SAMPLING_RATE);
+	delay = usecs_to_jiffies(DEF_SAMPLING_RATE);
 
 	if (num_online_cpus() > 1)
 		delay -= jiffies % delay;
@@ -337,6 +449,13 @@ int __init intelli_plug_init(void)
 #endif
 	return 0;
 }
+
+static void __exit intelli_plug_exit(void)
+{
+	stop_rq_work();
+	kfree(rq_data);
+}
+module_exit(intelli_plug_exit);
 
 MODULE_AUTHOR("Paul Reioux <reioux@gmail.com>");
 MODULE_DESCRIPTION("'intell_plug' - An intelligent cpu hotplug driver for "
