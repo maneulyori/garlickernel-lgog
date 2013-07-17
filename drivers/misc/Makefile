@@ -79,4 +79,3 @@ obj-$(CONFIG_QFP_FUSE) += qfp_fuse.o
 obj-$(CONFIG_SLIMPORT_ANX7808)	+= slimport_anx7808/
 obj-$(CONFIG_BU52031NVX) += pm8xxx-cradle.o
 obj-$(CONFIG_LGE_FTT_CHARGER) += ftt-charger.o
-obj-y += mako_hotplug_control.o
