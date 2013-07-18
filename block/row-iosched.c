@@ -96,13 +96,8 @@ static const struct row_queue_params row_queues_def[] = {
 };
 
 /* Default values for idling on read queues (in msec) */
-<<<<<<< HEAD
-#define ROW_IDLE_TIME_MSEC 10
-#define ROW_READ_FREQ_MSEC 25
-=======
 #define ROW_IDLE_TIME_MSEC 5
 #define ROW_READ_FREQ_MSEC 5
->>>>>>> 69c9114... block: row-iosched idling triggered by readahead pages
 
 /**
  * struct rowq_idling_data -  parameters for idling on the queue
@@ -277,14 +272,12 @@ static void row_add_request(struct request_queue *q,
 	struct row_data *rd = (struct row_data *)q->elevator->elevator_data;
 	struct row_queue *rqueue = RQ_ROWQ(rq);
 	s64 diff_ms;
-<<<<<<< HEAD
-=======
+
 	bool queue_was_empty = list_empty(&rqueue->fifo);
 	unsigned long bv_page_flags = 0;
 
 	if (rq->bio && rq->bio->bi_io_vec && rq->bio->bi_io_vec->bv_page)
 		bv_page_flags = rq->bio->bi_io_vec->bv_page->flags;
->>>>>>> 69c9114... block: row-iosched idling triggered by readahead pages
 
 	list_add_tail(&rq->queuelist, &rqueue->fifo);
 	rd->nr_reqs[rq_data_dir(rq)]++;
