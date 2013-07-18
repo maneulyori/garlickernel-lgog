@@ -2601,7 +2601,6 @@ bed:
 				    NULL, NULL, NULL);
 
 		/* Check if the we got some results */
-<<<<<<< HEAD
 /* LGE_CHANGE
  * Releasing socket has to be done.
  * 2012-04-06, chaeuk.lee@lge.com
@@ -2612,15 +2611,12 @@ bed:
 			goto out;
 		}
 #else /* below the original */
-		if (!self->cachedaddr)
-			return -EAGAIN;		/* Didn't find any devices */
-#endif /* CONFIG_LGE_IRDA */
-=======
 		if (!self->cachedaddr) {
 			err = -EAGAIN;		/* Didn't find any devices */
 			goto out;
 		}
->>>>>>> f3692f9... Merge 3.4.39 upstream
+#endif /* CONFIG_LGE_IRDA */
+
 		daddr = self->cachedaddr;
 		/* Cleanup */
 		self->cachedaddr = 0;
