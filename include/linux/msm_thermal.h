@@ -17,17 +17,22 @@
 struct msm_thermal_data {
 	uint32_t sensor_id;
 	uint32_t poll_ms;
+#ifdef CONFIG_INTELLI_THERMAL
+	int32_t limit_temp_degC;
+	int32_t temp_hysteresis_degC;
+	uint32_t freq_step;
+	uint32_t freq_control_mask;
+	int32_t core_limit_temp_degC;
+	int32_t core_temp_hysteresis_degC;
+	uint32_t core_control_mask;
+#else
 	uint32_t limit_temp_degC;
 	uint32_t temp_hysteresis_degC;
 	uint32_t freq_step;
-#if defined(CONFIG_MACH_APQ8064_GK_KR)||defined(CONFIG_MACH_APQ8064_GKATT)||defined(CONFIG_MACH_APQ8064_GVDCM)
-	uint32_t limit_temp_degC_low;
-#endif	
+#endif
 };
 
-extern unsigned short get_threshold(void);
-
-#ifdef CONFIG_THERMAL_MONITOR
+#if defined(CONFIG_THERMAL_MONITOR) || defined(CONFIG_INTELLI_THERMAL)
 extern int msm_thermal_init(struct msm_thermal_data *pdata);
 extern int msm_thermal_device_init(void);
 #else
