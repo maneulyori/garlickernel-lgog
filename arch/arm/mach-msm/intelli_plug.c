@@ -48,6 +48,9 @@ module_param(intelli_plug_active, uint, 0644);
 static unsigned int eco_mode_active = 0;
 module_param(eco_mode_active, uint, 0644);
 
+static unsigned int manual_mode = 0;
+module_param(manual_mode, uint, 0644);
+
 static unsigned int persist_count = 0;
 static bool suspended = false;
 
@@ -129,16 +132,22 @@ static unsigned int calculate_thread_stats(void)
 
 	if (!eco_mode_active) {
 		threshold_size =  ARRAY_SIZE(nr_run_thresholds_full);
-		nr_run_hysteresis = 8;
-		nr_fshift = 3;
+		if(manual_mode == 0)
+		{
+			nr_run_hysteresis = 8;
+			nr_fshift = 3;
+		}
 #ifdef DEBUG_INTELLI_PLUG
 		pr_info("intelliplug: full mode active!");
 #endif
 	}
 	else {
 		threshold_size =  ARRAY_SIZE(nr_run_thresholds_eco);
-		nr_run_hysteresis = 4;
-		nr_fshift = 1;
+		if(manual_mode == 0)
+		{
+			nr_run_hysteresis = 4;
+			nr_fshift = 1;
+		}
 #ifdef DEBUG_INTELLI_PLUG
 		pr_info("intelliplug: eco mode active!");
 #endif
