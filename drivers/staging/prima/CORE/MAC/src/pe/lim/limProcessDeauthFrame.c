@@ -157,7 +157,11 @@ limProcessDeauthFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo, tpPESession p
     if (limCheckDisassocDeauthAckPending(pMac, (tANI_U8*)pHdr->sa))
     {
         PELOGW(limLog(pMac, LOGE, 
+<<<<<<< HEAD
                     FL("Ignore the Deauth received, while waiting for ack of disassoc/deauth"));)
+=======
+                    FL("Ignore the Deauth received, while waiting for ack of disassoc/deauth\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         limCleanUpDisassocDeauthReq(pMac,(tANI_U8*)pHdr->sa, 1);
         return;
     }
@@ -375,6 +379,7 @@ limProcessDeauthFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo, tpPESession p
                         }
                         else
                         {
+<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
                             if ((TRUE == pMac->lim.gLimTDLSOxygenSupport) &&
                                 (limGetTDLSPeerCount(pMac, psessionEntry) != 0)) {
@@ -384,6 +389,9 @@ limProcessDeauthFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo, tpPESession p
 #endif
 
                             limDeleteTDLSPeers(pMac, psessionEntry);
+=======
+                           limDeleteTDLSPeers(pMac, psessionEntry);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
                            /**
                             * This could be Deauthentication frame from

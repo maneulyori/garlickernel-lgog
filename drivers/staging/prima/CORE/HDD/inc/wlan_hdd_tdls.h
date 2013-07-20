@@ -51,7 +51,10 @@ should not be more than 2000 */
 #define TDLS_CTX_MAGIC 0x54444c53    // "TDLS"
 
 #define TDLS_MAX_SCAN_SCHEDULE          10
+<<<<<<< HEAD
 #define TDLS_MAX_SCAN_REJECT            5
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #define TDLS_DELAY_SCAN_PER_CONNECTION 100
 
 #define TDLS_IS_CONNECTED(peer)  \
@@ -80,7 +83,10 @@ typedef struct
     struct cfg80211_scan_request *scan_request;
     int magic;
     int attempt;
+<<<<<<< HEAD
     int reject;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     struct delayed_work tdls_scan_work;
 } tdls_scan_context_t;
 
@@ -124,6 +130,7 @@ typedef struct {
     tANI_U16    rssi_thres;
 } tdls_rssi_config_t;
 
+<<<<<<< HEAD
 struct _hddTdlsPeer_t;
 typedef struct {
     struct list_head peer_list[256];
@@ -131,12 +138,19 @@ typedef struct {
 #ifdef TDLS_USE_SEPARATE_DISCOVERY_TIMER
     vos_timer_t     peerDiscoverTimer;
 #endif
+=======
+typedef struct {
+    struct list_head peer_list[256];
+    hdd_adapter_t   *pAdapter;
+    vos_timer_t     peerDiscoverTimer;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     vos_timer_t     peerUpdateTimer;
     vos_timer_t     peerDiscoveryTimeoutTimer;
     tdls_config_params_t threshold_config;
     tANI_S32        discovery_peer_cnt;
     tANI_U32        discovery_sent_cnt;
     tANI_S8         ap_rssi;
+<<<<<<< HEAD
     struct _hddTdlsPeer_t  *curr_candidate;
     struct work_struct implicit_setup;
     v_U32_t            magic;
@@ -146,6 +160,11 @@ typedef struct {
 } tdlsCtx_t;
 
 typedef struct _hddTdlsPeer_t {
+=======
+} tdlsCtx_t;
+
+typedef struct {
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     struct list_head node;
     tdlsCtx_t   *pHddTdlsCtx;
     tSirMacAddr peerMac;
@@ -160,7 +179,10 @@ typedef struct _hddTdlsPeer_t {
     tANI_U16    tx_pkt;
     tANI_U16    rx_pkt;
     vos_timer_t     peerIdleTimer;
+<<<<<<< HEAD
     vos_timer_t     initiatorWaitTimeoutTimer;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 } hddTdlsPeer_t;
 
 typedef struct {
@@ -186,8 +208,11 @@ int wlan_hdd_tdls_set_sta_id(hdd_adapter_t *pAdapter, u8 *mac, u8 staId);
 
 hddTdlsPeer_t *wlan_hdd_tdls_find_peer(hdd_adapter_t *pAdapter, u8 *mac);
 
+<<<<<<< HEAD
 hddTdlsPeer_t *wlan_hdd_tdls_find_all_peer(hdd_context_t *pHddCtx, u8 *mac);
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 hddTdlsPeer_t *wlan_hdd_tdls_get_peer(hdd_adapter_t *pAdapter, u8 *mac);
 
 int wlan_hdd_tdls_set_cap(hdd_adapter_t *pAdapter, u8* mac, tTDLSCapType cap);
@@ -228,12 +253,21 @@ void wlan_hdd_tdls_check_bmps(hdd_adapter_t *pAdapter);
 
 u8 wlan_hdd_tdls_is_peer_progress(hdd_adapter_t *pAdapter, u8 *mac);
 
+<<<<<<< HEAD
 hddTdlsPeer_t *wlan_hdd_tdls_is_progress(hdd_context_t *pHddCtx, u8* mac, u8 skip_self, tANI_BOOLEAN mutexLock);
+=======
+u8 wlan_hdd_tdls_is_progress(hdd_adapter_t *pAdapter, u8* mac, u8 skip_self);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 void wlan_hdd_tdls_set_mode(hdd_context_t *pHddCtx,
                             eTDLSSupportMode tdls_mode,
                             v_BOOL_t bUpdateLast);
 
+<<<<<<< HEAD
+=======
+void wlan_hdd_tdls_pre_setup(tdlsCtx_t *pHddTdlsCtx, hddTdlsPeer_t *curr_peer);
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 tANI_U32 wlan_hdd_tdls_discovery_sent_cnt(hdd_context_t *pHddCtx);
 
 void wlan_hdd_tdls_check_power_save_prohibited(hdd_adapter_t *pAdapter);

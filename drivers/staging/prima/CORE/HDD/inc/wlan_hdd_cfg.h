@@ -618,6 +618,7 @@ typedef enum
 #define CFG_REST_TIME_CONC_MAX                      ( 10000 )
 #define CFG_REST_TIME_CONC_DEFAULT                  ( 100 )
 
+<<<<<<< HEAD
 #define CFG_NUM_STA_CHAN_COMBINED_CONC_NAME             "gNumStaChanCombinedConc"
 #define CFG_NUM_STA_CHAN_COMBINED_CONC_MIN              ( 1 )
 #define CFG_NUM_STA_CHAN_COMBINED_CONC_MAX              ( 255 )
@@ -627,6 +628,12 @@ typedef enum
 #define CFG_NUM_P2P_CHAN_COMBINED_CONC_MIN              ( 1 )
 #define CFG_NUM_P2P_CHAN_COMBINED_CONC_MAX              ( 255 )
 #define CFG_NUM_P2P_CHAN_COMBINED_CONC_DEFAULT          ( 1 )
+=======
+#define CFG_NUM_CHAN_COMBINED_CONC_NAME             "gNumChanCombinedConc"
+#define CFG_NUM_CHAN_COMBINED_CONC_MIN              ( 1 )
+#define CFG_NUM_CHAN_COMBINED_CONC_MAX              ( 255 )
+#define CFG_NUM_CHAN_COMBINED_CONC_DEFAULT          ( 1 )
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #endif
 
@@ -821,11 +828,14 @@ typedef enum
 #define CFG_IMMEDIATE_ROAM_RSSI_DIFF_MAX                    (125)
 #define CFG_IMMEDIATE_ROAM_RSSI_DIFF_DEFAULT                (3)
 
+<<<<<<< HEAD
 /*This parameter is used to set Wireless Extended Security Mode.*/
 #define CFG_ENABLE_WES_MODE_NAME                            "gWESModeEnabled"
 #define CFG_ENABLE_WES_MODE_NAME_MIN                        (0)
 #define CFG_ENABLE_WES_MODE_NAME_MAX                        (1)
 #define CFG_ENABLE_WES_MODE_NAME_DEFAULT                    (0)
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif /* (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR) */
 
 #ifdef FEATURE_WLAN_OKC
@@ -835,6 +845,7 @@ typedef enum
 #define CFG_OKC_FEATURE_ENABLED_DEFAULT                    (1)
 #endif
 
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 #define CFG_ROAM_SCAN_OFFLOAD_ENABLED                       "gRoamScanOffloadEnabled"
 #define CFG_ROAM_SCAN_OFFLOAD_ENABLED_MIN                   (0)
@@ -842,6 +853,8 @@ typedef enum
 #define CFG_ROAM_SCAN_OFFLOAD_ENABLED_DEFAULT               (1)
 #endif
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #define CFG_QOS_WMM_PKT_CLASSIFY_BASIS_NAME                "PktClassificationBasis" // DSCP or 802.1Q
 #define CFG_QOS_WMM_PKT_CLASSIFY_BASIS_MIN                  (0)
 #define CFG_QOS_WMM_PKT_CLASSIFY_BASIS_MAX                  (1)
@@ -1372,6 +1385,43 @@ typedef enum
 #define CFG_VOS_TRACE_ENABLE_DEFAULT      (0xffff)
 
 /*
+ * VOS Trace Enable Control
+ * Notes:
+ *  the MIN/MAX/DEFAULT values apply for all modules
+ *  the DEFAULT value is outside the valid range.  if the DEFAULT
+ *    value is not overridden, then no change will be made to the
+ *    "built in" default values compiled into the code
+ *  values are a bitmap indicating which log levels are to enabled
+ *    (must match order of vos_trace_level enumerations)
+ *    00000001  FATAL
+ *    00000010  ERROR
+ *    00000100  WARN
+ *    00001000  INFO
+ *    00010000  INFO HIGH
+ *    00100000  INFO MED
+ *    01000000  INFO LOW
+ *    10000000  DEBUG
+ *
+ *  hence a value of 0xFF would set all bits (enable all logs)
+ */
+
+#define CFG_VOS_TRACE_ENABLE_BAP_NAME     "vosTraceEnableBAP"
+#define CFG_VOS_TRACE_ENABLE_TL_NAME      "vosTraceEnableTL"
+#define CFG_VOS_TRACE_ENABLE_WDI_NAME     "vosTraceEnableWDI"
+#define CFG_VOS_TRACE_ENABLE_HDD_NAME     "vosTraceEnableHDD"
+#define CFG_VOS_TRACE_ENABLE_SME_NAME     "vosTraceEnableSME"
+#define CFG_VOS_TRACE_ENABLE_PE_NAME      "vosTraceEnablePE"
+#define CFG_VOS_TRACE_ENABLE_WDA_NAME     "vosTraceEnableWDA"
+#define CFG_VOS_TRACE_ENABLE_SYS_NAME     "vosTraceEnableSYS"
+#define CFG_VOS_TRACE_ENABLE_VOSS_NAME    "vosTraceEnableVOSS"
+#define CFG_VOS_TRACE_ENABLE_SAP_NAME     "vosTraceEnableSAP"
+#define CFG_VOS_TRACE_ENABLE_HDD_SAP_NAME "vosTraceEnableHDDSAP"
+
+#define CFG_VOS_TRACE_ENABLE_MIN          (0)
+#define CFG_VOS_TRACE_ENABLE_MAX          (0xff)
+#define CFG_VOS_TRACE_ENABLE_DEFAULT      (0xffff)
+
+/*
  * WDI Trace Enable Control
  * Notes:
  *  the MIN/MAX/DEFAULT values apply for all modules
@@ -1495,11 +1545,16 @@ typedef enum
 #define CFG_ENABLE_MCC_ENABLED_NAME             "gEnableMCCMode"
 #define CFG_ENABLE_MCC_ENABLED_MIN              ( 0 )
 #define CFG_ENABLE_MCC_ENABLED_MAX              ( 1 )
+<<<<<<< HEAD
 #define CFG_ENABLE_MCC_ENABLED_DEFAULT          ( 1 )
+=======
+#define CFG_ENABLE_MCC_ENABLED_DEFAULT          ( 1 ) 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /*
  * Allow GO in MCC mode to accept different beacon interval than STA's.
  * Added for Wi-Fi Cert. 5.1.12
+<<<<<<< HEAD
  * Default: gAllowMCCGODiffBI = 2
  * If gAllowMCCGODiffBI = 1  // Set to 1 for WFA certification. GO Beacon
  *                              interval is not changed. MCC GO
@@ -1518,6 +1573,21 @@ typedef enum
 #define CFG_ALLOW_MCC_GO_DIFF_BI_MIN            ( 0 )
 #define CFG_ALLOW_MCC_GO_DIFF_BI_MAX            ( 4 )
 #define CFG_ALLOW_MCC_GO_DIFF_BI_DEFAULT        ( 4 )
+=======
+ * Default: Disable
+ * If gAllowMCCGODiffBI = 1  // Set to 1 for WFA certification. GO Beacon interval is not changed. MCC GO 
+*                                             doesn't work well in optimized way. In worst scenario, it may invite STA 
+*                                            disconnection.
+ * gAllowMCCGODiffBI = 2     //If set to 2 workaround 1 disassoc all the clients 
+ *                             and update beacon Interval
+ * gAllowMCCGODiffBI = 3     //If set to 3 tear down the P2P link in auto/ 
+ *                             Non-autonomous -GO case
+ */
+#define CFG_ALLOW_MCC_GO_DIFF_BI_NAME           "gAllowMCCGODiffBI"
+#define CFG_ALLOW_MCC_GO_DIFF_BI_MIN            ( 0 )
+#define CFG_ALLOW_MCC_GO_DIFF_BI_MAX            ( 3 )
+#define CFG_ALLOW_MCC_GO_DIFF_BI_DEFAULT        ( 2 ) 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /*
  * Enable/Disable Thermal Mitigation feature
@@ -1701,6 +1771,7 @@ typedef enum
 #define CFG_DISABLE_LDPC_WITH_TXBF_AP             "gDisableLDPCWithTxbfAP"
 #define CFG_DISABLE_LDPC_WITH_TXBF_AP_MIN         ( 0 )
 #define CFG_DISABLE_LDPC_WITH_TXBF_AP_MAX         ( 1 )
+<<<<<<< HEAD
 #define CFG_DISABLE_LDPC_WITH_TXBF_AP_DEFAULT     ( 0 )
 #endif
 
@@ -1723,6 +1794,10 @@ typedef enum
 #define CFG_LIST_OF_NON_11AC_COUNTRY_CODE                    "gListOfNon11acCountryCode"
 #define CFG_LIST_OF_NON_11AC_COUNTRY_CODE_DEFAULT            "RU,UA,ZA"
 
+=======
+#define CFG_DISABLE_LDPC_WITH_TXBF_AP_DEFAULT     ( 1 )
+#endif
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /*--------------------------------------------------------------------------- 
   Type declarations
   -------------------------------------------------------------------------*/ 
@@ -1882,10 +1957,15 @@ typedef struct
    v_U32_t        nActiveMinChnTimeConc;     //in units of milliseconds
    v_U32_t        nActiveMaxChnTimeConc;     //in units of milliseconds
    v_U32_t        nRestTimeConc;             //in units of milliseconds
+<<<<<<< HEAD
    v_U8_t         nNumStaChanCombinedConc;   //number of channels combined for
                                              //STA in each split scan operation
    v_U8_t         nNumP2PChanCombinedConc;   //number of channels combined for
                                              //P2P in each split scan operation
+=======
+   v_U8_t         nNumChanCombinedConc;      //number of channels combined
+                                             //in each split scan operation
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
    v_U8_t         nMaxPsPoll;
@@ -1925,6 +2005,7 @@ typedef struct
    v_BOOL_t                     isFastTransitionEnabled;
    v_U8_t                       RoamRssiDiff;
    v_U8_t                       nImmediateRoamRssiDiff;
+<<<<<<< HEAD
    v_BOOL_t                     isWESModeEnabled;
 #endif
 #ifdef FEATURE_WLAN_OKC
@@ -1932,6 +2013,11 @@ typedef struct
 #endif
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
    v_BOOL_t                     isRoamOffloadScanEnabled;
+=======
+#endif
+#ifdef FEATURE_WLAN_OKC
+   v_BOOL_t                     isOkcIniFeatureEnabled;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
    hdd_wmm_classification_t     PktClassificationBasis; // DSCP or 802.1Q
    v_BOOL_t                     bImplicitQosEnabled;
@@ -2060,6 +2146,10 @@ typedef struct
    v_BOOL_t                    ignoreDynamicDtimInP2pMode;
    v_U16_t                     configMccParam;
    v_U32_t                     numBuffAdvert;
+<<<<<<< HEAD
+=======
+   v_U8_t                      ignore_chan165;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    v_BOOL_t                    enableRxSTBC;
 #ifdef FEATURE_WLAN_TDLS       
    v_BOOL_t                    fEnableTDLSSupport;
@@ -2090,9 +2180,12 @@ typedef struct
    v_U8_t                      retryLimitZero;
    v_U8_t                      retryLimitOne;
    v_U8_t                      retryLimitTwo;
+<<<<<<< HEAD
    char                        listOfNonDfsCountryCode[128];
    v_BOOL_t                    enableSSR;
    char                        listOfNon11acCountryCode[128];
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 } hdd_config_t;
 /*--------------------------------------------------------------------------- 
   Function declarations and documenation

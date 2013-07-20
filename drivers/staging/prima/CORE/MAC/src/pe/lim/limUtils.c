@@ -564,12 +564,21 @@ char *limMsgStr(tANI_U32 msgType)
         case eWNI_SME_DELTS_RSP:
             return "eWNI_SME_DELTS_RSP";
         case eWNI_SME_DELTS_IND:
+<<<<<<< HEAD
             return "eWNI_SME_DELTS_IND";
 #if defined WLAN_FEATURE_VOWIFI_11R || defined FEATURE_WLAN_CCX || defined(FEATURE_WLAN_LFR)
         case eWNI_SME_GET_ROAM_RSSI_REQ:
             return "eWNI_SME_GET_ROAM_RSSI_REQ";
         case eWNI_SME_GET_ROAM_RSSI_RSP:
             return "eWNI_SME_GET_ROAM_RSSI_RSP";
+=======
+            return "eWNI_SME_DELTS_IND\n";
+#if defined WLAN_FEATURE_VOWIFI_11R || defined FEATURE_WLAN_CCX || defined(FEATURE_WLAN_LFR)
+        case eWNI_SME_GET_ROAM_RSSI_REQ:
+            return "eWNI_SME_GET_ROAM_RSSI_REQ\n";
+        case eWNI_SME_GET_ROAM_RSSI_RSP:
+            return "eWNI_SME_GET_ROAM_RSSI_RSP\n";
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
         case WDA_SUSPEND_ACTIVITY_RSP:
@@ -681,9 +690,15 @@ char *limMsgStr(tANI_U32 msgType)
         case eWNI_PMC_EXIT_BMPS_RSP:
             return "eWNI_PMC_EXIT_BMPS_RSP";
         case eWNI_PMC_EXIT_BMPS_IND:
+<<<<<<< HEAD
             return "eWNI_PMC_EXIT_BMPS_IND";
         case eWNI_SME_SET_BCN_FILTER_REQ:
             return "eWNI_SME_SET_BCN_FILTER_REQ";
+=======
+            return "eWNI_PMC_EXIT_BMPS_IND\n";
+        case eWNI_SME_SET_BCN_FILTER_REQ:
+            return "eWNI_SME_SET_BCN_FILTER_REQ\n";
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         default:
             return "INVALID SME message";
     }
@@ -930,7 +945,11 @@ limInitMlm(tpAniSirGlobal pMac)
     }
     else
     {
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL(" limCreateTimers Failed to create lim timers "));
+=======
+        limLog(pMac, LOGP, FL(" limCreateTimers Failed to create lim timers \n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 } /*** end limInitMlm() ***/
 
@@ -1341,7 +1360,11 @@ tANI_U8 limWriteDeferredMsgQ(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
     {
         if(!(pMac->lim.deferredMsgCnt & 0xF))
         {
+<<<<<<< HEAD
             PELOGE(limLog(pMac, LOGE, FL("Deferred Message Queue is full. Msg:%d Messages Failed:%d"), limMsg->type, ++pMac->lim.deferredMsgCnt);)
+=======
+            PELOGE(limLog(pMac, LOGE, FL("Deferred Message Queue is full. Msg:%d Messages Failed:%d\n"), limMsg->type, ++pMac->lim.deferredMsgCnt);)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
         else
         {
@@ -2111,7 +2134,11 @@ limUpdateShortPreamble(tpAniSirGlobal pMac, tSirMacAddr peerMacAddr,
             PELOG1(limLog(pMac, LOG1, FL("Disabling short preamble"));)
 
             if (limEnableShortPreamble(pMac, false, pBeaconParams, psessionEntry) != eSIR_SUCCESS)
+<<<<<<< HEAD
                 PELOGE(limLog(pMac, LOGE, FL("Cannot enable long preamble"));)
+=======
+                PELOGE(limLog(pMac, LOGE, FL("Cannot enable long preamble\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
     }
 }
@@ -2777,7 +2804,11 @@ void limCancelDot11hChannelSwitch(tpAniSirGlobal pMac, tpPESession psessionEntry
     /* We need to restore pre-channelSwitch state on the STA */
     if (limRestorePreChannelSwitchState(pMac, psessionEntry) != eSIR_SUCCESS)
     {
+<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE, FL("LIM: Could not restore pre-channelSwitch (11h) state, resetting the system"));)
+=======
+        PELOGE(limLog(pMac, LOGE, FL("LIM: Could not restore pre-channelSwitch (11h) state, resetting the system\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 
     }
 }
@@ -3748,7 +3779,11 @@ limEnable11aProtection(tpAniSirGlobal pMac, tANI_U8 enable,
 {
     if(NULL == psessionEntry)
     {
+<<<<<<< HEAD
         PELOG3(limLog(pMac, LOG3, FL("psessionEntry is NULL"));)
+=======
+        PELOG3(limLog(pMac, LOG3, FL("psessionEntry is NULL\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eSIR_FAILURE;
     }        
         //overlapping protection configuration check.
@@ -5596,8 +5631,13 @@ limProcessAddBaInd(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
             if((eBA_DISABLE == pSta->tcCfg[tid].fUseBATx) &&
                  (pBaCandidate->baInfo[tid].fBaEnable))
             {
+<<<<<<< HEAD
                 limLog(pMac, LOGE, FL("BA setup for staId = %d, TID: %d, SSN: %d"),
                         pSta->staIndex, tid, pBaCandidate->baInfo[tid].startingSeqNum);
+=======
+               PELOG2(limLog(pMac, LOG2, FL("BA setup for staId = %d, TID: %d, SSN: %d"),
+                        pSta->staIndex, tid, pBaCandidate->baInfo[tid].startingSeqNum);)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 limPostMlmAddBAReq(pMac, pSta, tid, pBaCandidate->baInfo[tid].startingSeqNum,psessionEntry);  
             }
         }
@@ -7643,6 +7683,10 @@ tANI_U8 limGetShortSlotFromPhyMode(tpAniSirGlobal pMac, tpPESession psessionEntr
         // Will reach here in 11b case
         val = false;
     }
+<<<<<<< HEAD
     limLog(pMac, LOG1, FL("phyMode = %u shortslotsupported = %u"), phyMode, val);
+=======
+    limLog(pMac, LOG1, FL("phyMode = %u shortslotsupported = %u\n"), phyMode, val);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return val;
 }

@@ -1112,7 +1112,11 @@ WLANBAP_CreateNewLogLinkCtx
 #ifdef BAP_DEBUG
   /* Trace the tBtampCtx being passed in. */
   VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH,
+<<<<<<< HEAD
             "WLAN BAP Context Monitor: pBtampContext value = %p in %s:%d", pBtampContext, __func__, __LINE__ );
+=======
+            "WLAN BAP Context Monitor: pBtampContext value = %x in %s:%d", pBtampContext, __func__, __LINE__ );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif //BAP_DEBUG
 
   /*------------------------------------------------------------------------

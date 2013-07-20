@@ -129,9 +129,15 @@ limExtractApCapability(tpAniSirGlobal pMac, tANI_U8 *pIE, tANI_U16 ieLen,
 
 #ifdef WLAN_FEATURE_11AC
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO_MED,
+<<<<<<< HEAD
             "***beacon.VHTCaps.present*****=%d",pBeaconStruct->VHTCaps.present);
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO_MED,
            "***beacon.SU Beamformer Capable*****=%d",pBeaconStruct->VHTCaps.suBeamFormerCap);
+=======
+            "***beacon.VHTCaps.present*****=%d\n",pBeaconStruct->VHTCaps.present);
+        VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO_MED,
+           "***beacon.SU Beamformer Capable*****=%d\n",pBeaconStruct->VHTCaps.suBeamFormerCap);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
         if ( pBeaconStruct->VHTCaps.present && pBeaconStruct->VHTOperation.present)
         {

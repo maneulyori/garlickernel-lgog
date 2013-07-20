@@ -749,6 +749,7 @@ sap_AcquireGlobalLock( ptSapContext  pSapCtx );
 VOS_STATUS
 sap_ReleaseGlobalLock( ptSapContext  pSapCtx );
 
+<<<<<<< HEAD
 /*==========================================================================
 FUNCTION  sapConvertSapPhyModeToCsrPhyMode
 
@@ -763,6 +764,10 @@ RETURN VALUE If SUCCESS or FAILURE
 SIDE EFFECTS
 ============================================================================*/
 eCsrPhyMode sapConvertSapPhyModeToCsrPhyMode( eSapPhyMode sapPhyMode );
+=======
+VOS_STATUS
+wlan_sap_select_cbmode(void *pAdapter,eSapPhyMode SapHw_mode, v_U8_t channel);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #ifdef __cplusplus
 }

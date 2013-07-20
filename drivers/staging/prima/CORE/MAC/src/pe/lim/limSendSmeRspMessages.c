@@ -1405,8 +1405,13 @@ limSendSmeDeauthInd(tpAniSirGlobal pMac, tpDphHashNode pStaDs, tpPESession psess
     //peerMacAddr
     palCopyMemory( pMac->hHdd, pSirSmeDeauthInd->peerMacAddr, pStaDs->staAddr, sizeof(tSirMacAddr));
     pSirSmeDeauthInd->reasonCode = pStaDs->mlmStaContext.disassocReason;
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pSirSmeDeauthInd->staId = pStaDs->staIndex;
 
     mmhMsg.type = eWNI_SME_DEAUTH_IND;
@@ -1450,7 +1455,11 @@ limSendSmeTDLSDelStaInd(tpAniSirGlobal pMac, tpDphHashNode pStaDs, tpPESession p
 
     if( eHAL_STATUS_SUCCESS != palAllocateMemory( pMac->hHdd, (void **)&pSirTdlsDelStaInd, sizeof(tSirTdlsDelStaInd)))
     {
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("palAllocateMemory failed for eWNI_SME_TDLS_DEL_STA_IND "));
+=======
+        limLog(pMac, LOGP, FL("palAllocateMemory failed for eWNI_SME_TDLS_DEL_STA_IND \n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 

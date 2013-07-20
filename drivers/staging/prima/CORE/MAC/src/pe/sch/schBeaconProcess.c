@@ -38,8 +38,11 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /*
  * Airgo Networks, Inc proprietary. All rights reserved.
  * This file schBeaconProcess.cc contains beacon processing related

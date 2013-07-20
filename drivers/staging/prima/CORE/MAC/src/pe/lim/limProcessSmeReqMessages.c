@@ -439,7 +439,11 @@ __limProcessSmeSysReadyInd(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     {
         peRegisterTLHandle(pMac);
     }
+<<<<<<< HEAD
     PELOGW(limLog(pMac, LOGW, FL("sending WDA_SYS_READY_IND msg to HAL"));)
+=======
+    PELOGW(limLog(pMac, LOGW, FL("sending WDA_SYS_READY_IND msg to HAL\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     MTRACE(macTraceMsgTx(pMac, NO_SESSION, msg.type));
 
     if (eSIR_SUCCESS != wdaPostCtrlMsg(pMac, &msg))
@@ -771,7 +775,11 @@ __limHandleSmeStartBssRequest(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
                     centerChan = limGetCenterChannel(pMac,channelNumber,pSmeStartBssReq->cbMode,WNI_CFG_VHT_CHANNEL_WIDTH_80MHZ);
                     if(centerChan != eSIR_CFG_INVALID_ID)
                     {
+<<<<<<< HEAD
                         limLog(pMac, LOGW, FL("***Center Channel for 80MHZ channel width = %ld"),centerChan);
+=======
+                        limLog(pMac, LOGW, FL("***Center Channel for 80MHZ channel width = %ld\n"),centerChan);          
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                         psessionEntry->apCenterChan = centerChan;
                         if (cfgSetInt(pMac, WNI_CFG_VHT_CHANNEL_CENTER_FREQ_SEGMENT1, centerChan)
                                                                      != eSIR_SUCCESS)
@@ -1424,6 +1432,29 @@ static void __limProcessSmeOemDataReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 
 #endif //FEATURE_OEM_DATA_SUPPORT
 
+/**
+ * __limProcessClearDfsChannelList()
+ *
+ *FUNCTION:
+ *Clear DFS channel list  when country is changed/aquired.
+.*This message is sent from SME.
+ *
+ *LOGIC:
+ *
+ *ASSUMPTIONS:
+ *
+ *NOTE:
+ *
+ * @param  pMac      Pointer to Global MAC structure
+ * @param  *pMsgBuf  A pointer to the SME message buffer
+ * @return None
+ */
+static void __limProcessClearDfsChannelList(tpAniSirGlobal pMac,
+                                                           tpSirMsgQ pMsg)
+{
+    palZeroMemory(pMac->hHdd, &pMac->lim.dfschannelList,
+                  sizeof(tSirDFSChannelList));
+}
 
 /**
  * __limProcessSmeJoinReq()
@@ -1591,13 +1622,21 @@ __limProcessSmeJoinReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 #ifdef WLAN_FEATURE_11AC
         psessionEntry->vhtCapability = IS_DOT11_MODE_VHT(psessionEntry->dot11mode);
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO_MED,
+<<<<<<< HEAD
             "***__limProcessSmeJoinReq: vhtCapability=%d****",psessionEntry->vhtCapability);
+=======
+            "***__limProcessSmeJoinReq: vhtCapability=%d****\n",psessionEntry->vhtCapability);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         if (psessionEntry->vhtCapability )
         {
             psessionEntry->txBFIniFeatureEnabled = pSmeJoinReq->txBFIniFeatureEnabled;
 
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO_MED,
+<<<<<<< HEAD
                 "***__limProcessSmeJoinReq: txBFIniFeatureEnabled=%d****",
+=======
+                "***__limProcessSmeJoinReq: txBFIniFeatureEnabled=%d****\n",
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 psessionEntry->txBFIniFeatureEnabled);
 
             if( psessionEntry->txBFIniFeatureEnabled )
@@ -1605,7 +1644,11 @@ __limProcessSmeJoinReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
                 if (cfgSetInt(pMac, WNI_CFG_VHT_SU_BEAMFORMEE_CAP, psessionEntry->txBFIniFeatureEnabled)
                                                              != eSIR_SUCCESS)
                 {
+<<<<<<< HEAD
                     limLog(pMac, LOGP, FL("could not set  WNI_CFG_VHT_SU_BEAMFORMEE_CAP at CFG"));
+=======
+                    limLog(pMac, LOGP, FL("could not set  WNI_CFG_VHT_SU_BEAMFORMEE_CAP at CFG\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     retCode = eSIR_LOGP_EXCEPTION;
                     goto end;
                 }
@@ -1615,7 +1658,11 @@ __limProcessSmeJoinReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
                 if (cfgSetInt(pMac, WNI_CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED, pSmeJoinReq->txBFCsnValue)
                                                              != eSIR_SUCCESS)
                 {
+<<<<<<< HEAD
                     limLog(pMac, LOGP, FL("could not set  WNI_CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED at CFG"));
+=======
+                    limLog(pMac, LOGP, FL("could not set  WNI_CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED at CFG\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     retCode = eSIR_LOGP_EXCEPTION;
                     goto end;
                 }
@@ -2232,7 +2279,11 @@ __limProcessSmeDisassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     }
 
 
+<<<<<<< HEAD
     PELOG1(limLog(pMac, LOG1,   FL("received DISASSOC_REQ message. Reason: %d global SmeState: %d"),
+=======
+    PELOG1(limLog(pMac, LOG1,   FL("received DISASSOC_REQ message. Reason: %d global SmeState: %d"), 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                                         smeDisassocReq.reasonCode, pMac->lim.gLimSmeState);)
 
 
@@ -3335,7 +3386,11 @@ __limHandleSmeStopBssRequest(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     {
         limWPSPBCClose(pMac, psessionEntry);
     }
+<<<<<<< HEAD
     PELOGW(limLog(pMac, LOGW, FL("RECEIVED STOP_BSS_REQ with reason code=%d"), stopBssReq.reasonCode);)
+=======
+    PELOGW(limLog(pMac, LOGW, FL("RECEIVED STOP_BSS_REQ with reason code=%d\n"), stopBssReq.reasonCode);)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     prevState = psessionEntry->limSmeState;
 
@@ -3580,7 +3635,11 @@ __limProcessSmeAddtsReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 
     if((psessionEntry = peFindSessionByBssid(pMac, pSirAddts->bssId,&sessionId))== NULL)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGE, "Session Does not exist for given bssId");
+=======
+        limLog(pMac, LOGE, "Session Does not exist for given bssId\n");
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 #ifdef FEATURE_WLAN_DIAG_SUPPORT_LIM //FEATURE_WLAN_DIAG_SUPPORT 
@@ -3596,13 +3655,21 @@ __limProcessSmeAddtsReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
      * if ap, just ignore with error log
      */
     PELOG1(limLog(pMac, LOG1,
+<<<<<<< HEAD
            FL("Received SME_ADDTS_REQ (TSid %d, UP %d)"),
+=======
+           FL("Received SME_ADDTS_REQ (TSid %d, UP %d)\n"),
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
            pSirAddts->req.tspec.tsinfo.traffic.tsid,
            pSirAddts->req.tspec.tsinfo.traffic.userPrio);)
 
     if ((psessionEntry->limSystemRole != eLIM_STA_ROLE)&&(psessionEntry->limSystemRole != eLIM_BT_AMP_STA_ROLE))
     {
+<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE, "AddTs received on AP - ignoring");)
+=======
+        PELOGE(limLog(pMac, LOGE, "AddTs received on AP - ignoring\n");)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         limSendSmeAddtsRsp(pMac, pSirAddts->rspReqd, eSIR_FAILURE, psessionEntry, pSirAddts->req.tspec, 
                 smesessionId,smetransactionId);
         return;
@@ -4051,7 +4118,11 @@ __limProcessSmeGetRoamRssiRequest(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 
     if( eSIR_SUCCESS != (wdaPostCtrlMsg( pMac, &msgQ ))){
         palFreeMemory( pMac, pMsgBuf );
+<<<<<<< HEAD
         limLog(pMac, LOGP, "Unable to forward request");
+=======
+        limLog(pMac, LOGP, "Unable to forward request\n");
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -4084,7 +4155,11 @@ __limProcessSmeUpdateAPWPSIEs(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 
     if ((limUpdateAPWPSIEsReqSerDes(pMac, pUpdateAPWPSIEsReq, (tANI_U8 *) pMsgBuf) == eSIR_FAILURE))
     {
+<<<<<<< HEAD
         limLog(pMac, LOGW, FL("received invalid SME_SETCONTEXT_REQ message"));
+=======
+        limLog(pMac, LOGW, FL("received invalid SME_SETCONTEXT_REQ message\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
 
@@ -4196,11 +4271,19 @@ __limProcessSmeChangeBI(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     tUpdateBeaconParams beaconParams;
 
     PELOG1(limLog(pMac, LOG1,
+<<<<<<< HEAD
            FL("received Update Beacon Interval message")););
     
     if(pMsgBuf == NULL)
     {
         limLog(pMac, LOGE,FL("Buffer is Pointing to NULL"));
+=======
+           FL("received Update Beacon Interval message\n")););
+    
+    if(pMsgBuf == NULL)
+    {
+        limLog(pMac, LOGE,FL("Buffer is Pointing to NULL\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -4208,7 +4291,11 @@ __limProcessSmeChangeBI(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 
     if((psessionEntry = peFindSessionByBssid(pMac, pChangeBIParams->bssId, &sessionId)) == NULL)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGE, FL("Session does not exist for given BSSID"));
+=======
+        limLog(pMac, LOGE, FL("Session does not exist for given BSSID\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -4233,7 +4320,11 @@ __limProcessSmeChangeBI(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
 
         //Set change in beacon Interval
         beaconParams.beaconInterval = pChangeBIParams->beaconInterval;
+<<<<<<< HEAD
         beaconParams.paramChangeBitmap = PARAM_BCN_INTERVAL_CHANGED;
+=======
+        beaconParams.paramChangeBitmap |= PARAM_BCN_INTERVAL_CHANGED;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         limSendBeaconParams(pMac, &beaconParams, psessionEntry);
     }
 
@@ -4379,13 +4470,18 @@ limSendSetMaxTxPowerReq ( tpAniSirGlobal pMac, tPowerdBm txPower, tpPESession pS
 #endif
    if( pMaxTxParams == NULL )
    {
+<<<<<<< HEAD
       limLog( pMac, LOGE, "%s:%d: pMaxTxParams is NULL", __func__, __LINE__);
+=======
+      limLog( pMac, LOGE, "%s:%d: pMaxTxParams is NULL\n", __func__, __LINE__);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return eSIR_FAILURE;
    }
    pMaxTxParams->power = txPower;
    palCopyMemory( pMac->hHdd, pMaxTxParams->bssId, pSessionEntry->bssId, sizeof(tSirMacAddr) );
    palCopyMemory( pMac->hHdd, pMaxTxParams->selfStaMacAddr, pSessionEntry->selfMacAddr, sizeof(tSirMacAddr) );
 
+<<<<<<< HEAD
    msgQ.type = WDA_SET_MAX_TX_POWER_REQ;
    msgQ.bodyptr = pMaxTxParams;
    msgQ.bodyval = 0;
@@ -4398,6 +4494,23 @@ limSendSetMaxTxPowerReq ( tpAniSirGlobal pMac, tPowerdBm txPower, tpPESession pS
       palFreeMemory(pMac->hHdd, pMaxTxParams);
    }
    return retCode;
+=======
+    msgQ.type = WDA_SET_MAX_TX_POWER_REQ;
+    msgQ.bodyptr = pMaxTxParams;
+    msgQ.bodyval = 0;
+    PELOGW(limLog(pMac, LOG1, FL("Posting WDA_SET_MAX_TX_POWER_REQ to WDA\n"));)
+    MTRACE(macTraceMsgTx(pMac, pSessionEntry->peSessionId, msgQ.type));
+    if(eSIR_SUCCESS != (retCode = wdaPostCtrlMsg(pMac, &msgQ)))
+    {
+       PELOGW(limLog(pMac, LOGW, FL("wdaPostCtrlMsg() failed\n"));)
+       if (NULL != pMaxTxParams)
+       {
+          palFreeMemory(pMac->hHdd, (tANI_U8*)pMaxTxParams);
+       }
+       return retCode;
+    }
+    return retCode;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }
 #endif
 
@@ -4609,7 +4722,11 @@ __limInsertSingleShotNOAForScan(tpAniSirGlobal pMac, tANI_U32 noaDuration)
                   pMac->hHdd, (void **) &pMsgNoA, sizeof( tP2pPsConfig )))
     {
         limLog( pMac, LOGP,
+<<<<<<< HEAD
                      FL( "Unable to allocate memory during NoA Update" ));
+=======
+                     FL( "Unable to allocate memory during NoA Update\n" ));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto error;
     }
 
@@ -4635,11 +4752,19 @@ __limInsertSingleShotNOAForScan(tpAniSirGlobal pMac, tANI_U32 noaDuration)
     {
         /// Could not activate Insert NOA timer.
         // Log error
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not activate Insert Single Shot NOA during scan timer"));
 
         // send the scan response back with status failure and do not even call insert NOA
         limSendSmeScanRsp(pMac, sizeof(tSirSmeScanRsp), eSIR_SME_SCAN_FAILED, pMac->lim.gSmeSessionId, pMac->lim.gTransactionId);
         palFreeMemory( pMac->hHdd, pMsgNoA);
+=======
+        limLog(pMac, LOGP, FL("could not activate Insert Single Shot NOA during scan timer\n"));
+
+        // send the scan response back with status failure and do not even call insert NOA
+        limSendSmeScanRsp(pMac, sizeof(tSirSmeScanRsp), eSIR_SME_SCAN_FAILED, pMac->lim.gSmeSessionId, pMac->lim.gTransactionId);
+        palFreeMemory( pMac->hHdd, (void **) &pMsgNoA);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto error;
     }
 
@@ -4653,7 +4778,11 @@ __limInsertSingleShotNOAForScan(tpAniSirGlobal pMac, tANI_U32 noaDuration)
     if(eSIR_SUCCESS != wdaPostCtrlMsg(pMac, &msg))
     {
         /* In this failure case, timer is already started, so its expiration will take care of sending scan response */
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("wdaPost Msg failed"));
+=======
+        limLog(pMac, LOGP, FL("wdaPost Msg failed\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         /* Deactivate the NOA timer in failure case */
         limDeactivateAndChangeTimer(pMac, eLIM_INSERT_SINGLESHOT_NOA_TIMER);
         goto error;
@@ -4672,14 +4801,22 @@ error:
 
 static void __limRegisterDeferredSmeReqForNOAStart(tpAniSirGlobal pMac, tANI_U16 msgType, tANI_U32 *pMsgBuf)
 {
+<<<<<<< HEAD
     limLog(pMac, LOG1, FL("Reg msgType %d"), msgType) ;
+=======
+    limLog(pMac, LOG1, FL("Reg msgType %d\n"), msgType) ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pMac->lim.gDeferMsgTypeForNOA = msgType;
     pMac->lim.gpDefdSmeMsgForNOA = pMsgBuf;
 }
 
 static void __limDeregisterDeferredSmeReqAfterNOAStart(tpAniSirGlobal pMac)
 {
+<<<<<<< HEAD
     limLog(pMac, LOG1, FL("Dereg msgType %d"), pMac->lim.gDeferMsgTypeForNOA) ;
+=======
+    limLog(pMac, LOG1, FL("Dereg msgType %d\n"), pMac->lim.gDeferMsgTypeForNOA) ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pMac->lim.gDeferMsgTypeForNOA = 0;
     if (pMac->lim.gpDefdSmeMsgForNOA != NULL)
     {
@@ -4707,7 +4844,11 @@ tANI_U32 limCalculateNOADuration(tpAniSirGlobal pMac, tANI_U16 msgType, tANI_U32
                  * Could not get max channel value
                  * from CFG. Log error.
                  */
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("could not retrieve passive max channel value"));
+=======
+                limLog(pMac, LOGP, FL("could not retrieve passive max channel value\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
                 /* use a default value of 110ms */
                 val = DEFAULT_PASSIVE_MAX_CHANNEL_TIME;
@@ -4754,7 +4895,11 @@ tANI_U32 limCalculateNOADuration(tpAniSirGlobal pMac, tANI_U16 msgType, tANI_U32
             break;
 
     }
+<<<<<<< HEAD
     limLog(pMac, LOGW, FL("msgType %d noa %d"), msgType, noaDuration);
+=======
+    limLog(pMac, LOGW, FL("msgType %d noa %d\n"), msgType, noaDuration);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return noaDuration;
 }
 
@@ -4762,7 +4907,11 @@ void limProcessRegdDefdSmeReqAfterNOAStart(tpAniSirGlobal pMac)
 {
     tANI_BOOLEAN bufConsumed = TRUE;
 
+<<<<<<< HEAD
     limLog(pMac, LOG1, FL("Process defd sme req %d"), pMac->lim.gDeferMsgTypeForNOA);
+=======
+    limLog(pMac, LOG1, FL("Process defd sme req %d\n"), pMac->lim.gDeferMsgTypeForNOA);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     if ( (pMac->lim.gDeferMsgTypeForNOA != 0) &&
          (pMac->lim.gpDefdSmeMsgForNOA != NULL) )
     {
@@ -4788,7 +4937,11 @@ void limProcessRegdDefdSmeReqAfterNOAStart(tpAniSirGlobal pMac)
                 __limProcessSmeJoinReq(pMac, pMac->lim.gpDefdSmeMsgForNOA);
                 break;
             default:
+<<<<<<< HEAD
                 limLog(pMac, LOGE, FL("Unknown deferred msg type %d"), pMac->lim.gDeferMsgTypeForNOA);
+=======
+                limLog(pMac, LOGE, FL("Unknown deferred msg type %d\n"), pMac->lim.gDeferMsgTypeForNOA);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 break;
         }
         __limDeregisterDeferredSmeReqAfterNOAStart(pMac);
@@ -4796,7 +4949,11 @@ void limProcessRegdDefdSmeReqAfterNOAStart(tpAniSirGlobal pMac)
     else
     {
         limLog( pMac, LOGW, FL("start received from FW when no sme deferred msg pending. Do nothing."
+<<<<<<< HEAD
             "It might happen sometime when NOA start ind and timeout happen at the same time"));
+=======
+            "It might happen sometime when NOA start ind and timeout happen at the same time\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 }
 
@@ -4813,13 +4970,21 @@ static tSirRetStatus limProcessSmeDisStartReq(tpAniSirGlobal pMac,
     tANI_U8      sessionId;
 
     VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
                                   ("Discovery Req Recieved")) ;
+=======
+                                  ("Discovery Req Recieved\n")) ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     if((psessionEntry = peFindSessionByBssid(pMac, disReq->bssid, &sessionId)) 
                                                                         == NULL)
     {
          VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+<<<<<<< HEAD
                     "PE Session does not exist for given sme sessionId %d",
+=======
+                    "PE Session does not exist for given sme sessionId %d\n", 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                                             disReq->sessionId);
          goto lim_tdls_dis_start_error;
     }
@@ -4828,7 +4993,11 @@ static tSirRetStatus limProcessSmeDisStartReq(tpAniSirGlobal pMac,
     if (psessionEntry->limSystemRole != eLIM_STA_ROLE)
     {
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+<<<<<<< HEAD
                          "dis req received in wrong system Role %d",
+=======
+                         "dis req received in wrong system Role %d\n", 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                              psessionEntry->limSystemRole);
         goto lim_tdls_dis_start_error;
     }
@@ -4842,7 +5011,11 @@ static tSirRetStatus limProcessSmeDisStartReq(tpAniSirGlobal pMac,
      {
      
          limLog(pMac, LOGE, "dis req received in invalid LIMsme \
+<<<<<<< HEAD
                                state (%d)", psessionEntry->limSmeState);
+=======
+                               state (%d)\n", psessionEntry->limSmeState);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
          goto lim_tdls_dis_start_error;
      }
     
@@ -4858,6 +5031,7 @@ static tSirRetStatus limProcessSmeDisStartReq(tpAniSirGlobal pMac,
      */
      //limSetLinkState(pMac, eSIR_LINK_TDLS_DISCOVERY_STATE, 
      //                                    psessionEntry->bssId) ;
+<<<<<<< HEAD
 #endif
 
      /* save dis request message for matching dialog token */
@@ -5005,6 +5179,8 @@ eHalStatus limProcessSmeLinkStartReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     /* in case of success, eWNI_SME_TDLS_LINK_START_RSP is sent back to SME later when 
     TDLS setup cnf TX complete is successful. --> see limTdlsSetupCnfTxComplete() */
     return eSIR_SUCCESS ; 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 lim_tdls_link_start_error:    
     /* in case of error, return immediately to SME */
@@ -5013,6 +5189,162 @@ lim_tdls_link_start_error:
     return eSIR_FAILURE ;
 }
 
+<<<<<<< HEAD
+=======
+     /* save dis request message for matching dialog token */
+     palCopyMemory( pMac->hHdd, (tANI_U8 *) &pMac->lim.gLimTdlsDisReq, 
+                           (tANI_U8 *) disReq, sizeof(tSirTdlsDisReq));
+
+     VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+                             "Transmit Discovery Request Frame\n") ;
+     /* format TDLS discovery request frame and transmit it */
+     limSendTdlsDisReqFrame(pMac, disReq->peerMac, disReq->dialog, 
+                                                       psessionEntry) ;
+
+     /* prepare for response */
+     pMac->lim.gLimTdlsDisStaCount = 0 ;
+     pMac->lim.gLimTdlsDisResultList = NULL ;
+
+    /*
+     * start TDLS discovery request timer to wait for discovery responses
+     * from all TDLS enabled clients in BSS.
+     */
+
+    VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+                                ("Start Discovery request Timeout Timer\n")) ;
+    MTRACE(macTrace(pMac, TRACE_CODE_TIMER_ACTIVATE, 0, 
+                                             eLIM_TDLS_DISCOVERY_RSP_WAIT));
+
+    /* assign appropriate sessionId to the timer object */
+    pMac->lim.limTimers.gLimTdlsDisRspWaitTimer.sessionId = 
+                                            psessionEntry->peSessionId;
+
+    if (tx_timer_activate(&pMac->lim.limTimers.gLimTdlsDisRspWaitTimer)
+                                                               != TX_SUCCESS)
+    {
+        limLog(pMac, LOGP, FL("TDLS discovery response timer \
+                                                  activation failed!\n"));
+        goto lim_tdls_dis_start_error;
+    }
+    /* 
+     * when timer expired, eWNI_SME_TDLS_DISCOVERY_START_RSP is sent 
+     *  back to SME 
+     */
+    return (eSIR_SUCCESS) ; 
+lim_tdls_dis_start_error:
+   /* in error case, PE has to sent the response SME immediately with error code */
+   limSendSmeTdlsDisRsp(pMac, eSIR_FAILURE, 
+                                     eWNI_SME_TDLS_DISCOVERY_START_RSP);
+   return eSIR_FAILURE;
+}
+/*
+ * Process link start request recieved from SME and transmit to AP.
+ */
+eHalStatus limProcessSmeLinkStartReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
+{
+    /* get all discovery request parameters */
+    tSirTdlsSetupReq *setupReq = (tSirTdlsSetupReq *) pMsgBuf ;
+    tLimTdlsLinkSetupInfo *linkSetupInfo; 
+    //tLimTdlsLinkSetupPeer *setupPeer;
+    tpPESession psessionEntry;
+    tANI_U8      sessionId;
+    eHalStatus   status;
+    
+    if((psessionEntry = peFindSessionByBssid(pMac, 
+                                    setupReq->bssid, &sessionId)) == NULL)
+    {
+         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+                     "PE Session does not exist for given sme sessionId %d\n", 
+                                                          setupReq->sessionId);
+         goto lim_tdls_link_start_error;
+    }
+    
+    /* check if we are in proper state to work as TDLS client */ 
+    if (psessionEntry->limSystemRole != eLIM_STA_ROLE)
+    {
+        VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+                      "TDLS link setup req received in wrong system Role %d\n",
+                                                psessionEntry->limSystemRole);
+        goto lim_tdls_link_start_error;
+    }
+
+    /*
+     * if we are still good, go ahead and check if we are in proper state to
+     * do TDLS setup procedure.
+     */
+    if ((psessionEntry->limSmeState != eLIM_SME_ASSOCIATED_STATE) &&
+            (psessionEntry->limSmeState != eLIM_SME_LINK_EST_STATE))
+    {
+        limLog(pMac, LOGE, "Setup request in invalid LIMsme \
+                              state (%d)\n", pMac->lim.gLimSmeState);
+        goto lim_tdls_link_start_error;
+    }
+    
+    /*
+     * Now, go ahead and transmit TDLS discovery request, and save setup Req 
+     * info for future reference.
+     */
+     /* create node for Link setup */
+    linkSetupInfo = &pMac->lim.gLimTdlsLinkSetupInfo ;
+    //setupPeer = NULL ;
+   
+    status = limTdlsPrepareSetupReqFrame(pMac, linkSetupInfo, setupReq->dialog, 
+                                          setupReq->peerMac, psessionEntry) ; 
+    if(eHAL_STATUS_SUCCESS == status)
+    /* in case of success, eWNI_SME_TDLS_LINK_START_RSP is sent back to SME later when 
+    TDLS setup cnf TX complete is successful. */
+        return eSIR_SUCCESS;
+#if 0
+
+    /*
+    * we allocate the TDLS setup Peer Memory here, we will free'd this
+    * memory after teardown, if the link is successfully setup or
+    * free this memory if any timeout is happen in link setup procedure
+    */
+    if( eHAL_STATUS_SUCCESS != palAllocateMemory( pMac->hHdd,
+                  (void **) &setupPeer, sizeof( tLimTdlsLinkSetupPeer )))
+    {
+     limLog( pMac, LOGP, 
+                  FL( "Unable to allocate memory during ADD_STA\n" ));
+     VOS_ASSERT(0) ;
+     return eSIR_MEM_ALLOC_FAILED;
+    }
+    setupPeer->dialog = setupReq->dialog ;
+    setupPeer->tdls_prev_link_state =  setupPeer->tdls_link_state ;
+    setupPeer->tdls_link_state = TDLS_LINK_SETUP_START_STATE ;
+    /* TDLS_sessionize: remember sessionId for future */
+    setupPeer->tdls_sessionId = psessionEntry->peSessionId;
+    setupPeer->tdls_bIsResponder = 1;
+
+    /* 
+    * we only populate peer MAC, so it can assit us to find the
+    * TDLS peer after response/or after response timeout
+    */
+    palCopyMemory(pMac->hHdd, setupPeer->peerMac, setupReq->peerMac,
+                                              sizeof(tSirMacAddr)) ;
+    /* format TDLS discovery request frame and transmit it */
+    limSendTdlsLinkSetupReqFrame(pMac, setupReq->peerMac, 
+                                       setupReq->dialog, psessionEntry, NULL, 0) ;
+
+    limStartTdlsTimer(pMac, psessionEntry->peSessionId, 
+                        &setupPeer->gLimTdlsLinkSetupRspTimeoutTimer,
+     (tANI_U32)setupPeer->peerMac, WNI_CFG_TDLS_LINK_SETUP_RSP_TIMEOUT,
+                            SIR_LIM_TDLS_LINK_SETUP_RSP_TIMEOUT) ;
+    /* update setup peer list */
+    setupPeer->next = linkSetupInfo->tdlsLinkSetupList ;
+    linkSetupInfo->tdlsLinkSetupList = setupPeer ;
+    /* in case of success, eWNI_SME_TDLS_LINK_START_RSP is sent back to SME later when 
+    TDLS setup cnf TX complete is successful. --> see limTdlsSetupCnfTxComplete() */
+    return eSIR_SUCCESS ; 
+#endif
+lim_tdls_link_start_error:    
+    /* in case of error, return immediately to SME */
+    limSendSmeTdlsLinkStartRsp(pMac, eSIR_FAILURE, setupReq->peerMac, 
+                                         eWNI_SME_TDLS_LINK_START_RSP);
+    return eSIR_FAILURE ;
+}
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /*
  * Process link teardown request recieved from SME and transmit to AP.
  */
@@ -5027,7 +5359,11 @@ eHalStatus limProcessSmeTeardownReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     if((psessionEntry = peFindSessionByBssid(pMac, teardownReq->bssid, &sessionId)) == NULL)
     {
          VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+<<<<<<< HEAD
                         "PE Session does not exist for given sme sessionId %d", teardownReq->sessionId);
+=======
+                        "PE Session does not exist for given sme sessionId %d\n", teardownReq->sessionId);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
          goto lim_tdls_teardown_req_error;
     }
     
@@ -5035,7 +5371,11 @@ eHalStatus limProcessSmeTeardownReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     if (psessionEntry->limSystemRole != eLIM_STA_ROLE)
     {
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+<<<<<<< HEAD
                           "TDLS teardown req received in wrong system Role %d", psessionEntry->limSystemRole);
+=======
+                          "TDLS teardown req received in wrong system Role %d\n", psessionEntry->limSystemRole);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto lim_tdls_teardown_req_error;
     }
 
@@ -5047,12 +5387,20 @@ eHalStatus limProcessSmeTeardownReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
             (psessionEntry->limSmeState != eLIM_SME_LINK_EST_STATE))
     {
         limLog(pMac, LOGE, "TDLS teardwon req received in invalid LIMsme \
+<<<<<<< HEAD
                                state (%d)", psessionEntry->limSmeState);
+=======
+                               state (%d)\n", psessionEntry->limSmeState);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto lim_tdls_teardown_req_error;
     }
     
     VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
             "Teardown for peer = %02x,%02x,%02x,%02x,%02x,%02x",
+=======
+            "Teardown for peer = %02x,%02x,%02x,%02x,%02x,%02x\n",
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                              teardownReq->peerMac[0],
                                              teardownReq->peerMac[1],
                                              teardownReq->peerMac[2],
@@ -5069,7 +5417,11 @@ eHalStatus limProcessSmeTeardownReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     if(NULL == setupPeer)
     {
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
                                 ("invalid Peer on teardown ")) ;
+=======
+                                ("invalid Peer on teardown \n")) ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto lim_tdls_teardown_req_error;
     }
 
@@ -5079,7 +5431,11 @@ eHalStatus limProcessSmeTeardownReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     /* TDLS_sessionize: check sessionId in case */
     if((setupPeer)->tdls_sessionId != psessionEntry->peSessionId) 
     {
+<<<<<<< HEAD
         limLog(pMac, LOGE, "TDLS teardown req; stored sessionId (%d) not matched from peSessionId (%d)", \
+=======
+        limLog(pMac, LOGE, "TDLS teardown req; stored sessionId (%d) not matched from peSessionId (%d)\n", \
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             (setupPeer)->tdls_sessionId, psessionEntry->limSmeState);
         (setupPeer)->tdls_sessionId = psessionEntry->peSessionId;
     }
@@ -5089,7 +5445,11 @@ eHalStatus limProcessSmeTeardownReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
                                 eSIR_MAC_TDLS_TEARDOWN_UNSPEC_REASON, psessionEntry, NULL, 0 ))
     {
         VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
                                 ("couldn't send teardown frame ")) ;
+=======
+                                ("couldn't send teardown frame \n")) ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto lim_tdls_teardown_req_error;
     }
     /* in case of success, eWNI_SME_TDLS_TEARDOWN_RSP is sent back to SME later when 
@@ -5113,7 +5473,11 @@ __limProcessSmeResetApCapsChange(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     tANI_U8  sessionId = 0;
     if (pMsgBuf == NULL)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGE,FL("Buffer is Pointing to NULL"));
+=======
+        limLog(pMac, LOGE,FL("Buffer is Pointing to NULL\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -5121,7 +5485,11 @@ __limProcessSmeResetApCapsChange(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     psessionEntry = peFindSessionByBssid(pMac, pResetCapsChange->bssId, &sessionId);
     if (psessionEntry == NULL)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGE, FL("Session does not exist for given BSSID"));
+=======
+        limLog(pMac, LOGE, FL("Session does not exist for given BSSID\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -5213,6 +5581,12 @@ limProcessSmeReqMessages(tpAniSirGlobal pMac, tpSirMsgQ pMsg)
         case eWNI_SME_UPDATE_NOA:
             __limProcessSmeNoAUpdate(pMac, pMsgBuf);
             break;
+<<<<<<< HEAD
+=======
+        case eWNI_SME_CLEAR_DFS_CHANNEL_LIST:
+            __limProcessClearDfsChannelList(pMac, pMsg);
+            break;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         case eWNI_SME_JOIN_REQ:
             __limProcessSmeJoinReq(pMac, pMsgBuf);
             break;
@@ -5269,7 +5643,11 @@ limProcessSmeReqMessages(tpAniSirGlobal pMac, tpSirMsgQ pMsg)
             if (pMsg->type == eWNI_SME_ASSOC_CNF)
                 PELOG1(limLog(pMac, LOG1, FL("Received ASSOC_CNF message"));)
             else
+<<<<<<< HEAD
                 PELOG1(limLog(pMac, LOG1, FL("Received REASSOC_CNF message"));)
+=======
+                PELOG1(limLog(pMac, LOG1, FL("Received REASSOC_CNF message\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             __limProcessSmeAssocCnfNew(pMac, pMsg->type, pMsgBuf);
             break;
 

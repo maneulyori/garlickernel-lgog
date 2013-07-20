@@ -669,7 +669,11 @@ tSirRetStatus limSendBeaconFilterInfo(tpAniSirGlobal pMac,tpPESession psessionEn
 
     if( psessionEntry == NULL )
     {
+<<<<<<< HEAD
         limLog( pMac, LOGE, FL("Fail to find the right session "));
+=======
+        limLog( pMac, LOGE, FL("Fail to find the right session \n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         retCode = eSIR_FAILURE;
         return retCode;
     }
@@ -736,7 +740,11 @@ tSirRetStatus limSendModeUpdate(tpAniSirGlobal pMac,
           (void **) &pVhtOpMode, sizeof(tUpdateVHTOpMode)))
     {
         limLog( pMac, LOGP,
+<<<<<<< HEAD
             FL( "Unable to PAL allocate memory during Update Op Mode" ));
+=======
+            FL( "Unable to PAL allocate memory during Update Op Mode\n" ));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eSIR_MEM_ALLOC_FAILED;
     }
     palCopyMemory( pMac->hHdd, (tANI_U8 *)pVhtOpMode, pTempParam, sizeof(tUpdateVHTOpMode));
@@ -758,7 +766,11 @@ tSirRetStatus limSendModeUpdate(tpAniSirGlobal pMac,
     {
         palFreeMemory(pMac->hHdd, pVhtOpMode);
         limLog( pMac, LOGP,
+<<<<<<< HEAD
                     FL("Posting  WDA_UPDATE_OP_MODE to WDA failed, reason=%X"),
+=======
+                    FL("Posting  WDA_UPDATE_OP_MODE to WDA failed, reason=%X\n"),
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     retCode );
     }
 
@@ -787,7 +799,11 @@ tSirRetStatus limSendTdlsLinkEstablish(tpAniSirGlobal pMac, tANI_U8 bIsPeerRespo
           sizeof(tSirTdlsLinkEstablishInd)))
     {
         limLog( pMac, LOGP,
+<<<<<<< HEAD
         FL( "Unable to PAL allocate memory while sending Tdls Link Establish " ));
+=======
+        FL( "Unable to PAL allocate memory while sending Tdls Link Establish \n" ));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
         retCode = eSIR_SME_RESOURCES_UNAVAILABLE;
         return retCode;
@@ -815,7 +831,11 @@ tSirRetStatus limSendTdlsLinkEstablish(tpAniSirGlobal pMac, tANI_U8 bIsPeerRespo
     if (retCode != eSIR_SUCCESS)
     {
         palFreeMemory(pMac, (void*)pTdlsLinkEstablish);
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("Posting tdls link establish %d failed, reason = %x "), retCode);
+=======
+        limLog(pMac, LOGP, FL("Posting tdls link establish %d failed, reason = %x \n"), retCode);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 
     return retCode;
@@ -840,7 +860,11 @@ tSirRetStatus limSendTdlsLinkTeardown(tpAniSirGlobal pMac, tANI_U16 staId)
           sizeof(tSirTdlsLinkTeardownInd)))
     {
         limLog( pMac, LOGP,
+<<<<<<< HEAD
         FL( "Unable to PAL allocate memory while sending Tdls Link Teardown " ));
+=======
+        FL( "Unable to PAL allocate memory while sending Tdls Link Teardown \n" ));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
         retCode = eSIR_SME_RESOURCES_UNAVAILABLE;
         return retCode;
@@ -861,7 +885,11 @@ tSirRetStatus limSendTdlsLinkTeardown(tpAniSirGlobal pMac, tANI_U16 staId)
     if (retCode != eSIR_SUCCESS)
     {
         palFreeMemory(pMac, (void*)pTdlsLinkTeardown);
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("Posting tdls link teardown %d failed, reason = %x "), retCode);
+=======
+        limLog(pMac, LOGP, FL("Posting tdls link teardown %d failed, reason = %x \n"), retCode);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 
     return retCode;

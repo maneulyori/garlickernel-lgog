@@ -126,7 +126,11 @@ typedef struct sSirFTPreAuthKeyInfo
 typedef struct sFTPEContext
 {
     tpSirFTPreAuthReq pFTPreAuthReq;                      // Saved FT Pre Auth Req
+<<<<<<< HEAD
     void              *psavedsessionEntry;
+=======
+    void              *psavedsessionEntry;                
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     tSirRetStatus     ftPreAuthStatus;
     tANI_U16          saved_auth_rsp_length;
     tANI_U8           saved_auth_rsp[MAX_FTIE_SIZE];

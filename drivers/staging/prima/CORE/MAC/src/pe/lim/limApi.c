@@ -119,6 +119,7 @@ static void __limInitScanVars(tpAniSirGlobal pMac)
     palZeroMemory(pMac->hHdd, pMac->lim.gLimCachedScanHashTable,
                     sizeof(pMac->lim.gLimCachedScanHashTable));
 
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 
     pMac->lim.gLimMlmLfrScanResultLength = 0;
@@ -127,6 +128,8 @@ static void __limInitScanVars(tpAniSirGlobal pMac)
     palZeroMemory(pMac->hHdd, pMac->lim.gLimCachedLfrScanHashTable,
                     sizeof(pMac->lim.gLimCachedLfrScanHashTable));
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pMac->lim.gLimBackgroundScanChannelId = 0;
     pMac->lim.gLimBackgroundScanStarted = 0;
     pMac->lim.gLimRestoreCBNumScanInterval = LIM_RESTORE_CB_NUM_SCAN_INTERVAL_DEFAULT;

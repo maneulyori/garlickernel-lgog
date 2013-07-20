@@ -648,6 +648,8 @@ VOS_STATUS vos_nv_open(void)
         }
     
         if (vos_nv_getValidity(VNV_HW_CAL_VALUES, &itemIsValid) == 
+<<<<<<< HEAD
+=======
          VOS_STATUS_SUCCESS)
         {
             if (itemIsValid == VOS_TRUE)
@@ -659,10 +661,25 @@ VOS_STATUS vos_nv_open(void)
         }
 
         if (vos_nv_getValidity(VNV_FW_CONFIG, &itemIsValid) == 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
          VOS_STATUS_SUCCESS)
         {
             if (itemIsValid == VOS_TRUE)
             {
+<<<<<<< HEAD
+                if(vos_nv_read( VNV_HW_CAL_VALUES, (v_VOID_t *)&pnvEFSTable->halnv
+    .tables.hwCalValues, NULL, sizeof(sHwCalValues) ) != VOS_STATUS_SUCCESS)
+                    goto error;
+            }
+        }
+
+        if (vos_nv_getValidity(VNV_FW_CONFIG, &itemIsValid) == 
+         VOS_STATUS_SUCCESS)
+        {
+            if (itemIsValid == VOS_TRUE)
+            {
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 if(vos_nv_read( VNV_FW_CONFIG, (v_VOID_t *)&pnvEFSTable->halnv
     .tables.fwConfig, NULL, sizeof(sFwConfig) ) != VOS_STATUS_SUCCESS)
                     goto error;
@@ -1759,23 +1776,35 @@ VOS_STATUS vos_nv_getNVBuffer(v_VOID_t **pNvBuffer,v_SIZE_t *pSize)
   -------------------------------------------------------------------------*/
 VOS_STATUS vos_nv_setRegDomain(void * clientCtxt, v_REGDOMAIN_t regId)
 {
+<<<<<<< HEAD
     v_CONTEXT_t pVosContext = NULL;
     hdd_context_t *pHddCtx = NULL;
     struct wiphy *wiphy = NULL;
     v_U8_t nBandCapability;
     int i, j, k, m;
 
+=======
+   v_CONTEXT_t pVosContext = NULL;
+   hdd_context_t *pHddCtx = NULL;
+   struct wiphy *wiphy = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    /* Client Context Argumant not used for PRIMA */
-   if(regId >= REGDOMAIN_COUNT)
+   if (regId >= REGDOMAIN_COUNT)
    {
       VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
                 "VOS set reg domain, invalid REG domain ID %d", regId);
       return VOS_STATUS_E_INVAL;
    }
 
+   pVosContext = vos_get_global_context(VOS_MODULE_ID_SYS, NULL);
+   if (NULL != pVosContext)
+      pHddCtx = vos_get_context(VOS_MODULE_ID_HDD, pVosContext);
+   else
+      return VOS_STATUS_E_EXISTS;
    /* Set correct channel information based on REG Domain */
    regChannels = pnvEFSTable->halnv.tables.regDomains[regId].channels;
 
+<<<<<<< HEAD
    pVosContext = vos_get_global_context(VOS_MODULE_ID_SYS, NULL);
    if (NULL != pVosContext)
        pHddCtx = vos_get_context(VOS_MODULE_ID_HDD, pVosContext);
@@ -1846,6 +1875,17 @@ VOS_STATUS vos_nv_setRegDomain(void * clientCtxt, v_REGDOMAIN_t regId)
        }
     }
 
+=======
+   /* when CRDA is not running then we are world roaming.
+      In this case if 11d is enabled, then country code should
+      be update on basis of world roaming */
+   if (memcmp(pHddCtx->cfg_ini->crdaDefaultCountryCode,
+                    CFG_CRDA_DEFAULT_COUNTRY_CODE_DEFAULT , 2) == 0)
+   {
+      wiphy = pHddCtx->wiphy;
+      regulatory_hint(wiphy, "00");
+   }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    return VOS_STATUS_SUCCESS;
 }
 
@@ -1925,6 +1965,7 @@ static int bw20_ch_index_to_bw40_ch_index(int k)
 return m;
 }
 
+<<<<<<< HEAD
 void crda_regulatory_entry_default(v_U8_t *countryCode, int domain_id)
 {
    int k;
@@ -1987,6 +2028,8 @@ static int crda_regulatory_entry_post_processing(struct wiphy *wiphy,
    return 0;
 }
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /* create_crda_regulatory_entry should be called from user command or 11d country IE */
 static int create_crda_regulatory_entry(struct wiphy *wiphy,
                 struct regulatory_request *request,
@@ -2046,16 +2089,26 @@ static int create_crda_regulatory_entry(struct wiphy *wiphy,
            {
               pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[k].enabled =
                  NV_CHANNEL_DFS;
+<<<<<<< HEAD
               // max_power is in mBm = 100 * dBm
               pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[k].pwrLimit =
                  (tANI_S8) ((wiphy->bands[i]->channels[j].max_power)/100);
+=======
+              // max_power is in mBm = 100 * d
+              pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[k].pwrLimit =
+                 (tANI_S8) (wiphy->bands[i]->channels[j].max_power);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
               if ((wiphy->bands[i]->channels[j].flags & IEEE80211_CHAN_NO_HT40) == 0)
               {
                  pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[n].enabled =
                     NV_CHANNEL_DFS;
                  // 40MHz channel power is half of 20MHz (-3dB) ??
                  pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[n].pwrLimit =
+<<<<<<< HEAD
                     (tANI_S8) (((wiphy->bands[i]->channels[j].max_power)/100)-3);
+=======
+                    (tANI_S8) ((wiphy->bands[i]->channels[j].max_power)-3);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
               }
            }
            else // Enable is only last flag we support
@@ -2064,14 +2117,22 @@ static int create_crda_regulatory_entry(struct wiphy *wiphy,
                  NV_CHANNEL_ENABLE;
               // max_power is in dBm
               pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[k].pwrLimit =
+<<<<<<< HEAD
                  (tANI_S8) ((wiphy->bands[i]->channels[j].max_power)/100);
+=======
+                 (tANI_S8) (wiphy->bands[i]->channels[j].max_power);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
               if ((wiphy->bands[i]->channels[j].flags & IEEE80211_CHAN_NO_HT40) == 0)
               {
                  pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[n].enabled =
                     NV_CHANNEL_ENABLE;
                  // 40MHz channel power is half of 20MHz (-3dB) ??
                  pnvEFSTable->halnv.tables.regDomains[NUM_REG_DOMAINS-2].channels[n].pwrLimit =
+<<<<<<< HEAD
                     (tANI_S8) (((wiphy->bands[i]->channels[j].max_power)/100)-3);
+=======
+                    (tANI_S8) ((wiphy->bands[i]->channels[j].max_power)-3);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
               }
            }
            /* ignore CRDA max_antenna_gain typical is 3dBi, nv.bin antennaGain is
@@ -2083,7 +2144,10 @@ static int create_crda_regulatory_entry(struct wiphy *wiphy,
    run_time_alpha2[0] = request->alpha2[0];
    run_time_alpha2[1] = request->alpha2[1];
    crda_regulatory_run_time_entry_valid = VOS_TRUE;
+<<<<<<< HEAD
    crda_regulatory_entry_post_processing(wiphy, request, nBandCapability, NUM_REG_DOMAINS-2);
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 return 0;
 }
 v_BOOL_t is_crda_regulatory_entry_valid(void)
@@ -2351,7 +2415,10 @@ static int create_crda_regulatory_entry_from_regd(struct wiphy *wiphy,
      run_time_alpha2[1] = request->alpha2[1];
      crda_regulatory_run_time_entry_valid = VOS_TRUE;
   }
+<<<<<<< HEAD
   crda_regulatory_entry_post_processing(wiphy, request, nBandCapability, domain_id);
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   return 0;
 }
 
@@ -2366,6 +2433,14 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
                 struct regulatory_request *request)
 {
     hdd_context_t *pHddCtx = wiphy_priv(wiphy);
+<<<<<<< HEAD
+=======
+    v_REGDOMAIN_t domainIdCurrent;
+    tANI_U8 ccode[WNI_CFG_COUNTRY_CODE_LEN];
+    tANI_U8 uBufLen = WNI_CFG_COUNTRY_CODE_LEN;
+    eCsrBand nBandCapability;
+    int i=0,j=0,k=0,m=0;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     wiphy_dbg(wiphy, "info: cfg80211 reg_notifier callback for country"
                      " %c%c\n", request->alpha2[0], request->alpha2[1]);
     if (request->initiator == NL80211_REGDOM_SET_BY_USER)
@@ -2394,13 +2469,32 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
        // sme_ChangeCountryCode(pHddCtx->hHal, NULL,
        //    &country_code[0], pAdapter, pHddCtx->pvosContext);
     }
+<<<<<<< HEAD
     else if (request->initiator == NL80211_REGDOM_SET_BY_DRIVER)
     {
        wiphy_dbg(wiphy, "info: set by driver\n");
+=======
+    else if (request->initiator == NL80211_REGDOM_SET_BY_DRIVER ||
+             (request->initiator == NL80211_REGDOM_SET_BY_CORE))
+    {
+       if ( eHAL_STATUS_SUCCESS !=  sme_GetCountryCode(pHddCtx->hHal, ccode, &uBufLen))
+       {
+          wiphy_dbg(wiphy, "info: set by driver CCODE ERROR\n");
+          return 0;
+       }
+       if (eHAL_STATUS_SUCCESS != sme_GetRegulatoryDomainForCountry (pHddCtx->hHal,
+                                           ccode, (v_REGDOMAIN_t *) &domainIdCurrent))
+       {
+          wiphy_dbg(wiphy, "info: set by driver ERROR\n");
+          return 0;
+       }
+       wiphy_dbg(wiphy, "country: %c%c set by driver\n",ccode[0],ccode[1]);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
        /* if set by driver itself, it means driver can accept the crda
           regulatory settings and wiphy->regd should be populated with crda
           settings. iwiphy->bands doesn't seem to set ht40 flags in kernel
           correctly, this may be fixed by later kernel */
+<<<<<<< HEAD
        if (create_crda_regulatory_entry_from_regd(wiphy, request, pHddCtx->cfg_ini->nBandCapability) == 0)
        {
           pr_info("crda entry created.\n");
@@ -2427,6 +2521,152 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
 
        /* Haven't seen any condition that will set by driver after init.
           If we do, then we should also call sme_ChangeCountryCode */
+=======
+       if (memcmp(pHddCtx->cfg_ini->crdaDefaultCountryCode,
+                         CFG_CRDA_DEFAULT_COUNTRY_CODE_DEFAULT , 2) != 0)
+       {
+          if (create_crda_regulatory_entry_from_regd(wiphy, request, pHddCtx->cfg_ini->nBandCapability) == 0)
+          {
+             pr_info("crda entry created.\n");
+             if (crda_alpha2[0] == request->alpha2[0] && crda_alpha2[1] == request->alpha2[1])
+             {
+                /* first CRDA request should be from init time */
+                /* Change default country code to CRDA country code, assume indoor */
+                pnvEFSTable->halnv.tables.defaultCountryTable.countryCode[0] = request->alpha2[0];
+                pnvEFSTable->halnv.tables.defaultCountryTable.countryCode[1] = request->alpha2[1];
+                pnvEFSTable->halnv.tables.defaultCountryTable.countryCode[2] = 'I';
+                pnvEFSTable->halnv.tables.defaultCountryTable.regDomain = NUM_REG_DOMAINS-1;
+                wiphy_dbg(wiphy, "info: init time default country code is %c%c%c\n",
+                pnvEFSTable->halnv.tables.defaultCountryTable.countryCode[0],
+                    pnvEFSTable->halnv.tables.defaultCountryTable.countryCode[1],
+                       pnvEFSTable->halnv.tables.defaultCountryTable.countryCode[2]);
+             }
+             else /* second or later CRDA request after init time */
+             {
+                wiphy_dbg(wiphy, "info: crda none-default country code is %c%c\n",
+                    request->alpha2[0], request->alpha2[1]);
+             }
+             // hdd will read regd for this country after complete
+          }
+          complete(&pHddCtx->driver_crda_req);
+       }
+       else
+       {
+          sme_GetFreqBand(pHddCtx->hHal, &nBandCapability);
+          for (i=0, m=0; i<IEEE80211_NUM_BANDS; i++)
+          {
+             if (NULL == wiphy->bands[i])
+             {
+                VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
+                     "error: wiphy->bands[i] is NULL, i = %d", i);
+                continue;
+             }
+
+             // internal channels[] is one continous array for both 2G and 5G bands
+             // m is internal starting channel index for each band
+             if (0 == i)
+             {
+                m = 0;
+             }
+             else
+             {
+                if( wiphy->bands[i-1] == NULL)
+                {
+                   m = 14;
+                }
+                else
+                {
+                   if(eCSR_BAND_5G == nBandCapability)
+                   {
+                      m = wiphy->bands[i-1]->n_channels + 11;
+                   }
+                   else
+                   {
+                      m = wiphy->bands[i-1]->n_channels + m;
+                   }
+                }
+             }
+
+             for (j=0; j<wiphy->bands[i]->n_channels; j++)
+             {
+                // k = (m + j) is internal current channel index for 20MHz channel
+                // n is internal channel index for corresponding 40MHz channel
+                k = m + j;
+
+                if (IEEE80211_BAND_2GHZ == i && eCSR_BAND_5G == nBandCapability) // 5G only
+                {
+                   // Enable social channels for P2P
+                   if ((2412 == wiphy->bands[i]->channels[j].center_freq ||
+                       2437 == wiphy->bands[i]->channels[j].center_freq ||
+                       2462 == wiphy->bands[i]->channels[j].center_freq ) &&
+                       NV_CHANNEL_ENABLE == regChannels[k].enabled)
+                   {
+                       wiphy->bands[i]->channels[j].flags &= ~IEEE80211_CHAN_DISABLED;
+                   }
+                   else
+                   {
+                      wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_DISABLED;
+                   }
+                   continue;
+                }
+                else if (IEEE80211_BAND_5GHZ == i && eCSR_BAND_24 == nBandCapability) // 2G only
+                {
+                   wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_DISABLED;
+                   continue;
+                }
+
+                if (NV_CHANNEL_DISABLE == regChannels[k].enabled ||
+                    NV_CHANNEL_INVALID == regChannels[k].enabled)
+                {
+                   wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_DISABLED;
+                }
+                else if (NV_CHANNEL_DFS == regChannels[k].enabled)
+                {
+                   wiphy->bands[i]->channels[j].flags &= ~(IEEE80211_CHAN_DISABLED
+                                                          |IEEE80211_CHAN_RADAR);
+                   wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
+                }
+                else
+                {
+                   wiphy->bands[i]->channels[j].flags &= ~(IEEE80211_CHAN_DISABLED
+                                                          |IEEE80211_CHAN_PASSIVE_SCAN
+                                                          |IEEE80211_CHAN_NO_IBSS
+                                                          |IEEE80211_CHAN_RADAR);
+                }
+             }
+          }
+          /* Haven't seen any condition that will set by driver after init.
+           If we do, then we should also call sme_ChangeCountryCode */
+          if (wiphy->bands[IEEE80211_BAND_5GHZ])
+          {
+             for (j=0; j<wiphy->bands[IEEE80211_BAND_5GHZ]->n_channels; j++)
+             {
+                 // p2p UNII-1 band channels are passive when domain is FCC.
+                if ((wiphy->bands[IEEE80211_BAND_5GHZ ]->channels[j].center_freq == 5180 ||
+                               wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5200 ||
+                               wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5220 ||
+                               wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5240) &&
+                               (ccode[0]== 'U'&& ccode[1]=='S'))
+                {
+                   wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
+                }
+                else if ((wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5180 ||
+                                    wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5200 ||
+                                    wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5220 ||
+                                    wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5240) &&
+                                    (ccode[0]!= 'U'&& ccode[1]!='S'))
+                {
+                   wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
+                }
+             }
+          }
+
+          if (request->initiator == NL80211_REGDOM_SET_BY_CORE || request->initiator == NL80211_REGDOM_SET_BY_DRIVER)
+          {
+             request->processed = 1;
+          }
+       }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 return 0;
 }

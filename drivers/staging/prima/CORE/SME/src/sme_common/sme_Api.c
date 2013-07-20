@@ -1716,9 +1716,12 @@ eHalStatus sme_ProcessMsg(tHalHandle hHal, vos_msg_t* pMsg)
           case eWNI_SME_TDLS_DEL_STA_IND:
           case eWNI_SME_TDLS_DEL_ALL_PEER_IND:
           case eWNI_SME_MGMT_FRM_TX_COMPLETION_IND:
+<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
           case eWNI_SME_TDLS_AP_DISAPPEAR_IND:
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #ifdef FEATURE_WLAN_TDLS_INTERNAL
           case eWNI_SME_TDLS_DISCOVERY_START_RSP:
           case eWNI_SME_TDLS_DISCOVERY_START_IND:
@@ -5191,6 +5194,7 @@ eHalStatus sme_RoamUpdateAPWPARSNIEs(tHalHandle hHal, tANI_U8 sessionId, tSirRSN
    return (status);
 }
 /* ---------------------------------------------------------------------------
+<<<<<<< HEAD
 
     \fn sme_ChangeMCCBeaconInterval
 
@@ -5210,6 +5214,27 @@ eHalStatus sme_ChangeMCCBeaconInterval(tHalHandle hHal, tANI_U8 sessionId)
    eHalStatus status = eHAL_STATUS_FAILURE;
    tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
 
+=======
+
+    \fn sme_ChangeMCCBeaconInterval
+
+    \brief To update P2P-GO beaconInterval. This function should be called after 
+    disassociating all the station is done 
+    This is an asynchronous API.
+
+    \param 
+
+    \return eHalStatus  SUCCESS 
+                        FAILURE or RESOURCES 
+                        The API finished and failed.
+
+  -------------------------------------------------------------------------------*/
+eHalStatus sme_ChangeMCCBeaconInterval(tHalHandle hHal, tANI_U8 sessionId)
+{
+   eHalStatus status = eHAL_STATUS_FAILURE;
+   tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    smsLog(pMac, LOG1, FL("Update Beacon PARAMS "));
    status = sme_AcquireGlobalLock( &pMac->sme );
    if ( HAL_STATUS_SUCCESS( status ) )
@@ -6000,6 +6025,7 @@ eHalStatus sme_PreferredNetworkFoundInd (tHalHandle hHal, void* pMsg)
    {
       if (pPrefNetworkFoundInd->ssId.length > 0)
       {
+<<<<<<< HEAD
          ssIdLength = CSR_MIN(SIR_MAC_MAX_SSID_LENGTH,
                               pPrefNetworkFoundInd->ssId.length);
          vos_mem_copy(dumpSsId, pPrefNetworkFoundInd->ssId.ssId, ssIdLength);
@@ -6023,6 +6049,11 @@ eHalStatus sme_PreferredNetworkFoundInd (tHalHandle hHal, void* pMsg)
             smsLog(pMac, LOGE, FL(" not enough data length %d needed %d"),
                pPrefNetworkFoundInd->mesgLen, sizeof(tSirPrefNetworkFoundInd));
          }
+=======
+          smsLog(pMac, LOG1, "Preferred Network Found Indication in %s(), SSID=%s",
+                 __func__, pPrefNetworkFoundInd->ssId.ssId);
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
          /* Call Preferred Netowrk Found Indication callback routine. */
          if (HAL_STATUS_SUCCESS(status) && (pMac->pmc.prefNetwFoundCB != NULL))
@@ -6253,7 +6284,11 @@ eHalStatus sme_8023MulticastList (tHalHandle hHal, tANI_U8 sessionId, tpSirRcvFl
     tCsrRoamSession         *pSession = NULL;
 
     VOS_TRACE( VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, "%s: "
+<<<<<<< HEAD
                "ulMulticastAddrCnt=%d, multicastAddr[0]=%p", __func__,
+=======
+               "ulMulticastAddrCnt=%d, multicastAddr[0]=%d", __func__,
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                pMulticastAddrs->ulMulticastAddrCnt,
                pMulticastAddrs->multicastAddr[0]);
 
@@ -6344,6 +6379,11 @@ eHalStatus sme_ReceiveFilterSetFilter(tHalHandle hHal, tpSirRcvPktFilterCfgType 
     vos_mem_copy( pRcvPktFilterCfg->selfMacAddr, pSession->selfMacAddr, sizeof(tSirMacAddr));
     vos_mem_copy( pRcvPktFilterCfg->bssId, pSession->connectedProfile.bssid, 
                           sizeof(tSirMacAddr));
+<<<<<<< HEAD
+=======
+
+    vos_mem_copy(pRequestBuf, pRcvPktFilterCfg, allocSize);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     vos_mem_copy(pRequestBuf, pRcvPktFilterCfg, allocSize);
 
@@ -7065,12 +7105,16 @@ eHalStatus sme_UpdateRoamRssiDiff(tHalHandle hHal, v_U8_t RoamRssiDiff)
         pMac->roam.configParam.RoamRssiDiff = RoamRssiDiff;
         sme_ReleaseGlobalLock( &pMac->sme );
     }
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     if (pMac->roam.configParam.isRoamOffloadScanEnabled)
     {
        csrRoamOffloadScan(pMac, ROAM_SCAN_OFFLOAD_UPDATE_CFG, REASON_RSSI_DIFF_CHANGED);
     }
 #endif
+=======
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return status ;
 }
 
@@ -7103,6 +7147,7 @@ eHalStatus sme_UpdateFastTransitionEnabled(tHalHandle hHal,
 
     return status ;
 }
+<<<<<<< HEAD
 
 /* ---------------------------------------------------------------------------
     \fn sme_UpdateWESMode
@@ -7118,10 +7163,166 @@ eHalStatus sme_UpdateWESMode(tHalHandle hHal, v_BOOL_t isWESModeEnabled)
 {
     tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
     eHalStatus          status    = eHAL_STATUS_SUCCESS;
+=======
+#endif /* (WLAN_FEATURE_VOWIFI_11R) || (FEATURE_WLAN_CCX) || (FEATURE_WLAN_LFR) */
+
+#ifdef FEATURE_WLAN_LFR
+/*--------------------------------------------------------------------------
+  \brief sme_UpdateIsFastRoamIniFeatureEnabled() - enable/disable LFR support at runtime
+  It is used at in the REG_DYNAMIC_VARIABLE macro definition of 
+  isFastRoamIniFeatureEnabled.
+  This is a synchronous call
+  \param hHal - The handle returned by macOpen.
+  \return eHAL_STATUS_SUCCESS - SME update isFastRoamIniFeatureEnabled config successfully.
+          Other status means SME is failed to update isFastRoamIniFeatureEnabled.
+  \sa
+  --------------------------------------------------------------------------*/
+eHalStatus sme_UpdateIsFastRoamIniFeatureEnabled(tHalHandle hHal, 
+        const v_BOOL_t isFastRoamIniFeatureEnabled)
+{
+  tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
+
+  if (pMac->roam.configParam.isFastRoamIniFeatureEnabled == isFastRoamIniFeatureEnabled)
+  {
+      VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
+                     "%s: FastRoam is already enabled or disabled, nothing to do (returning) old(%d) new(%d)", __func__,
+                      pMac->roam.configParam.isFastRoamIniFeatureEnabled,
+                      isFastRoamIniFeatureEnabled);
+      return eHAL_STATUS_SUCCESS;
+  }
+
+  VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
+                     "%s: FastRoamEnabled is changed from %d to %d", __func__,
+                      pMac->roam.configParam.isFastRoamIniFeatureEnabled,
+                      isFastRoamIniFeatureEnabled);
+  pMac->roam.configParam.isFastRoamIniFeatureEnabled = isFastRoamIniFeatureEnabled;
+  csrNeighborRoamUpdateFastRoamingEnabled(pMac, isFastRoamIniFeatureEnabled);
+
+  if(TRUE == isFastRoamIniFeatureEnabled)
+  {
+      sme_UpdateConfigFwRssiMonitoring(hHal, TRUE);
+  }
+  else
+  {
+      /* CCX also depend on FW Monitoring.
+         Hence Disabling LFR should check for CCX enable before disabling FW Monitoring */
+#ifdef FEATURE_WLAN_CCX
+      if(FALSE == pMac->roam.configParam.isCcxIniFeatureEnabled)
+#endif
+      {
+          VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
+                     "%s: Turn off FW Monitoring", __func__);
+          sme_UpdateConfigFwRssiMonitoring(hHal, FALSE);
+      }
+  }
+
+  return eHAL_STATUS_SUCCESS;
+}
+#endif /* FEATURE_WLAN_LFR */
+
+#ifdef FEATURE_WLAN_CCX
+/*--------------------------------------------------------------------------
+  \brief sme_UpdateIsCcxFeatureEnabled() - enable/disable CCX support at runtime
+  It is used at in the REG_DYNAMIC_VARIABLE macro definition of
+  isCcxIniFeatureEnabled.
+  This is a synchronous call
+  \param hHal - The handle returned by macOpen.
+  \return eHAL_STATUS_SUCCESS - SME update isCcxIniFeatureEnabled config successfully.
+          Other status means SME is failed to update isCcxIniFeatureEnabled.
+  \sa
+  --------------------------------------------------------------------------*/
+
+eHalStatus sme_UpdateIsCcxFeatureEnabled(tHalHandle hHal,
+                const v_BOOL_t isCcxIniFeatureEnabled)
+{
+  tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
+
+  if (pMac->roam.configParam.isCcxIniFeatureEnabled == isCcxIniFeatureEnabled)
+  {
+      VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
+                     "%s: CCX Mode is already enabled or disabled, nothing to do (returning) old(%d) new(%d)", __func__,
+                      pMac->roam.configParam.isCcxIniFeatureEnabled,
+                      isCcxIniFeatureEnabled);
+      return eHAL_STATUS_SUCCESS;
+  }
+
+  VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
+                     "%s: CcxEnabled is changed from %d to %d", __func__,
+                      pMac->roam.configParam.isCcxIniFeatureEnabled,
+                      isCcxIniFeatureEnabled);
+  pMac->roam.configParam.isCcxIniFeatureEnabled = isCcxIniFeatureEnabled;
+  csrNeighborRoamUpdateCcxModeEnabled(pMac, isCcxIniFeatureEnabled);
+
+  if(TRUE == isCcxIniFeatureEnabled)
+  {
+      sme_UpdateFastTransitionEnabled(hHal, TRUE);
+      sme_UpdateConfigFwRssiMonitoring(hHal, TRUE);
+  }
+  else
+  {
+      /* LFR also depend on FW Monitoring.
+         Hence Disabling CCX should check for LFR enable before disabling FW Monitoring and Fast Transition */
+#ifdef FEATURE_WLAN_LFR
+      if(FALSE == pMac->roam.configParam.isFastRoamIniFeatureEnabled)
+#endif
+      {
+          VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
+                     "%s: Turn off FW Monitoring/Fast Transition", __func__);
+          sme_UpdateFastTransitionEnabled(hHal, FALSE);
+          sme_UpdateConfigFwRssiMonitoring(hHal, FALSE);
+      }
+  }
+  return eHAL_STATUS_SUCCESS;
+}
+#endif /* FEATURE_WLAN_CCX */
+
+/*--------------------------------------------------------------------------
+  \brief sme_UpdateConfigFwRssiMonitoring() - enable/disable firmware RSSI Monitoring at runtime
+  It is used at in the REG_DYNAMIC_VARIABLE macro definition of
+  fEnableFwRssiMonitoring.
+  This is a synchronous call
+  \param hHal - The handle returned by macOpen.
+  \return eHAL_STATUS_SUCCESS - SME update fEnableFwRssiMonitoring. config successfully.
+          Other status means SME is failed to update fEnableFwRssiMonitoring.
+  \sa
+  --------------------------------------------------------------------------*/
+
+eHalStatus sme_UpdateConfigFwRssiMonitoring(tHalHandle hHal,
+        v_BOOL_t fEnableFwRssiMonitoring)
+{
+    eHalStatus halStatus = eHAL_STATUS_SUCCESS;
+
+    if (ccmCfgSetInt(hHal, WNI_CFG_PS_ENABLE_RSSI_MONITOR, fEnableFwRssiMonitoring,
+                    NULL, eANI_BOOLEAN_FALSE)==eHAL_STATUS_FAILURE)
+    {
+        halStatus = eHAL_STATUS_FAILURE;
+        VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR,
+                     "Failure: Could not pass on WNI_CFG_PS_RSSI_MONITOR configuration info to CCM");
+    }
+
+    return (halStatus);
+}
+
+#ifdef WLAN_FEATURE_NEIGHBOR_ROAMING
+/*--------------------------------------------------------------------------
+  \brief sme_setNeighborLookupRssiThreshold() - update neighbor lookup rssi threshold
+  This is a synchronous call
+  \param hHal - The handle returned by macOpen.
+  \return eHAL_STATUS_SUCCESS - SME update config successful.
+          Other status means SME is failed to update
+  \sa
+  --------------------------------------------------------------------------*/
+eHalStatus sme_setNeighborLookupRssiThreshold(tHalHandle hHal,
+               v_U8_t neighborLookupRssiThreshold)
+{
+    tpAniSirGlobal pMac    = PMAC_STRUCT( hHal );
+    eHalStatus     status  = eHAL_STATUS_SUCCESS;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     status = sme_AcquireGlobalLock( &pMac->sme );
     if ( HAL_STATUS_SUCCESS( status ) )
     {
+<<<<<<< HEAD
         VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_DEBUG,
                      "LFR runtime successfully set WES Mode to %d - old value is %d - roam state is %d",
                      isWESModeEnabled,
@@ -7145,6 +7346,35 @@ eHalStatus sme_UpdateWESMode(tHalHandle hHal, v_BOOL_t isWESModeEnabled)
           Other status means SME failure to update
     -------------------------------------------------------------------------*/
 eHalStatus sme_SetRoamScanControl(tHalHandle hHal, v_BOOL_t roamScanControl)
+=======
+        status = csrNeighborRoamSetLookupRssiThreshold(pMac, neighborLookupRssiThreshold);
+        if (HAL_STATUS_SUCCESS(status))
+        {
+            VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_DEBUG,
+                     "LFR runtime successfully set Lookup threshold to %d - old value is %d - roam state is %d",
+                     neighborLookupRssiThreshold,
+                     pMac->roam.configParam.neighborRoamConfig.nNeighborLookupRssiThreshold,
+                     pMac->roam.neighborRoamInfo.neighborRoamState);
+            pMac->roam.configParam.neighborRoamConfig.nNeighborLookupRssiThreshold =
+                                            neighborLookupRssiThreshold;
+        }
+        sme_ReleaseGlobalLock( &pMac->sme );
+    }
+
+    return status;
+}
+
+/*--------------------------------------------------------------------------
+  \brief sme_setNeighborReassocRssiThreshold() - update neighbor reassoc rssi threshold
+  This is a synchronous call
+  \param hHal - The handle returned by macOpen.
+  \return eHAL_STATUS_SUCCESS - SME update config successful.
+          Other status means SME is failed to update
+  \sa
+  --------------------------------------------------------------------------*/
+eHalStatus sme_setNeighborReassocRssiThreshold(tHalHandle hHal,
+        v_U8_t neighborReassocRssiThreshold)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
     tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
     eHalStatus          status    = eHAL_STATUS_SUCCESS;
@@ -7153,6 +7383,7 @@ eHalStatus sme_SetRoamScanControl(tHalHandle hHal, v_BOOL_t roamScanControl)
     if ( HAL_STATUS_SUCCESS( status ) )
     {
         VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_DEBUG,
+<<<<<<< HEAD
                      "LFR runtime successfully set roam scan control to %d - old value is %d - roam state is %d",
                      roamScanControl,
                      pMac->roam.configParam.nRoamScanControl,
@@ -7406,6 +7637,36 @@ v_U8_t sme_getNeighborLookupRssiThreshold(tHalHandle hHal)
     tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
     return pMac->roam.configParam.neighborRoamConfig.nNeighborLookupRssiThreshold;
 }
+=======
+                     "LFR runtime successfully set Reassoc threshold to %d - old value is %d - roam state is %d",
+                     neighborReassocRssiThreshold,
+                     pMac->roam.configParam.neighborRoamConfig.nNeighborReassocRssiThreshold,
+                     pMac->roam.neighborRoamInfo.neighborRoamState);
+        pMac->roam.configParam.neighborRoamConfig.nNeighborReassocRssiThreshold =
+                                      neighborReassocRssiThreshold;
+        pMac->roam.neighborRoamInfo.cfgParams.neighborReassocThreshold =
+                                      neighborReassocRssiThreshold;
+        sme_ReleaseGlobalLock( &pMac->sme );
+    }
+
+    return status ;
+}
+
+
+/*--------------------------------------------------------------------------
+  \brief sme_getNeighborLookupRssiThreshold() - get neighbor lookup rssi threshold
+  This is a synchronous call
+  \param hHal - The handle returned by macOpen.
+  \return eHAL_STATUS_SUCCESS - SME update config successful.
+          Other status means SME is failed to update
+  \sa
+  --------------------------------------------------------------------------*/
+v_U8_t sme_getNeighborLookupRssiThreshold(tHalHandle hHal)
+{
+    tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
+    return pMac->roam.configParam.neighborRoamConfig.nNeighborLookupRssiThreshold;
+}
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /*--------------------------------------------------------------------------
   \brief sme_setNeighborScanRefreshPeriod() - set neighbor scan results refresh period
@@ -7437,6 +7698,7 @@ eHalStatus sme_setNeighborScanRefreshPeriod(tHalHandle hHal,
         sme_ReleaseGlobalLock( &pMac->sme );
     }
 
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     if (pMac->roam.configParam.isRoamOffloadScanEnabled)
     {
@@ -7479,6 +7741,10 @@ eHalStatus sme_UpdateRoamScanOffloadEnabled(tHalHandle hHal,
     return status ;
 }
 #endif
+=======
+    return status ;
+}
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /*--------------------------------------------------------------------------
   \brief sme_getNeighborScanRefreshPeriod() - get neighbor scan results refresh period
@@ -7699,7 +7965,11 @@ eHalStatus sme_ChangeRoamScanChannelList(tHalHandle hHal, tANI_U8 *pChannelList,
     tpAniSirGlobal pMac = PMAC_STRUCT( hHal );
     eHalStatus          status    = eHAL_STATUS_SUCCESS;
     tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
+<<<<<<< HEAD
     tANI_U8 oldChannelList[WNI_CFG_VALID_CHANNEL_LIST_LEN*2] = {0};
+=======
+    tANI_U8 oldChannelList[128] = {0};
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     tANI_U8 newChannelList[128] = {0};
     tANI_U8 i = 0, j = 0;
 
@@ -7714,6 +7984,7 @@ eHalStatus sme_ChangeRoamScanChannelList(tHalHandle hHal, tANI_U8 *pChannelList,
                 pNeighborRoamInfo->cfgParams.channelInfo.ChannelList[i]);
             }
         }
+<<<<<<< HEAD
         csrFlushBgScanRoamChannelList(pMac);
         csrCreateBgScanRoamChannelList(pMac, pChannelList, numChannels);
         status = csrUpdateBgScanConfigIniChannelList(pMac, csrGetCurrentBand(hHal));
@@ -7744,6 +8015,27 @@ eHalStatus sme_ChangeRoamScanChannelList(tHalHandle hHal, tANI_U8 *pChannelList,
        csrRoamOffloadScan(pMac, ROAM_SCAN_OFFLOAD_UPDATE_CFG, REASON_CHANNEL_LIST_CHANGED);
     }
 #endif
+=======
+        csrFlushAndCreateBgScanRoamChannelList(pMac, pChannelList, numChannels);
+        status = csrUpdateBgScanConfigIniChannelList(pMac, csrGetCurrentBand(hHal));
+
+        if (NULL != pNeighborRoamInfo->cfgParams.channelInfo.ChannelList)
+        {
+            j = 0;
+            for (i = 0; i < pNeighborRoamInfo->cfgParams.channelInfo.numOfChannels; i++)
+            {
+                j += snprintf(newChannelList + j, sizeof(newChannelList) - j," %d",
+                pNeighborRoamInfo->cfgParams.channelInfo.ChannelList[i]);
+            }
+        }
+
+        VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_DEBUG,
+                     "LFR runtime successfully set roam scan channels to %s - old value is %s - roam state is %d",
+                     newChannelList, oldChannelList,
+                     pMac->roam.neighborRoamInfo.neighborRoamState);
+        sme_ReleaseGlobalLock( &pMac->sme );
+    }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     return status ;
 }
@@ -7775,12 +8067,15 @@ eHalStatus sme_ChangeCountryValidChannelListByRevision(tHalHandle hHal,
         csrInitCountryValidChannelList(pMac, Revision);
         sme_ReleaseGlobalLock( &pMac->sme );
     }
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     if (pMac->roam.configParam.isRoamOffloadScanEnabled)
     {
        csrRoamOffloadScan(pMac, ROAM_SCAN_OFFLOAD_UPDATE_CFG, REASON_VALID_CHANNEL_LIST_CHANGED);
     }
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     return status ;
 }
@@ -7825,9 +8120,14 @@ eHalStatus sme_getRoamScanChannelList(tHalHandle hHal, tANI_U8 *pChannelList,
         {
             VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_WARN,
                      "Roam Scan channel list is NOT yet initialized");
+<<<<<<< HEAD
             *pNumChannels = 0;
             sme_ReleaseGlobalLock( &pMac->sme );
             return status;
+=======
+            sme_ReleaseGlobalLock( &pMac->sme );
+            return eHAL_STATUS_NOT_INITIALIZED;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
 
         *pNumChannels = pNeighborRoamInfo->cfgParams.channelInfo.numOfChannels;
@@ -7838,6 +8138,10 @@ eHalStatus sme_getRoamScanChannelList(tHalHandle hHal, tANI_U8 *pChannelList,
         pOutPtr[i] = '\0';
         sme_ReleaseGlobalLock( &pMac->sme );
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return status ;
 }
 
@@ -7880,6 +8184,7 @@ tANI_BOOLEAN sme_getIsCcxFeatureEnabled(tHalHandle hHal)
 }
 
 /*--------------------------------------------------------------------------
+<<<<<<< HEAD
   \brief sme_GetWESMode() - get WES Mode
   This is a synchronous call
   \param hHal - The handle returned by macOpen
@@ -7907,6 +8212,8 @@ v_BOOL_t sme_GetRoamScanControl(tHalHandle hHal)
 #endif
 
 /*--------------------------------------------------------------------------
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   \brief sme_getIsLfrFeatureEnabled() - get LFR feature enabled or not
   This is a synchronuous call
   \param hHal - The handle returned by macOpen.
@@ -7942,6 +8249,10 @@ tANI_BOOLEAN sme_getIsFtFeatureEnabled(tHalHandle hHal)
 #endif
 }
 
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /* ---------------------------------------------------------------------------
     \fn sme_IsFeatureSupportedByFW
@@ -8192,6 +8503,7 @@ VOS_STATUS sme_StartTdlsLinkTeardownReq(tHalHandle hHal, tANI_U8 sessionId, tSir
 
 #endif /* FEATURE_WLAN_TDLS */
 
+<<<<<<< HEAD
 eHalStatus sme_UpdateDfsSetting(tHalHandle hHal, tANI_U8 fUpdateEnableDFSChnlScan)
 {
     eHalStatus status = eHAL_STATUS_FAILURE;
@@ -8323,3 +8635,5 @@ VOS_STATUS sme_SelectCBMode(tHalHandle hHal, eCsrPhyMode eCsrPhyMode, tANI_U8 ch
    return VOS_STATUS_SUCCESS;
 }
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17

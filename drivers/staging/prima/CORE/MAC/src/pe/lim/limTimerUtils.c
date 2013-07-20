@@ -124,10 +124,17 @@ limCreateTimers(tpAniSirGlobal pMac)
     {
         /// Could not start min channel timer.
         // Log error
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not create MIN channel timer"));
         return TX_TIMER_ERROR;
     }
     PELOG2(limLog(pMac, LOG2, FL("Created MinChannelTimer"));)
+=======
+        limLog(pMac, LOGP, FL("could not create MIN channel timer\n"));
+        return TX_TIMER_ERROR;
+    }
+    PELOG2(limLog(pMac, LOG2, FL("Created MinChannelTimer\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     /* Periodic probe request timer value is half of the Min channel
      * timer. Probe request sends periodically till min/max channel
@@ -146,7 +153,11 @@ limCreateTimers(tpAniSirGlobal pMac)
         {
            /// Could not start Periodic Probe Req timer.
            // Log error
+<<<<<<< HEAD
            limLog(pMac, LOGP, FL("could not create periodic probe timer"));
+=======
+           limLog(pMac, LOGP, FL("could not create periodic probe timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
            goto err_timer;
         }
      }
@@ -176,7 +187,11 @@ limCreateTimers(tpAniSirGlobal pMac)
 
         goto err_timer;
     }
+<<<<<<< HEAD
     PELOG2(limLog(pMac, LOG2, FL("Created MaxChannelTimer"));)
+=======
+    PELOG2(limLog(pMac, LOG2, FL("Created MaxChannelTimer\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     if (pMac->lim.gLimSystemRole != eLIM_AP_ROLE)
     {
@@ -189,7 +204,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                             0,                         // reschedule_ticks
                             TX_NO_ACTIVATE) != TX_SUCCESS)
         {
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("failed to create Channel Switch timer"));
+=======
+            limLog(pMac, LOGP, FL("failed to create Channel Switch timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 
@@ -206,7 +225,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                             0,                         // reschedule_ticks
                             TX_NO_ACTIVATE) != TX_SUCCESS)
         {
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("failed to create Quiet Begin Timer"));
+=======
+            limLog(pMac, LOGP, FL("failed to create Quiet Begin Timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 
@@ -225,7 +248,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                             0,                         // reschedule_ticks
                             TX_NO_ACTIVATE) != TX_SUCCESS)
         {
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("failed to create Quiet Begin Timer"));
+=======
+            limLog(pMac, LOGP, FL("failed to create Quiet Begin Timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 
@@ -264,7 +291,11 @@ limCreateTimers(tpAniSirGlobal pMac)
         {
             /// Could not create Periodic Join Probe Request timer.
             // Log error
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("could not create Periodic Join Probe Request timer"));
+=======
+            limLog(pMac, LOGP, FL("could not create Periodic Join Probe Request timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 
@@ -391,7 +422,11 @@ limCreateTimers(tpAniSirGlobal pMac)
             /// Could not start Heartbeat timer.
             // Log error
             limLog(pMac, LOGP,
+<<<<<<< HEAD
                FL("call to create heartbeat timer failed"));
+=======
+               FL("call to create heartbeat timer failed\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 
@@ -420,7 +455,11 @@ limCreateTimers(tpAniSirGlobal pMac)
             // Could not creat wt-probe-after-HeartBeat-failure timer.
             // Log error
             limLog(pMac, LOGP,
+<<<<<<< HEAD
                    FL("unable to create ProbeAfterHBTimer"));
+=======
+                   FL("unable to create ProbeAfterHBTimer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 
@@ -462,7 +501,11 @@ limCreateTimers(tpAniSirGlobal pMac)
             /// Could not start background scan timer.
             // Log error
             limLog(pMac, LOGP,
+<<<<<<< HEAD
                FL("call to create background scan timer failed"));
+=======
+               FL("call to create background scan timer failed\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
 #ifdef FEATURE_WLAN_TDLS_INTERNAL
@@ -479,7 +522,11 @@ limCreateTimers(tpAniSirGlobal pMac)
              * from CFG. Log error.
              */
             limLog(pMac, LOGP,
+<<<<<<< HEAD
                FL("could not retrieve ReassocFailureTimeout value"));
+=======
+               FL("could not retrieve ReassocFailureTimeout value\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
         cfgValue = SYS_MS_TO_TICKS(cfgValue);
 
@@ -494,7 +541,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                             TX_NO_ACTIVATE) != TX_SUCCESS)
         {
             limLog(pMac, LOGP,
+<<<<<<< HEAD
                FL("could not create TDLS discovery response wait timer"));
+=======
+               FL("could not create TDLS discovery response wait timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
         }
 #endif
@@ -515,7 +566,11 @@ limCreateTimers(tpAniSirGlobal pMac)
         /// Could not start Send Disassociate Frame Threshold timer.
         // Log error
         limLog(pMac, LOGP,
+<<<<<<< HEAD
                FL("create Disassociate throttle timer failed"));
+=======
+               FL("create Disassociate throttle timer failed\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
     PELOG1(limLog(pMac, LOG1,
@@ -558,7 +613,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                   != TX_SUCCESS)
     {
         // Cannot create keepalive timer.  Log error.
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("Cannot create keepalive timer."));
+=======
+        limLog(pMac, LOGP, FL("Cannot create keepalive timer.\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 
@@ -589,7 +648,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                             TX_NO_ACTIVATE) != TX_SUCCESS)
         {
             // Cannot create timer.  Log error.
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("Cannot create CNF wait timer."));
+=======
+            limLog(pMac, LOGP, FL("Cannot create CNF wait timer.\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
     }
@@ -614,7 +677,11 @@ limCreateTimers(tpAniSirGlobal pMac)
     if (palAllocateMemory(pMac->hHdd, (void **) &pMac->lim.gLimPreAuthTimerTable.pTable,
           cfgValue*sizeof(tLimPreAuthNode)) != eHAL_STATUS_SUCCESS)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("palAllocateMemory failed!"));
+=======
+        limLog(pMac, LOGP, FL("palAllocateMemory failed!\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 
@@ -650,7 +717,11 @@ limCreateTimers(tpAniSirGlobal pMac)
         {
             // Cannot create update OLBC cache timer
             // Log error
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("Cannot create update OLBC cache timer"));
+=======
+            limLog(pMac, LOGP, FL("Cannot create update OLBC cache timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto err_timer;
         }
     }
@@ -670,7 +741,11 @@ limCreateTimers(tpAniSirGlobal pMac)
     {
         // Could not create Join failure timer.
         // Log error
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not create Join failure timer"));
+=======
+        limLog(pMac, LOGP, FL("could not create Join failure timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 #endif
@@ -687,7 +762,11 @@ limCreateTimers(tpAniSirGlobal pMac)
     {
         // Could not create Join failure timer.
         // Log error
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not create Join failure timer"));
+=======
+        limLog(pMac, LOGP, FL("could not create Join failure timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 #endif
@@ -702,7 +781,11 @@ limCreateTimers(tpAniSirGlobal pMac)
     {
         // Could not create Join failure timer.
         // Log error
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not create Join failure timer"));
+=======
+        limLog(pMac, LOGP, FL("could not create Join failure timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 
@@ -715,7 +798,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                                     cfgValue, 0,
                                     TX_NO_ACTIVATE) != TX_SUCCESS)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not DISASSOC ACK TIMEOUT timer"));
+=======
+        limLog(pMac, LOGP, FL("could not DISASSOC ACK TIMEOUT timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 
@@ -727,7 +814,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                                     cfgValue, 0,
                                     TX_NO_ACTIVATE) != TX_SUCCESS)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not create DEAUTH ACK TIMEOUT timer"));
+=======
+        limLog(pMac, LOGP, FL("could not create DEAUTH ACK TIMEOUT timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 
@@ -739,7 +830,11 @@ limCreateTimers(tpAniSirGlobal pMac)
                                     cfgValue, 0,
                                     TX_NO_ACTIVATE) != TX_SUCCESS)
     {
+<<<<<<< HEAD
         limLog(pMac, LOGP, FL("could not create Single Shot NOA Insert Timeout timer"));
+=======
+        limLog(pMac, LOGP, FL("could not create Single Shot NOA Insert Timeout timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto err_timer;
     }
 
@@ -952,17 +1047,29 @@ limAssocFailureTimerHandler(void *pMacGlobal, tANI_U32 param)
     if((LIM_REASSOC == param) &&
        (NULL != pMac->lim.pSessionEntry))
     {
+<<<<<<< HEAD
         limLog(pMac, LOGE, FL("Reassoc timeout happened"));
+=======
+        limLog(pMac, LOGE, FL("Reassoc timeout happened\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         if(pMac->lim.reAssocRetryAttempt < LIM_MAX_REASSOC_RETRY_LIMIT)
         {
             limSendRetryReassocReqFrame(pMac, pMac->lim.pSessionEntry->pLimMlmReassocRetryReq, pMac->lim.pSessionEntry);
             pMac->lim.reAssocRetryAttempt++;
+<<<<<<< HEAD
             limLog(pMac, LOGW, FL("Reassoc request retry is sent %d times"), pMac->lim.reAssocRetryAttempt);
+=======
+            limLog(pMac, LOGW, FL("Reassoc request retry is sent %d times\n"), pMac->lim.reAssocRetryAttempt);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return;
         }
         else
         {
+<<<<<<< HEAD
             limLog(pMac, LOGW, FL("Reassoc request retry MAX(%d) reached"), LIM_MAX_REASSOC_RETRY_LIMIT);
+=======
+            limLog(pMac, LOGW, FL("Reassoc request retry MAX(%d) reached\n"), LIM_MAX_REASSOC_RETRY_LIMIT);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             if(NULL != pMac->lim.pSessionEntry->pLimMlmReassocRetryReq)
             {
                 palFreeMemory( pMac->hHdd, pMac->lim.pSessionEntry->pLimMlmReassocRetryReq);
@@ -1275,6 +1382,26 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
 
             break;
 
+        case eLIM_PERIODIC_JOIN_PROBE_REQ_TIMER:
+            if (tx_timer_deactivate(&pMac->lim.limTimers.gLimPeriodicJoinProbeReqTimer)
+                                         != TX_SUCCESS)
+            {
+                // Could not deactivate periodic join req Times.
+                limLog(pMac, LOGP,
+                       FL("Unable to deactivate periodic join request timer\n"));
+            }
+
+            val = SYS_MS_TO_TICKS(LIM_JOIN_PROBE_REQ_TIMER_MS);
+            if (tx_timer_change(&pMac->lim.limTimers.gLimPeriodicJoinProbeReqTimer,
+                                val, 0) != TX_SUCCESS)
+            {
+                // Could not change periodic join req times.
+                // Log error
+                limLog(pMac, LOGP, FL("Unable to change periodic join request timer\n"));
+            }
+
+            break;
+
         case eLIM_AUTH_FAIL_TIMER:
             if (tx_timer_deactivate(&pMac->lim.limTimers.gLimAuthFailureTimer)
                                               != TX_SUCCESS)
@@ -1548,7 +1675,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 // Could not change BackgroundScanTimer timer.
                 // Log error
                 limLog(pMac, LOGP,
+<<<<<<< HEAD
                    FL("unable to change BackgroundScanTimer timer"));
+=======
+                   FL("unable to change BackgroundScanTimer timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             }
 
             break;
@@ -1654,7 +1785,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 ** Could not deactivate Join Failure
                 ** timer. Log error.
                 **/
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to deactivate Preauth response Failure timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to deactivate Preauth response Failure timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             val = 1000;
@@ -1666,7 +1801,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 * Could not change Join Failure
                 * timer. Log error.
                 */
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to change Join Failure timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to change Join Failure timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             break;
@@ -1687,7 +1826,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 ** Could not deactivate Join Failure
                 ** timer. Log error.
                 **/
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to deactivate Remain on Chn timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to deactivate Remain on Chn timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             val = 1000;
@@ -1699,11 +1842,40 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 * Could not change Join Failure
                 * timer. Log error.
                 */
+<<<<<<< HEAD
+=======
+                limLog(pMac, LOGP, FL("Unable to change timer\n"));
+                return;
+            }
+            break;
+
+    case eLIM_CONVERT_ACTIVE_CHANNEL_TO_PASSIVE:
+            if (tx_timer_deactivate(&pMac->lim.limTimers.gLimActiveToPassiveChannelTimer) != TX_SUCCESS)
+            {
+                /**
+                ** Could not deactivate Active to passive channel timer.
+                ** Log error.
+                **/
+                limLog(pMac, LOGP, FL("Unable to Deactivate "
+                                      "Active to passive channel timer"));
+                return;
+            }
+            val = ACTIVE_TO_PASSIVE_CONVERISON_TIMEOUT;
+            val = SYS_MS_TO_TICKS(val);
+            if (tx_timer_change(&pMac->lim.limTimers.gLimActiveToPassiveChannelTimer,
+                                                val, 0) != TX_SUCCESS)
+            {
+                /**
+                * Could not change timer to check scan type for passive channel.
+                * timer. Log error.
+                */
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 limLog(pMac, LOGP, FL("Unable to change timer"));
                 return;
             }
             break;
 
+<<<<<<< HEAD
     case eLIM_CONVERT_ACTIVE_CHANNEL_TO_PASSIVE:
             if (tx_timer_deactivate(&pMac->lim.limTimers.gLimActiveToPassiveChannelTimer) != TX_SUCCESS)
             {
@@ -1729,6 +1901,8 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
             }
             break;
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     case eLIM_DISASSOC_ACK_TIMER:
             if (tx_timer_deactivate(&pMac->lim.limTimers.gLimDisassocAckTimer) != TX_SUCCESS)
             {
@@ -1736,7 +1910,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 ** Could not deactivate Join Failure
                 ** timer. Log error.
                 **/
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to deactivate Disassoc ack timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to deactivate Disassoc ack timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             val = 1000;
@@ -1748,7 +1926,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 * Could not change Join Failure
                 * timer. Log error.
                 */
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to change timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to change timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             break;
@@ -1760,7 +1942,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 ** Could not deactivate Join Failure
                 ** timer. Log error.
                 **/
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to deactivate Deauth ack timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to deactivate Deauth ack timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             val = 1000;
@@ -1772,7 +1958,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
                 * Could not change Join Failure
                 * timer. Log error.
                 */
+<<<<<<< HEAD
                 limLog(pMac, LOGP, FL("Unable to change timer"));
+=======
+                limLog(pMac, LOGP, FL("Unable to change timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 return;
             }
             break;
@@ -1784,7 +1974,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
        ** Could not deactivate SingleShot NOA Insert
        ** timer. Log error.
        **/
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("Unable to deactivate SingleShot NOA Insert timer"));
+=======
+            limLog(pMac, LOGP, FL("Unable to deactivate SingleShot NOA Insert timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return;
         }
         val = LIM_INSERT_SINGLESHOTNOA_TIMEOUT_VALUE;
@@ -1796,7 +1990,11 @@ limDeactivateAndChangeTimer(tpAniSirGlobal pMac, tANI_U32 timerId)
        * Could not change Single Shot NOA Insert
        * timer. Log error.
        */
+<<<<<<< HEAD
             limLog(pMac, LOGP, FL("Unable to change timer"));
+=======
+            limLog(pMac, LOGP, FL("Unable to change timer\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return;
         }
         break;
@@ -1876,6 +2074,11 @@ limReactivateHeartBeatTimer(tpAniSirGlobal pMac, tpPESession psessionEntry)
        limLog(pMac, LOGW, FL("Active offload feature is enabled, FW takes care of HB monitoring"));
        return;
     }
+#endif
+
+#ifdef WLAN_ACTIVEMODE_OFFLOAD_FEATURE
+    if(IS_ACTIVEMODE_OFFLOAD_FEATURE_ENABLE)
+       return;
 #endif
 
     limHeartBeatDeactivateAndChangeTimer(pMac, psessionEntry);
@@ -2324,10 +2527,17 @@ limMissedBeaconInActiveMode(void *pMacGlobal, tpPESession psessionEntry)
        msg.bodyptr = psessionEntry;
        msg.bodyval = 0;
        limLog(pMac, LOGE,
+<<<<<<< HEAD
                  FL("Heartbeat failure from Riva"));
        if ((statusCode = limPostMsgApi(pMac, &msg)) != eSIR_SUCCESS)
           limLog(pMac, LOGE,
                  FL("posting message %X to LIM failed, reason=%d"),
+=======
+                 FL("Heartbeat failure from Riva\n"));
+       if ((statusCode = limPostMsgApi(pMac, &msg)) != eSIR_SUCCESS)
+          limLog(pMac, LOGE,
+                 FL("posting message %X to LIM failed, reason=%d\n"),
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                  msg.type, statusCode);
     }
 }

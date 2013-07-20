@@ -2107,7 +2107,11 @@ eHalStatus pmcIssueCommand( tpAniSirGlobal pMac, eSmeCommandType cmdType, void *
     {
         smePushCommand( pMac, pCommand, fPutToListHead );
     }
+<<<<<<< HEAD
     else if( pCommand )
+=======
+    else
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     {
         pmcReleaseCommand( pMac, pCommand );
     }

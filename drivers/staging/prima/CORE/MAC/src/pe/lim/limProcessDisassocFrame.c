@@ -165,7 +165,11 @@ limProcessDisassocFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo, tpPESession
     if (limCheckDisassocDeauthAckPending(pMac, (tANI_U8*)pHdr->sa))
     {
         PELOGW(limLog(pMac, LOGE, 
+<<<<<<< HEAD
                     FL("Ignore the DisAssoc received, while waiting for ack of disassoc/deauth"));)
+=======
+                    FL("Ignore the DisAssoc received, while waiting for ack of disassoc/deauth\n"));)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         limCleanUpDisassocDeauthReq(pMac,(tANI_U8*)pHdr->sa, 1);
         return;
     }

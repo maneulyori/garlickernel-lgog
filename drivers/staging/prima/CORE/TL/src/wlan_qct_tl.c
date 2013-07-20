@@ -2138,6 +2138,16 @@ WLANTL_SetSTAPriority
   pClientSTA = pTLCb->atlSTAClients[ucSTAId];
 
   if ( NULL == pClientSTA )
+<<<<<<< HEAD
+=======
+  {
+        TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+            "WLAN TL:Client Memory was not allocated on %s", __func__));
+        return VOS_STATUS_E_FAILURE;
+  }
+
+  if ( 0 == pClientSTA->ucExists )
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   {
         TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
             "WLAN TL:Client Memory was not allocated on %s", __func__));
@@ -2380,6 +2390,7 @@ WLANTL_TxBAPFrm
    ------------------------------------------------------------------------*/
   ucStaId = pTLCb->tlBAPClient.ucBAPSTAId;
   if ( NULL == pTLCb->atlSTAClients[ucStaId] )
+<<<<<<< HEAD
   {
        TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
            "WLAN TL:Client Memory was not allocated on %s", __func__));
@@ -2388,6 +2399,16 @@ WLANTL_TxBAPFrm
   if (( 0 == pMetaInfo->ucDisableFrmXtl ) && 
       ( 0 != pTLCb->atlSTAClients[ucStaId]->wSTADesc.ucSwFrameTXXlation ))
   {
+=======
+  {
+       TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+           "WLAN TL:Client Memory was not allocated on %s", __func__));
+       return VOS_STATUS_E_FAILURE;
+  }
+  if (( 0 == pMetaInfo->ucDisableFrmXtl ) && 
+      ( 0 != pTLCb->atlSTAClients[ucStaId]->wSTADesc.ucSwFrameTXXlation ))
+  {
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     vosStatus =  WLANTL_Translate8023To80211Header( vosDataBuff, &vosStatus,
                                                     pTLCb, &ucStaId,
                                                     pMetaInfo->ucUP, &ucWDSEnabled, &extraHeadSpace);
@@ -3346,6 +3367,7 @@ WLANTL_SuspendDataTx
   {
     if ( WLANTL_STA_ID_INVALID( *pucSTAId ) )
     {
+<<<<<<< HEAD
       TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
              "WLAN TL:Invalid station id %d requested on WLANTL_SuspendDataTx", *pucSTAId));
       return VOS_STATUS_E_FAULT;
@@ -3361,6 +3383,41 @@ WLANTL_SuspendDataTx
     TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
          "WLAN TL:Suspend request for station: %d", *pucSTAId));
     vos_atomic_set_U8( &pTLCb->atlSTAClients[*pucSTAId]->ucTxSuspended, 1);
+=======
+       /* If Bit set for this station with STAId */
+      if (ucTxSuspendReq >> (STAId +1) )
+      {
+        /* If it is Not a valid station ID */
+        if ( WLANTL_STA_ID_INVALID( STAId ) )
+        {
+          TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                 "WLAN TL:Invalid station id requested on WLANTL_SuspendDataTx"));
+          STAId++;
+          continue;
+        }
+        /* If this station is Not registered with TL */
+        if( NULL == pTLCb->atlSTAClients[STAId] )
+        {
+            TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+            "WLAN TL:Station memory was not previously allocated on WLANTL_SuspendDataTx"));
+            STAId++;
+            continue;
+        }
+        if ( 0 == pTLCb->atlSTAClients[STAId]->ucExists )
+        {
+          TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                 "WLAN TL:Station was not previously registered on WLANTL_SuspendDataTx"));
+          STAId++;
+          continue;
+        }
+
+        TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+               "WLAN TL:Suspend request for station: %d", STAId));
+        vos_atomic_set_U8( &pTLCb->atlSTAClients[STAId]->ucTxSuspended, 1);
+      }
+      STAId++;
+    } while ( STAId < WLAN_MAX_STA_COUNT );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     vosMsg.reserved = *pucSTAId;
   }
 
@@ -3441,11 +3498,24 @@ WLANTL_ResumeDataTx
     TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
               "WLAN TL:General resume requested"));
     vos_atomic_set_U8( &pTLCb->ucTxSuspended, 0);
+<<<<<<< HEAD
+=======
+
+    /* Set to Resume for all stations */
+    for (STAId = 0; STAId < WLAN_MAX_STA_COUNT; STAId++)
+    {
+        if( NULL != pTLCb->atlSTAClients[STAId] )
+        {
+            vos_atomic_set_U8( &pTLCb->atlSTAClients[STAId]->ucTxSuspended, 0);
+        }
+     }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   }
   else
   {
     if ( WLANTL_STA_ID_INVALID( *pucSTAId ))
     {
+<<<<<<< HEAD
       TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
             "WLAN TL:Invalid station id %d requested on WLANTL_ResumeDataTx", *pucSTAId));
       return VOS_STATUS_E_FAULT;
@@ -3461,6 +3531,41 @@ WLANTL_ResumeDataTx
     TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
          "WLAN TL:Resume request for station: %d", *pucSTAId));
     vos_atomic_set_U8( &pTLCb->atlSTAClients[*pucSTAId]->ucTxSuspended, 0);
+=======
+      /* If Bit Set for this station with STAId */
+      if (ucTxResumeReq >> (STAId + 1))
+      {
+        /* If it is Not a valid station ID */
+        if ( WLANTL_STA_ID_INVALID( STAId ))
+        {
+          TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                "WLAN TL:Invalid station id requested on WLANTL_ResumeDataTx"));
+          STAId++;
+          continue;
+        }
+        if ( NULL == pTLCb->atlSTAClients[STAId])
+        {
+          TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                 "WLAN TL:Station was not allocated memory on WLANTL_ResumeDataTx"));
+          STAId++;
+          continue;
+        }
+        /* If this station is Not registered with TL */
+        if ( 0 == pTLCb->atlSTAClients[STAId]->ucExists )
+        {
+          TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                 "WLAN TL:Station was not previously registered on WLANTL_ResumeDataTx"));
+          STAId++;
+          continue;
+        }
+
+        TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+               "WLAN TL:Resume request for station: %d", STAId));
+        vos_atomic_set_U8( &pTLCb->atlSTAClients[STAId]->ucTxSuspended, 0);
+      }
+      STAId++;
+    } while ( STAId < WLAN_MAX_STA_COUNT );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   }
 
   /*------------------------------------------------------------------------
@@ -3731,6 +3836,7 @@ WLANTL_GetRxPktCount
     return VOS_STATUS_E_FAULT;
   }
   pClientSTA = pTLCb->atlSTAClients[ucSTAId];
+<<<<<<< HEAD
 
   if ( NULL == pClientSTA )
   {
@@ -3739,6 +3845,16 @@ WLANTL_GetRxPktCount
         return VOS_STATUS_E_FAILURE;
   }
 
+=======
+
+  if ( NULL == pClientSTA )
+  {
+        TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+            "WLAN TL:Client Memory was not allocated on %s", __func__));
+        return VOS_STATUS_E_FAILURE;
+  }
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   if ( 0 == pClientSTA->ucExists )
   {
     TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
@@ -4014,6 +4130,117 @@ WLANTL_GetFrames
              ( 0 == pTLCb->ucTxSuspended ) &&
              ( uFlowMask & ( 1 << WDA_TXFLOW_MGMT ) )
             )
+<<<<<<< HEAD
+    {
+        vosTempBuf = NULL;
+        /*---------------------------------------------------------------------
+         Check to see if there was any EAPOL packet is pending
+         *--------------------------------------------------------------------*/
+        for ( i = 0; i < WLAN_MAX_STA_COUNT; i++)
+        {
+           if ((NULL != pTLCb->atlSTAClients[i]) &&
+               (pTLCb->atlSTAClients[i]->ucExists) &&
+               (0 == pTLCb->atlSTAClients[i]->ucTxSuspended) &&
+               (WLANTL_STA_CONNECTED == pTLCb->atlSTAClients[i]->tlState) &&
+               (pTLCb->atlSTAClients[i]->ucPktPending)
+               )
+               break;
+        }
+
+        if (i >= WLAN_MAX_STA_COUNT)
+        {
+           /* No More to Serve Exit Get Frames */
+           break;
+        }
+        /* Serve EAPOL frame with HI_FLOW_MASK */
+        ucSTAId = i;
+
+        for (j = WLANTL_MAX_AC ; j > 0; j--)
+        {
+          if (0 != pTLCb->atlSTAClients[ucSTAId]->aucACMask[j-1])
+          {
+            pTLCb->atlSTAClients[ucSTAId]->ucCurrentAC = j-1;
+            pTLCb->uCurServedAC = j-1;
+          }
+        }
+
+        pClientSTA = pTLCb->atlSTAClients[ucSTAId];
+
+        wSTAEvent = WLANTL_TX_EVENT;
+
+        pfnSTAFsm = tlSTAFsm[pClientSTA->tlState].
+                        pfnSTATbl[wSTAEvent];
+
+        if ( NULL != pfnSTAFsm )
+        {
+          pClientSTA->ucNoMoreData = 0;
+          vosStatus  = pfnSTAFsm( pvosGCtx, ucSTAId, &vosTempBuf);
+
+          if (( VOS_STATUS_SUCCESS != vosStatus ) &&
+              ( NULL != vosTempBuf ))
+          {
+               pClientSTA->pfnSTATxComp( pvosGCtx, vosTempBuf, vosStatus );
+               vosTempBuf = NULL;
+               break;
+          }/* status success*/
+        }
+
+        if (NULL != vosTempBuf)
+        {
+            WDA_TLI_PROCESS_FRAME_LEN( vosTempBuf, usPktLen, uResLen, uTotalPktLen);
+
+            VOS_ASSERT( usPktLen <= WLANTL_MAX_ALLOWED_LEN);
+
+            TLLOG4(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_LOW,
+                      "WLAN TL:Resources needed by frame: %d", uResLen));
+
+            if ( ( pTLCb->uResCount >= (uResLen + WDA_TLI_MIN_RES_MF ) ) &&
+               ( uRemaining > uTotalPktLen )
+               )
+            {
+              TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+                        "WLAN TL:Chaining data frame on GetFrame"));
+
+              vos_pkt_chain_packet( vosDataBuff, vosTempBuf, 1 /*true*/ );
+
+              /*EAPOL frame cannot be delayed*/
+              pTLCb->bUrgent      = TRUE;
+
+              vosTempBuf =  NULL;
+
+              /*Update remaining len from SSC */
+              uRemaining  -= (usPktLen + WDA_DXE_HEADER_SIZE);
+
+               /*Update resource count */
+              pTLCb->uResCount  -= uResLen;
+
+              //fow control update
+              pClientSTA->uIngress_length += uResLen;
+              pClientSTA->uBuffThresholdMax = (pClientSTA->uBuffThresholdMax >= uResLen) ?
+                (pClientSTA->uBuffThresholdMax - uResLen) : 0;
+              pClientSTA->ucEapolPktPending = 0;
+              VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+                "WLAN TL:GetFrames STA: %d EAPOLPktPending %d",
+                         ucSTAId, pClientSTA->ucEapolPktPending);
+            }
+         }
+         else
+         {  // no EAPOL frames exit Get frames
+            TLLOG2(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+                   "WLAN TL:GetFrames STA: %d, no EAPOL frame, continue.",
+                   ucSTAId));
+            continue;
+         }
+    }
+
+    else if (( WDA_TLI_MIN_RES_DATA <= pTLCb->uResCount ) &&
+             ( 0 == pTLCb->ucTxSuspended ) &&
+             (( uFlowMask & ( 1 << WDA_TXFLOW_AC_BK ) ) ||
+              ( uFlowMask & ( 1 << WDA_TXFLOW_AC_BE ) ) ||
+              ( uFlowMask & ( 1 << WDA_TXFLOW_AC_VI ) ) ||
+              ( uFlowMask & ( 1 << WDA_TXFLOW_AC_VO ) )) )
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     {
         vosTempBuf = NULL;
         /*---------------------------------------------------------------------
@@ -5531,6 +5758,7 @@ WLANTL_RxFrames
           continue;
       }
 
+<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS
       if (( pClientSTA->ucExists ) &&
            (WLAN_STA_TDLS == pClientSTA->wSTADesc.wSTAType) &&
@@ -5581,6 +5809,8 @@ WLANTL_RxFrames
       }
 #endif
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       if ((( 0 == pClientSTA->ucExists ) ||
           ( (0 != pClientSTA->ucRxBlocked)
             ///@@@: xg: no checking in SOFTAP for now, will revisit later
@@ -6045,6 +6275,162 @@ WLANTL_ResourceCB
 }/* WLANTL_ResourceCB */
 
 
+<<<<<<< HEAD
+=======
+/*==========================================================================
+  FUNCTION   WLANTL_IsTxXmitPending
+
+  DESCRIPTION
+    Called by the WDA when it wants to know whether WDA_DS_TX_START_XMIT msg
+    is pending in TL msg queue 
+
+  DEPENDENCIES
+    The TL must be registered with WDA before this function can be called.
+
+  PARAMETERS
+
+    IN
+    pvosGCtx:       pointer to the global vos context; a handle to TL's
+                    or WDA's control block can be extracted from its context
+
+  RETURN VALUE
+    The result code associated with performing the operation
+
+    0:   No WDA_DS_TX_START_XMIT msg pending 
+    1:   Msg WDA_DS_TX_START_XMIT already pending in TL msg queue 
+
+  SIDE EFFECTS
+
+============================================================================*/
+v_BOOL_t
+WLANTL_IsTxXmitPending
+(
+  v_PVOID_t       pvosGCtx
+)
+{
+
+   WLANTL_CbType*  pTLCb = NULL;
+  /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+
+  /*------------------------------------------------------------------------
+    Sanity check
+    Extract TL control block
+   ------------------------------------------------------------------------*/
+  pTLCb = VOS_GET_TL_CB(pvosGCtx);
+  if ( NULL == pTLCb )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_FATAL,
+        "WLAN TL:Invalid TL pointer from pvosGCtx in WLANTL_IsTxXmitPending "));
+    return FALSE;
+  }
+
+  return pTLCb->isTxTranmitMsgPending;
+
+}/*WLANTL_IsTxXmitPending */
+
+/*==========================================================================
+  FUNCTION   WLANTL_SetTxXmitPending
+
+  DESCRIPTION
+    Called by the WDA when it wants to indicate that WDA_DS_TX_START_XMIT msg
+    is pending in TL msg queue 
+
+  DEPENDENCIES
+    The TL must be registered with WDA before this function can be called.
+
+  PARAMETERS
+
+    IN
+    pvosGCtx:       pointer to the global vos context; a handle to TL's
+                    or WDA's control block can be extracted from its context
+
+  RETURN VALUE      None
+
+  SIDE EFFECTS
+
+============================================================================*/
+
+v_VOID_t
+WLANTL_SetTxXmitPending
+(
+  v_PVOID_t       pvosGCtx
+)
+{
+
+   WLANTL_CbType*  pTLCb = NULL;
+  /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+
+  /*------------------------------------------------------------------------
+    Sanity check
+    Extract TL control block
+   ------------------------------------------------------------------------*/
+  pTLCb = VOS_GET_TL_CB(pvosGCtx);
+  if ( NULL == pTLCb )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_FATAL,
+        "WLAN TL:Invalid TL pointer from pvosGCtx in WLANTL_SetTxXmitPending"));
+    return;
+  }
+
+  pTLCb->isTxTranmitMsgPending = 1;
+  return;
+
+}/*WLANTL_SetTxXmitPending  */
+
+/*==========================================================================
+  FUNCTION   WLANTL_ClearTxXmitPending
+
+  DESCRIPTION
+    Called by the WDA when it wants to indicate that no WDA_DS_TX_START_XMIT msg
+    is pending in TL msg queue 
+
+  DEPENDENCIES
+    The TL must be registered with WDA before this function can be called.
+
+  PARAMETERS
+
+    IN
+    pvosGCtx:       pointer to the global vos context; a handle to TL's
+                    or WDA's control block can be extracted from its context
+
+  RETURN VALUE     None
+
+  SIDE EFFECTS
+
+============================================================================*/
+
+v_VOID_t
+WLANTL_ClearTxXmitPending
+(
+  v_PVOID_t       pvosGCtx
+)
+{
+
+   WLANTL_CbType*  pTLCb = NULL;
+  /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+
+  /*------------------------------------------------------------------------
+    Sanity check
+    Extract TL control block
+   ------------------------------------------------------------------------*/
+  pTLCb = VOS_GET_TL_CB(pvosGCtx);
+  if ( NULL == pTLCb )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_FATAL,
+        "WLAN TL:Invalid TL pointer from pvosGCtx in WLANTL_ClearTxXmitPending "));
+    return;
+  }
+
+  pTLCb->isTxTranmitMsgPending = 0;
+  return;
+}/*WLANTL_ClearTxXmitPending */
+
+
+/*============================================================================
+                           TL STATE MACHINE
+============================================================================*/
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /*==========================================================================
   FUNCTION   WLANTL_IsTxXmitPending
 
@@ -7846,6 +8232,7 @@ if(0 == ucUnicastBroadcastType
     {
       wRxMetaInfo.ucUP = ucTid;
       wRxMetaInfo.rssiAvg = pClientSTA->rssiAvg;
+<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS
       if (WLAN_STA_TDLS == pClientSTA->wSTADesc.wSTAType)
       {
@@ -7856,6 +8243,8 @@ if(0 == ucUnicastBroadcastType
           wRxMetaInfo.isStaTdls = FALSE;
       }
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       pClientSTA->pfnSTARx( pvosGCtx, vosDataBuff, ucSTAId,
                                             &wRxMetaInfo );
     }
@@ -8282,9 +8671,15 @@ WLANTL_TxProcessMsg
               "WLAN TL:Client Memory was not allocated on %s", __func__));
           return VOS_STATUS_E_FAILURE;
       }
+<<<<<<< HEAD
 
       pClientSTA->aucACMask[ucAC] = 1;
 
+=======
+
+      pClientSTA->aucACMask[ucAC] = 1;
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       vos_atomic_set_U8( &pClientSTA->ucPktPending, 1);
       vosStatus = WDA_DS_StartXmit(pvosGCtx);
       break;
@@ -8701,8 +9096,50 @@ WLANTL_Translate8023To80211Header
   }
   ucStaId = *pucStaId;
   pClientSTA = pTLCb->atlSTAClients[ucStaId];
+<<<<<<< HEAD
 
   if ( NULL == pClientSTA )
+=======
+
+  if ( NULL == pClientSTA )
+  {
+      TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+          "WLAN TL:Client Memory was not allocated on %s", __func__));
+      return VOS_STATUS_E_FAILURE;
+  }
+
+#ifdef FEATURE_WLAN_TDLS
+
+  if ( WLAN_STA_INFRA == pTLCb->atlSTAClients[ucStaId]->wSTADesc.wSTAType
+      && pTLCb->ucTdlsPeerCount )
+  {
+    v_U8_t ucIndex = 0;
+    for ( ucIndex = 0; ucIndex < WLAN_MAX_STA_COUNT ; ucIndex++)
+    {
+      if ( ucIndex != ucStaId && pTLCb->atlSTAClients[ucIndex] && pTLCb->atlSTAClients[ucIndex]->ucExists &&
+          vos_mem_compare( (void*)pTLCb->atlSTAClients[ucIndex]->wSTADesc.vSTAMACAddress.bytes,
+            (void*)w8023Header.vDA, 6) )
+      {
+        TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_LOW,
+              "WLAN TL: Got a TDLS station. Using that index"));
+        ucStaId = ucIndex;
+        *pucStaId = ucStaId;
+        pClientSTA = pTLCb->atlSTAClients[ucStaId];
+        if ( NULL == pClientSTA )
+        {
+            TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                "WLAN TL:Client Memory was not allocated on %s", __func__));
+            return VOS_STATUS_E_FAILURE;
+        }
+        break;
+      }
+    }
+  }
+#endif
+
+
+  if ( 0 != pClientSTA->wSTADesc.ucAddRmvLLC )
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   {
       TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
           "WLAN TL:Client Memory was not allocated on %s", __func__));
@@ -9711,6 +10148,12 @@ WLAN_TLAPGetNextTxIds
 
         {
           //current station does not exist or have any packet to serve.
+<<<<<<< HEAD
+          continue;
+        }
+
+        if (WLANTL_STA_AUTHENTICATED != pTLCb->atlSTAClients[ucNextSTA]->tlState)
+=======
           continue;
         }
 
@@ -9730,11 +10173,49 @@ WLAN_TLAPGetNextTxIds
              ((FALSE == pTLCb->atlSTAClients[ucNextSTA]->ucLwmEventReported) ||
                  (0 < pTLCb->atlSTAClients[ucNextSTA]->uBuffThresholdMax))
            )
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+        {
+          TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+                 "%s Sta %d not in auth state so skipping it.",
+                 __func__, ucNextSTA));
+          continue;
+        }
+
+        //go to next station if current station can't send due to flow control
+        //Station is allowed to send when it is not in LWM mode. When station is in LWM mode,
+        //station is allowed to send only after FW reports FW memory is below threshold and on-fly
+        //packets are less then allowed value
+        if ( (TRUE == pTLCb->atlSTAClients[ucNextSTA]->ucLwmModeEnabled) &&
+             ((FALSE == pTLCb->atlSTAClients[ucNextSTA]->ucLwmEventReported) ||
+                 (0 < pTLCb->atlSTAClients[ucNextSTA]->uBuffThresholdMax))
+           )
         {
           continue;
         }
 
+<<<<<<< HEAD
 
+        // Find a station. Weight is updated already.
+        *pucSTAId = ucNextSTA;
+        pTLCb->ucCurrentSTA = ucNextSTA;
+        pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC = pTLCb->uCurServedAC;
+  
+        TLLOG4(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_LOW,
+                   " TL serve one station AC: %d  W: %d StaId: %d",
+                   pTLCb->uCurServedAC, pTLCb->ucCurLeftWeight, pTLCb->ucCurrentSTA ));
+      
+        return VOS_STATUS_SUCCESS;
+      } //STA loop
+
+      ucNextSTA = 0;
+      if ( FALSE == isServed )
+      {
+        //current loop finds no packet.no need to repeat for the same priority
+        break;
+      }
+      //current loop is partial loop. go for one more loop.
+      isServed = FALSE;
+=======
         // Find a station. Weight is updated already.
         *pucSTAId = ucNextSTA;
         pTLCb->ucCurrentSTA = ucNextSTA;
@@ -9947,6 +10428,219 @@ WLAN_TLGetNextTxIds
   ucNextAC = pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC;
     TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
              "Next AC: %d", ucNextAC));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+
+    } //Weight loop
+
+    if (WLANTL_AC_BK == pTLCb->uCurServedAC)
+    {
+<<<<<<< HEAD
+      pTLCb->uCurServedAC = WLANTL_AC_VO;
+=======
+       pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC     =
+                                   (WLANTL_ACEnumType)ucNextAC;
+       pTLCb->atlSTAClients[*pucSTAId]->ucCurrentWeight =
+                       pTLCb->tlConfigInfo.ucAcWeights[ucNextAC];
+
+        TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+                  "WLAN TL: Switching serviced AC to: %d with Weight: %d",
+                  pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC ,
+                  pTLCb->atlSTAClients[*pucSTAId]->ucCurrentWeight));
+       break;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+    }
+    else
+    {
+      pTLCb->uCurServedAC--;
+    }
+    pTLCb->ucCurLeftWeight =  pTLCb->tlConfigInfo.ucAcWeights[pTLCb->uCurServedAC];
+
+  }// AC loop
+
+  TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+<<<<<<< HEAD
+                   " TL can't find one station to serve \n" ));
+=======
+             " C AC: %d C W: %d",
+             pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC,
+             pTLCb->atlSTAClients[*pucSTAId]->ucCurrentWeight));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+
+  pTLCb->uCurServedAC = WLANTL_AC_BK;
+  pTLCb->ucCurLeftWeight = 1;
+  //invalid number will be captured by caller
+  pTLCb->ucCurrentSTA = WLAN_MAX_STA_COUNT; 
+
+  *pucSTAId = pTLCb->ucCurrentSTA;
+  return VOS_STATUS_E_FAULT;
+}
+
+<<<<<<< HEAD
+
+/*==========================================================================
+  FUNCTION    WLAN_TLGetNextTxIds
+
+  DESCRIPTION
+    Gets the next station and next AC in the list
+
+  DEPENDENCIES
+
+  PARAMETERS
+
+   IN
+   pvosGCtx:     pointer to the global vos context; a handle to TL's
+                 control block can be extracted from its context
+
+   OUT
+   pucSTAId:    Station ID
+
+
+  RETURN VALUE
+    The result code associated with performing the operation
+
+    VOS_STATUS_SUCCESS:   Everything is good :)
+
+  SIDE EFFECTS
+
+============================================================================*/
+VOS_STATUS
+WLAN_TLGetNextTxIds
+(
+  v_PVOID_t    pvosGCtx,
+  v_U8_t*      pucSTAId
+)
+{
+  WLANTL_CbType*  pTLCb;
+  v_U8_t          ucNextAC;
+  v_U8_t          ucNextSTA; 
+  v_U8_t          ucCount; 
+  v_U8_t          uFlowMask; // TX FlowMask from WDA
+  v_U8_t          ucACMask = 0;
+  v_U8_t          i = 0; 
+
+  tBssSystemRole systemRole; //RG HACK to be removed
+  tpAniSirGlobal pMac;
+
+  pMac = vos_get_context(VOS_MODULE_ID_PE, pvosGCtx);
+  if ( NULL == pMac )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+                      "%s: Invalid pMac", __func__));
+    return VOS_STATUS_E_FAULT;
+  }
+
+  systemRole = wdaGetGlobalSystemRole(pMac);
+
+  /*------------------------------------------------------------------------
+    Extract TL control block
+  ------------------------------------------------------------------------*/
+  pTLCb = VOS_GET_TL_CB(pvosGCtx);
+  if ( NULL == pTLCb )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+      "WLAN TL:Invalid TL pointer from pvosGCtx on WLAN_TLGetNextTxIds"));
+    return VOS_STATUS_E_FAULT;
+  }
+
+#ifdef FEATURE_WLAN_TDLS
+  if ((eSYSTEM_AP_ROLE == systemRole) || (vos_concurrent_sessions_running()) || pTLCb->ucTdlsPeerCount)
+#else
+  if ((eSYSTEM_AP_ROLE == systemRole) || (vos_concurrent_sessions_running()))
+#endif
+  {
+    return WLAN_TLAPGetNextTxIds(pvosGCtx,pucSTAId);
+  }
+
+
+  if ( VOS_STATUS_SUCCESS != WDA_DS_GetTxFlowMask( pvosGCtx, &uFlowMask ) )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+      "WLAN TL:Failed to retrieve Flow control mask from WDA"));
+    return VOS_STATUS_E_FAULT;
+  }
+
+  /*STA id - no priority yet implemented */
+  /*-----------------------------------------------------------------------
+    Choose the next STA for tx - for now go in a round robin fashion
+    through all the stations that have pending packets     
+  -------------------------------------------------------------------------*/
+  ucNextSTA = pTLCb->ucCurrentSTA;
+  
+  pTLCb->ucCurrentSTA = WLAN_MAX_STA_COUNT; 
+  for ( ucCount = 0; 
+        ucCount < WLAN_MAX_STA_COUNT;
+        ucCount++ )
+  {
+    ucNextSTA = ( (ucNextSTA+1) >= WLAN_MAX_STA_COUNT )?0:(ucNextSTA+1);
+    if(NULL == pTLCb->atlSTAClients[ucNextSTA])
+    {
+        continue;
+    }
+    if (( pTLCb->atlSTAClients[ucNextSTA]->ucExists ) &&
+        ( pTLCb->atlSTAClients[ucNextSTA]->ucPktPending ))
+    {
+      if (WLANTL_STA_AUTHENTICATED == pTLCb->atlSTAClients[ucNextSTA]->tlState)
+      {
+        TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+               "STA ID: %d on WLAN_TLGetNextTxIds", *pucSTAId));
+        pTLCb->ucCurrentSTA = ucNextSTA;
+        break;
+      }
+      else
+      {
+        TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+               "%s Sta %d is not in auth state, skipping this sta.",
+               __func__, ucNextSTA));
+      }
+    }
+  }
+
+  *pucSTAId = pTLCb->ucCurrentSTA;
+
+  if ( WLANTL_STA_ID_INVALID( *pucSTAId ) )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+      "WLAN TL:No station registered with TL at this point"));
+
+    return VOS_STATUS_E_FAULT;
+
+  }
+
+  /*Convert the array to a mask for easier operation*/
+  WLAN_TL_AC_ARRAY_2_MASK( pTLCb->atlSTAClients[*pucSTAId], ucACMask, i);
+  
+  if ( 0 == ucACMask )
+  {
+    TLLOGE(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+      "WLAN TL: Mask 0 "
+      "STA ID: %d on WLAN_TLGetNextTxIds", *pucSTAId));
+
+     /*setting STA id to invalid if mask is 0*/
+     *pucSTAId = WLAN_MAX_STA_COUNT;
+
+     return VOS_STATUS_E_FAULT;
+  }
+
+  /*-----------------------------------------------------------------------
+    AC is updated whenever a packet is fetched from HDD -> the current
+    weight of such an AC cannot be 0 -> in this case TL is expected to
+    exit this function at this point during the main Tx loop
+  -----------------------------------------------------------------------*/
+  if ( 0 < pTLCb->atlSTAClients[*pucSTAId]->ucCurrentWeight  )
+  {
+    TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+                  "WLAN TL: Maintaining serviced AC to: %d for Weight: %d",
+                  pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC ,
+                  pTLCb->atlSTAClients[*pucSTAId]->ucCurrentWeight));
+    return VOS_STATUS_SUCCESS;
+  }
+
+  /*-----------------------------------------------------------------------
+     Choose highest priority AC - !!! optimize me
+  -----------------------------------------------------------------------*/
+  ucNextAC = pTLCb->atlSTAClients[*pucSTAId]->ucCurrentAC;
+    TLLOG2(VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
+             "Next AC: %d", ucNextAC));
 
   while ( 0 != ucACMask )
   {
@@ -9983,6 +10677,8 @@ WLAN_TLGetNextTxIds
   return VOS_STATUS_SUCCESS;
 }/* WLAN_TLGetNextTxIds */
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
 /*==========================================================================
@@ -11360,7 +12056,11 @@ void WLANTL_PowerStateChangedCB
    if (NULL == tlCtxt)
    {
      VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
+<<<<<<< HEAD
                 "%s: Invalid TL Control Block", __func__ );
+=======
+                "Invalid TL Control Block", __func__ );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
      return;
    }
 

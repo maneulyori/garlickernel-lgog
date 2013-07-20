@@ -207,6 +207,7 @@ eHalStatus csrTdlsChangePeerSta(tHalHandle hHal, tANI_U8 sessionId, tSirMacAddr 
                           pstaParams->extn_capability,
                           sizeof(pstaParams->extn_capability));
 
+<<<<<<< HEAD
             tdlsAddStaCmdInfo->htcap_present = pstaParams->htcap_present;
             if(pstaParams->htcap_present)
                 palCopyMemory(pMac->hHdd, &tdlsAddStaCmdInfo->HTCap,
@@ -220,6 +221,13 @@ eHalStatus csrTdlsChangePeerSta(tHalHandle hHal, tANI_U8 sessionId, tSirMacAddr 
                               &pstaParams->VHTCap, sizeof(pstaParams->VHTCap));
             else
                 palZeroMemory(pMac->hHdd, &tdlsAddStaCmdInfo->VHTCap, sizeof(pstaParams->VHTCap));
+=======
+            palCopyMemory(pMac->hHdd, &tdlsAddStaCmdInfo->HTCap,
+                          &pstaParams->HTCap, sizeof(pstaParams->HTCap));
+
+            palCopyMemory(pMac->hHdd, &tdlsAddStaCmdInfo->VHTCap,
+                          &pstaParams->VHTCap, sizeof(pstaParams->VHTCap));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 			tdlsAddStaCmdInfo->supportedRatesLen = pstaParams->supported_rates_len;
 
@@ -444,6 +452,7 @@ eHalStatus csrTdlsProcessSendMgmt( tpAniSirGlobal pMac, tSmeCmd *cmd )
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, cmd->sessionId );
     eHalStatus status = eHAL_STATUS_FAILURE;
 
+<<<<<<< HEAD
     if (NULL == pSession->pConnectBssDesc)
     {
         smsLog( pMac, LOGE, FL("BSS Description is not present") );
@@ -456,6 +465,14 @@ eHalStatus csrTdlsProcessSendMgmt( tpAniSirGlobal pMac, tSmeCmd *cmd )
     if (!HAL_STATUS_SUCCESS( status ) )
     {
         smsLog( pMac, LOGE, FL("alloc failed") );
+=======
+    status = palAllocateMemory( pMac->hHdd, (void **)&tdlsSendMgmtReq, 
+            (sizeof(tSirTdlsSendMgmtReq) + tdlsSendMgmtCmdInfo->len ) );
+
+    if(!HAL_STATUS_SUCCESS( status ) )
+    {
+        smsLog( pMac, LOGE, FL("alloc failed ") );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         VOS_ASSERT(0) ;
         return status ;
     }
@@ -466,10 +483,23 @@ eHalStatus csrTdlsProcessSendMgmt( tpAniSirGlobal pMac, tSmeCmd *cmd )
     tdlsSendMgmtReq->dialog =  tdlsSendMgmtCmdInfo->dialog ;
     tdlsSendMgmtReq->statusCode =  tdlsSendMgmtCmdInfo->statusCode ;
     tdlsSendMgmtReq->responder =  tdlsSendMgmtCmdInfo->responder;
+<<<<<<< HEAD
 
     palCopyMemory(pMac->hHdd, tdlsSendMgmtReq->bssid,
                   pSession->pConnectBssDesc->bssId, sizeof (tSirMacAddr));
 
+=======
+    if (pSession->pConnectBssDesc)
+    {
+        palCopyMemory(pMac->hHdd, tdlsSendMgmtReq->bssid, pSession->pConnectBssDesc->bssId,
+                sizeof (tSirMacAddr));
+    }
+    else
+    {
+        smsLog( pMac, LOGE, FL("%s: BSS Description is not present\n"), __func__);
+        return eHAL_STATUS_FAILURE;
+    }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     palCopyMemory(pMac->hHdd, tdlsSendMgmtReq->peerMac, 
             tdlsSendMgmtCmdInfo->peerMac, sizeof(tSirMacAddr)) ;
 
@@ -504,6 +534,7 @@ eHalStatus csrTdlsProcessAddSta( tpAniSirGlobal pMac, tSmeCmd *cmd )
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, cmd->sessionId );
     eHalStatus status = eHAL_STATUS_FAILURE;
 
+<<<<<<< HEAD
     if (NULL == pSession->pConnectBssDesc)
     {
         smsLog( pMac, LOGE, FL("BSS description is not present") );
@@ -516,6 +547,14 @@ eHalStatus csrTdlsProcessAddSta( tpAniSirGlobal pMac, tSmeCmd *cmd )
     if (!HAL_STATUS_SUCCESS( status ) )
     {
         smsLog( pMac, LOGE, FL("alloc failed") );
+=======
+    status = palAllocateMemory( pMac->hHdd, (void **)&tdlsAddStaReq, 
+            (sizeof(tSirTdlsAddStaReq) ) );
+
+    if(!HAL_STATUS_SUCCESS( status ) )
+    {
+        smsLog( pMac, LOGE, FL("alloc failed ") );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         VOS_ASSERT(0) ;
         return status ;
     }
@@ -524,8 +563,21 @@ eHalStatus csrTdlsProcessAddSta( tpAniSirGlobal pMac, tSmeCmd *cmd )
     //Using dialog as transactionId. This can be used to match response with request
     tdlsAddStaReq->transactionId = 0;
 
+<<<<<<< HEAD
     palCopyMemory(pMac->hHdd, tdlsAddStaReq->bssid,
                   pSession->pConnectBssDesc->bssId, sizeof (tSirMacAddr));
+=======
+    if (pSession->pConnectBssDesc)
+    {
+        palCopyMemory(pMac->hHdd, tdlsAddStaReq->bssid, pSession->pConnectBssDesc->bssId,
+                sizeof (tSirMacAddr));
+    }
+    else
+    {
+        smsLog( pMac, LOGE, FL("%s: BSS description is not present\n"), __func__);
+        return eHAL_STATUS_FAILURE;
+    }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     palCopyMemory(pMac->hHdd, tdlsAddStaReq->peerMac, 
             tdlsAddStaCmdInfo->peerMac, sizeof(tSirMacAddr)) ;
@@ -537,10 +589,15 @@ eHalStatus csrTdlsProcessAddSta( tpAniSirGlobal pMac, tSmeCmd *cmd )
     palCopyMemory(pMac->hHdd, tdlsAddStaReq->extn_capability,
                               tdlsAddStaCmdInfo->extnCapability,
                               SIR_MAC_MAX_EXTN_CAP);
+<<<<<<< HEAD
     tdlsAddStaReq->htcap_present = tdlsAddStaCmdInfo->htcap_present;
     palCopyMemory(pMac->hHdd, &tdlsAddStaReq->htCap,
                   &tdlsAddStaCmdInfo->HTCap, sizeof(tdlsAddStaCmdInfo->HTCap));
     tdlsAddStaReq->vhtcap_present = tdlsAddStaCmdInfo->vhtcap_present;
+=======
+    palCopyMemory(pMac->hHdd, &tdlsAddStaReq->htCap,
+                  &tdlsAddStaCmdInfo->HTCap, sizeof(tdlsAddStaCmdInfo->HTCap));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     palCopyMemory(pMac->hHdd, &tdlsAddStaReq->vhtCap,
                   &tdlsAddStaCmdInfo->VHTCap, sizeof(tdlsAddStaCmdInfo->VHTCap));
     tdlsAddStaReq->supported_rates_length = tdlsAddStaCmdInfo->supportedRatesLen;
@@ -565,6 +622,7 @@ eHalStatus csrTdlsProcessDelSta( tpAniSirGlobal pMac, tSmeCmd *cmd )
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, cmd->sessionId );
     eHalStatus status = eHAL_STATUS_FAILURE;
 
+<<<<<<< HEAD
     if (NULL == pSession->pConnectBssDesc)
     {
         smsLog( pMac, LOGE, FL("BSS description is not present") );
@@ -577,16 +635,37 @@ eHalStatus csrTdlsProcessDelSta( tpAniSirGlobal pMac, tSmeCmd *cmd )
     if (!HAL_STATUS_SUCCESS( status ) )
     {
         smsLog( pMac, LOGE, FL("alloc failed") );
+=======
+    status = palAllocateMemory( pMac->hHdd, (void **)&tdlsDelStaReq, 
+            (sizeof(tSirTdlsDelStaReq) ) );
+
+    if(!HAL_STATUS_SUCCESS( status ) )
+    {
+        smsLog( pMac, LOGE, FL("alloc failed ") );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         VOS_ASSERT(0) ;
         return status ;
     }
     tdlsDelStaReq->sessionId = cmd->sessionId;
     //Using dialog as transactionId. This can be used to match response with request
     tdlsDelStaReq->transactionId = 0;
+<<<<<<< HEAD
 
     palCopyMemory(pMac->hHdd, tdlsDelStaReq->bssid,
                   pSession->pConnectBssDesc->bssId, sizeof (tSirMacAddr));
 
+=======
+    if (pSession->pConnectBssDesc)
+    {
+        palCopyMemory(pMac->hHdd, tdlsDelStaReq->bssid, pSession->pConnectBssDesc->bssId,
+                sizeof (tSirMacAddr));
+    }
+    else
+    {
+        smsLog( pMac, LOGE, FL("%s: BSS description is not present\n"), __func__);
+        return eHAL_STATUS_FAILURE;
+    }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     palCopyMemory(pMac->hHdd, tdlsDelStaReq->peerMac, 
             tdlsDelStaCmdInfo->peerMac, sizeof(tSirMacAddr)) ;
 
@@ -920,12 +999,21 @@ eHalStatus tdlsMsgProcessor(tpAniSirGlobal pMac,  v_U16_t msgType,
              */
             if (addStaRsp->tdlsAddOper == TDLS_OPER_ADD)
                 roamResult = eCSR_ROAM_RESULT_ADD_TDLS_PEER;
+<<<<<<< HEAD
             else /* addStaRsp->tdlsAddOper must be TDLS_OPER_UPDATE */
                 roamResult = eCSR_ROAM_RESULT_UPDATE_TDLS_PEER;
             csrRoamCallCallback(pMac, addStaRsp->sessionId, &roamInfo, 0, 
                                 eCSR_ROAM_TDLS_STATUS_UPDATE,
                                 roamResult);
 
+=======
+            else if (addStaRsp->tdlsAddOper == TDLS_OPER_UPDATE)
+                roamResult = eCSR_ROAM_RESULT_UPDATE_TDLS_PEER;
+            csrRoamCallCallback(pMac, addStaRsp->sessionId, &roamInfo, 0, 
+                         eCSR_ROAM_TDLS_STATUS_UPDATE, 
+                               roamResult);
+ 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             /* remove pending eSmeCommandTdlsDiscovery command */
             csrTdlsRemoveSmeCmd(pMac, eSmeCommandTdlsAddPeer) ;
         }
@@ -965,6 +1053,7 @@ eHalStatus tdlsMsgProcessor(tpAniSirGlobal pMac,  v_U16_t msgType,
                                eCSR_ROAM_RESULT_TEARDOWN_TDLS_PEER_IND);
             break ;
         }
+<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
         case eWNI_SME_TDLS_AP_DISAPPEAR_IND:
         {
@@ -978,6 +1067,8 @@ eHalStatus tdlsMsgProcessor(tpAniSirGlobal pMac,  v_U16_t msgType,
             break ;
         }
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
         case eWNI_SME_TDLS_DEL_ALL_PEER_IND:
         {
             tpSirTdlsDelAllPeerInd pSirTdlsDelAllPeerInd = (tpSirTdlsDelAllPeerInd) pMsgBuf ;

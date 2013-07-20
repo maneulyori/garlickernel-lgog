@@ -1440,7 +1440,11 @@ limDisassocCnfSerDes(tpAniSirGlobal pMac, tpSirSmeDisassocCnf pDisassocCnf, tANI
     pDisassocCnf->length = limGetU16(pBuf);
     pBuf += sizeof(tANI_U16);
 
+<<<<<<< HEAD
     PELOG1(limLog(pMac, LOG1, FL("SME_DISASSOC_CNF length %d bytes is:"), pDisassocCnf->length);)
+=======
+    PELOG1(limLog(pMac, LOG1, FL("SME_DISASSOC_CNF length %d bytes is:\n"), pDisassocCnf->length);)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     PELOG1(sirDumpBuf(pMac, SIR_LIM_MODULE_ID, LOG1, pTemp, pDisassocCnf->length);)
 
     pDisassocCnf->statusCode = (tSirResultCodes) limGetU32(pBuf);

@@ -445,7 +445,10 @@ typedef enum
 
   /*WLAN DAL Set Tx Power Request*/
   WDI_SET_TX_POWER_REQ                          = 82,
+<<<<<<< HEAD
   WDI_START_ROAM_CANDIDATE_LOOKUP_REQ           = 83,
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
   WDI_MAX_REQ,
 
@@ -712,8 +715,11 @@ typedef enum
   WDI_GET_ROAM_RSSI_RESP                        = 80,
 
   WDI_SET_TX_POWER_RESP                         = 81,
+<<<<<<< HEAD
   WDI_START_ROAM_CANDIDATE_LOOKUP_RESP          = 82,
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
   /*-------------------------------------------------------------------------
     Indications
@@ -1092,9 +1098,12 @@ typedef struct
 
   /*timestamp when we get response timer event*/
   wpt_uint32                  uTimeStampRspTmrExp;
+<<<<<<< HEAD
 
   /* enable/disable SSR on WDI timeout */
   wpt_boolean                 bEnableSSR;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }WDI_ControlBlockType; 
 
 
@@ -5168,6 +5177,7 @@ WDI_ProcessUpdateVHTOpModeRsp
 );
 #endif
 
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 /**
  *  @brief WDI_wdiEdTypeEncToEdTypeEnc -
@@ -5186,5 +5196,7 @@ WDI_wdiEdTypeEncToEdTypeEnc
 );
 #endif
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif /*WLAN_QCT_WDI_I_H*/
 

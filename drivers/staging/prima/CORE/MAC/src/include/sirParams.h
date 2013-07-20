@@ -93,10 +93,14 @@ typedef enum {
    SAP32STA = 5,
    TDLS = 6,
    P2P_GO_NOA_DECOUPLE_INIT_SCAN = 7,
+<<<<<<< HEAD
    WLANACTIVE_OFFLOAD = 8,
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
    WLAN_ROAM_SCAN_OFFLOAD = 23,
 #endif
+=======
+   WLANACTIVE_OFFLOAD = 8
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    //MAX_FEATURE_SUPPORTED = 128
 } placeHolderInCapBitmap;
 
@@ -549,6 +553,7 @@ typedef struct sSirMbMsgP2p
 
 #ifdef WLAN_FEATURE_11AC
 #define SIR_HAL_UPDATE_OP_MODE             (SIR_HAL_ITC_MSG_TYPES_BEGIN + 188)
+<<<<<<< HEAD
 #endif
 
 #ifdef FEATURE_WLAN_TDLS
@@ -559,6 +564,16 @@ typedef struct sSirMbMsgP2p
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 #define SIR_HAL_START_ROAM_CANDIDATE_LOOKUP_REQ (SIR_HAL_ITC_MSG_TYPES_BEGIN + 191)
 #endif
+=======
+#endif
+
+#ifdef FEATURE_WLAN_TDLS
+/// PE <-> HAL TDLS messages
+#define SIR_HAL_TDLS_LINK_ESTABLISH        (SIR_HAL_ITC_MSG_TYPES_BEGIN + 189)
+#define SIR_HAL_TDLS_LINK_TEARDOWN         (SIR_HAL_ITC_MSG_TYPES_BEGIN + 190)
+#endif
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #define SIR_HAL_GET_ROAM_RSSI_REQ          (SIR_HAL_ITC_MSG_TYPES_BEGIN + 193)
 #define SIR_HAL_GET_ROAM_RSSI_RSP          (SIR_HAL_ITC_MSG_TYPES_BEGIN + 194)
 

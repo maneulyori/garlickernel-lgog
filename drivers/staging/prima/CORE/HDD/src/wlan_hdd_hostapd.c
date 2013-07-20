@@ -456,7 +456,10 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
     char *startBssEvent; 
     hdd_context_t *pHddCtx;
     hdd_scaninfo_t *pScanInfo  = NULL;
+<<<<<<< HEAD
     struct iw_michaelmicfailure msg;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     dev = (struct net_device *)usrDataForCallback;
     pHostapdAdapter = netdev_priv(dev);
@@ -643,7 +646,11 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
             {
                wake_unlock(&pHddCtx->sap_wake_lock);
             }
+<<<<<<< HEAD
             wake_lock_timeout(&pHddCtx->sap_wake_lock, msecs_to_jiffies(HDD_SAP_WAKE_LOCK_DURATION));
+=======
+            wake_lock_timeout(&pHddCtx->sap_wake_lock, HDD_SAP_WAKE_LOCK_DURATION);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,38))
             {
@@ -1952,7 +1959,11 @@ static int iw_set_ap_encodeext(struct net_device *dev,
     }
          
     VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
           ("%s:EncryptionType:%d key_len:%d, KeyId:%d"), __func__, setKey.encType, setKey.keyLength,
+=======
+          ("%s:EncryptionType:%d key_len:%d, :%d, KeyId:%d \n"),__func__, setKey.encType, setKey.keyLength,
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
             setKey.keyId);
     for(i=0; i< ext->key_len; i++)
         VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,

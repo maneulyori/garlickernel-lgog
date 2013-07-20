@@ -2059,8 +2059,13 @@ VOS_STATUS WDA_ResumeDataTx(tWDA_CbContext *pWDA)
 
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
                       "%s: Entered " ,__func__);
+<<<<<<< HEAD
 
    status = WLANTL_ResumeDataTx(pWDA->pVosContext, NULL);
+=======
+   ucSTAId = WLAN_ALL_STA;
+   status = WLANTL_ResumeDataTx(pWDA->pVosContext, &ucSTAId);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    return status;
 }
 /*
@@ -3493,7 +3498,11 @@ void WDA_DelSTASelfReqCallback(WDI_Status   wdiStatus,
    tDelStaSelfParams     *delStaSelfParams;
    
    VOS_TRACE(VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
              "<------ %s, wdiStatus: %d pWdaParams: %p",
+=======
+             "<------ %s, wdiStatus: %d pWdaParams: 0x%x",
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
               __func__, wdiStatus, pWdaParams); 
 
    if (NULL == pWdaParams)
@@ -5394,8 +5403,11 @@ VOS_STATUS WDA_ProcessAddBASessionReq(tWDA_CbContext *pWDA,
       pAddBAReqParams->status =
             CONVERT_WDI2SIR_STATUS(status) ;
       WDA_SendMsg(pWDA, WDA_ADDBA_RSP, (void *)pAddBAReqParams , 0) ;
+<<<<<<< HEAD
       /*Reset the WDA state to READY */
       pWDA->wdaState = WDA_READY_STATE;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       vos_mem_free(pWdaParams->wdaWdiApiMsgParam) ;
       vos_mem_free(pWdaParams);
    }
@@ -6313,6 +6325,7 @@ VOS_STATUS WDA_ProcessSetP2PGONOAReq(tWDA_CbContext *pWDA,
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
                            "%s: VOS MEM Alloc Failure", __func__); 
+<<<<<<< HEAD
       VOS_ASSERT(0);
       return VOS_STATUS_E_NOMEM;
    }
@@ -6324,10 +6337,26 @@ VOS_STATUS WDA_ProcessSetP2PGONOAReq(tWDA_CbContext *pWDA,
                            "%s: VOS MEM Alloc Failure", __func__);
       vos_mem_free(pP2pPsConfigParams);
       vos_mem_free(wdiSetP2PGONOAReqParam);
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       VOS_ASSERT(0);
       return VOS_STATUS_E_NOMEM;
    }
 
+<<<<<<< HEAD
+=======
+   pWdaParams = (tWDA_ReqParams *)vos_mem_malloc(sizeof(tWDA_ReqParams)) ;
+   if(NULL == pWdaParams)
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                           "%s: VOS MEM Alloc Failure", __func__);
+      vos_mem_free(pP2pPsConfigParams);
+      vos_mem_free(wdiSetP2PGONOAReqParam);
+      VOS_ASSERT(0);
+      return VOS_STATUS_E_NOMEM;
+   }
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    wdiSetP2PGONOAReqParam->wdiP2PGONOAInfo.ucOpp_ps = 
                                     pP2pPsConfigParams->opp_ps;
    wdiSetP2PGONOAReqParam->wdiP2PGONOAInfo.uCtWindow = 
@@ -6595,7 +6624,11 @@ VOS_STATUS WDA_ProcessExitImpsReq(tWDA_CbContext *pWDA)
  * FUNCTION: WDA_EnterBmpsRespCallback
  * send Enter BMPS RSP back to PE
  */ 
+<<<<<<< HEAD
 void WDA_EnterBmpsRespCallback(WDI_EnterBmpsRspParamsType *pwdiEnterBmpsRsp, void* pUserData)
+=======
+void WDA_EnterBmpsReqCallback(WDI_EnterBmpsRspParamsType *pwdiEnterBmpsRsp, void* pUserData)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
    tWDA_CbContext *pWDA;
@@ -6706,8 +6739,12 @@ VOS_STATUS WDA_ProcessEnterBmpsReq(tWDA_CbContext *pWDA,
    wdiEnterBmpsReqParams->wdiEnterBmpsInfo.rssiFilterPeriod = (wpt_uint32)pEnterBmpsReqParams->rssiFilterPeriod;
    wdiEnterBmpsReqParams->wdiEnterBmpsInfo.numBeaconPerRssiAverage = (wpt_uint32)pEnterBmpsReqParams->numBeaconPerRssiAverage;
    wdiEnterBmpsReqParams->wdiEnterBmpsInfo.bRssiFilterEnable = (wpt_uint8)pEnterBmpsReqParams->bRssiFilterEnable;
+<<<<<<< HEAD
    wdiEnterBmpsReqParams->wdiReqStatusCB = WDA_EnterBmpsReqCallback;
    wdiEnterBmpsReqParams->pUserData = pWdaParams;
+=======
+   wdiEnterBmpsReqParams->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store param pointer as passed in by caller */
    /* store Params pass it to WDI */
@@ -6743,7 +6780,11 @@ static void WDA_SendExitBmpsRsp(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_ExitBmpsRespCallback
  * send Exit BMPS RSP back to PE
  */ 
+<<<<<<< HEAD
 void WDA_ExitBmpsRespCallback(WDI_ExitBmpsRspParamsType *pwdiExitBmpsRsp, void* pUserData)
+=======
+void WDA_ExitBmpsReqCallback(WDI_ExitBmpsRspParamsType *pwdiExitBmpsRsp, void* pUserData)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
    tWDA_CbContext *pWDA;
@@ -6783,12 +6824,20 @@ void WDA_ExitBmpsReqCallback(WDI_Status wdiStatus, void* pUserData)
    tExitBmpsParams *pExitBmpsRspParams;
 
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
               "<------ %s, wdiStatus: %d", __func__, wdiStatus);
 
    if(NULL == pWdaParams)
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
                  "%s: pWdaParams received NULL", __func__);
+=======
+                                          "------> %s " ,__func__);
+   if(NULL == wdiExitBmpsReqParams) 
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                           "%s: VOS MEM Alloc Failure", __func__); 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       VOS_ASSERT(0);
       return;
    }
@@ -6865,7 +6914,11 @@ VOS_STATUS WDA_ProcessExitBmpsReq(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_EnterUapsdRespCallback
  * send Enter UAPSD RSP back to PE
  */ 
+<<<<<<< HEAD
 void WDA_EnterUapsdRespCallback(  WDI_EnterUapsdRspParamsType *pwdiEnterUapsdRspParams, void* pUserData)
+=======
+void WDA_EnterUapsdReqCallback(  WDI_EnterUapsdRspParamsType *pwdiEnterUapsdRspParams, void* pUserData)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
    tWDA_CbContext *pWDA;
@@ -6998,7 +7051,11 @@ VOS_STATUS WDA_ProcessEnterUapsdReq(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_ExitUapsdRespCallback
  * send Exit UAPSD RSP back to PE
  */ 
+<<<<<<< HEAD
 void WDA_ExitUapsdRespCallback(WDI_ExitUapsdRspParamsType *pwdiExitRspParam, void* pUserData)
+=======
+void WDA_ExitUapsdReqCallback(WDI_ExitUapsdRspParamsType *pwdiExitRspParam, void* pUserData)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
 
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
@@ -7096,8 +7153,12 @@ VOS_STATUS WDA_ProcessExitUapsdReq(tWDA_CbContext *pWDA,
    }
 
    wdiExitUapsdReqParams->wdiExitUapsdInfo.bssIdx = pExitUapsdParams->bssIdx;
+<<<<<<< HEAD
    wdiExitUapsdReqParams->wdiReqStatusCB = WDA_ExitUapsdReqCallback;
    wdiExitUapsdReqParams->pUserData = pWdaParams;
+=======
+   wdiExitUapsdReqParams->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
      /* Store param pointer as passed in by caller */
    /* store Params pass it to WDI */
@@ -7105,7 +7166,11 @@ VOS_STATUS WDA_ProcessExitUapsdReq(tWDA_CbContext *pWDA,
    pWdaParams->pWdaContext = pWDA;
    pWdaParams->wdaMsgParam = pExitUapsdParams;
 
+<<<<<<< HEAD
    status = WDI_ExitUapsdReq(wdiExitUapsdReqParams, (WDI_ExitUapsdRspCb)WDA_ExitUapsdRespCallback, pWdaParams);
+=======
+   status = WDI_ExitUapsdReq(wdiExitUapsdReqParams, (WDI_ExitUapsdRspCb)WDA_ExitUapsdReqCallback, pWdaParams);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    if(IS_WDI_STATUS_FAILURE(status))
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
@@ -7314,6 +7379,7 @@ void WDA_SetUapsdAcParamsRespCallback(WDI_Status status, void* pUserData)
 
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
                                           "<------ %s " ,__func__);
+<<<<<<< HEAD
 
    if(NULL == pWdaParams)
    {
@@ -7324,6 +7390,9 @@ void WDA_SetUapsdAcParamsRespCallback(WDI_Status status, void* pUserData)
    }
 
    vos_mem_free(pWdaParams->wdaWdiApiMsgParam);
+=======
+   vos_mem_free(pWdaParams->wdaWdiApiMsgParam) ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    vos_mem_free(pWdaParams);
 
    return ;
@@ -7514,8 +7583,11 @@ VOS_STATUS WDA_UpdateUapsdParamsReq(tWDA_CbContext *pWDA,
    wdiUpdateUapsdParams->wdiUpdateUapsdInfo.uMaxSpLen = pUpdateUapsdInfo->maxSpLen;
    wdiUpdateUapsdParams->wdiUpdateUapsdInfo.ucSTAIdx = pUpdateUapsdInfo->staIdx;
    wdiUpdateUapsdParams->wdiUpdateUapsdInfo.ucUapsdACMask = pUpdateUapsdInfo->uapsdACMask;
+<<<<<<< HEAD
    wdiUpdateUapsdParams->wdiReqStatusCB = WDA_UpdateUapsdParamsReqCallback;
    wdiUpdateUapsdParams->pUserData = pWdaParams;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    pWdaParams = (tWDA_ReqParams *)vos_mem_malloc(sizeof(tWDA_ReqParams)) ;
    if(NULL == pWdaParams)
@@ -7534,7 +7606,11 @@ VOS_STATUS WDA_UpdateUapsdParamsReq(tWDA_CbContext *pWDA,
    pWdaParams->pWdaContext = pWDA;
 
    wstatus = WDI_UpdateUapsdParamsReq(wdiUpdateUapsdParams, 
+<<<<<<< HEAD
                     (WDI_UpdateUapsdParamsCb)WDA_UpdateUapsdParamsRespCallback,
+=======
+                    (WDI_UpdateUapsdParamsCb)WDA_UpdateUapsdParamsReqCallback,
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     pWdaParams);
 
    if(IS_WDI_STATUS_FAILURE(wstatus))
@@ -7584,12 +7660,20 @@ void WDA_ConfigureRxpFilterReqCallback(WDI_Status wdiStatus, void* pUserData)
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
 
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+<<<<<<< HEAD
               "<------ %s, wdiStatus: %d", __func__, wdiStatus);
 
    if(NULL == pWdaParams)
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
                  "%s: pWdaParams received NULL", __func__);
+=======
+                                          "------> %s " ,__func__);
+   if(NULL == wdiRxpFilterParams) 
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                           "%s: VOS MEM Alloc Failure", __func__); 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       VOS_ASSERT(0);
       return;
    }
@@ -8031,6 +8115,17 @@ VOS_STATUS WDA_RemBeaconFilterReq(tWDA_CbContext *pWDA,
       VOS_ASSERT(0);
       return VOS_STATUS_E_NOMEM;
    }
+<<<<<<< HEAD
+=======
+   wdiBeaconFilterInfo->wdiBeaconFilterInfo.ucIeCount = 
+      pBeaconFilterInfo->ucIeCount;
+   //Fill structure with info contained in the ucRemIeId
+   vos_mem_copy(wdiBeaconFilterInfo->wdiBeaconFilterInfo.ucRemIeId, 
+                pBeaconFilterInfo->ucRemIeId,
+                wdiBeaconFilterInfo->wdiBeaconFilterInfo.ucIeCount);
+   wdiBeaconFilterInfo->wdiReqStatusCB = NULL;
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    pWdaParams = (tWDA_ReqParams *)vos_mem_malloc(sizeof(tWDA_ReqParams)) ;
    if(NULL == pWdaParams)
    {
@@ -8059,7 +8154,11 @@ VOS_STATUS WDA_RemBeaconFilterReq(tWDA_CbContext *pWDA,
    pWdaParams->pWdaContext = pWDA;
 
    wstatus = WDI_RemBeaconFilterReq(wdiBeaconFilterInfo, 
+<<<<<<< HEAD
                                    (WDI_RemBeaconFilterCb)WDA_RemBeaconFilterRespCallback, pWdaParams);
+=======
+                                   (WDI_RemBeaconFilterCb)WDA_RemBeaconFilterReqCallback, pWdaParams);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    if(IS_WDI_STATUS_FAILURE(wstatus))
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
@@ -8215,8 +8314,12 @@ void WDA_HostOffloadRespCallback(WDI_Status status, void* pUserData)
 }
 /*
  * FUNCTION: WDA_HostOffloadReqCallback
+<<<<<<< HEAD
  * Free memory.
  * Invoked when HostOffload REQ failed in WDI and no RSP callback is generated.
+=======
+ *
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
  */
 void WDA_HostOffloadReqCallback(WDI_Status wdiStatus, void* pUserData)
 {
@@ -8404,7 +8507,11 @@ void WDA_KeepAliveRespCallback(WDI_Status status, void* pUserData)
    vos_mem_free(pWdaParams->wdaWdiApiMsgParam);
    vos_mem_free(pWdaParams->wdaMsgParam);
    vos_mem_free(pWdaParams);
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    //print a msg, nothing else to do
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
               "WDA_KeepAliveRespCallback invoked " );
@@ -8509,8 +8616,12 @@ VOS_STATUS WDA_ProcessKeepAliveReq(tWDA_CbContext *pWDA,
                     SIR_MAC_ADDR_LEN,
                     0);
     }
+<<<<<<< HEAD
     wdiKeepAliveInfo->wdiReqStatusCB = WDA_KeepAliveReqCallback;
     wdiKeepAliveInfo->pUserData = pWdaParams;
+=======
+    wdiKeepAliveInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     /* Store param pointer as passed in by caller */
     pWdaParams->wdaMsgParam = pKeepAliveParams;
@@ -8541,7 +8652,11 @@ VOS_STATUS WDA_ProcessKeepAliveReq(tWDA_CbContext *pWDA,
               wdiKeepAliveInfo->wdiKeepAliveInfo.ucTimePeriod,
               wdiKeepAliveInfo->wdiKeepAliveInfo.ucPacketType); 
     wstatus = WDI_KeepAliveReq(wdiKeepAliveInfo, 
+<<<<<<< HEAD
                              (WDI_KeepAliveCb)WDA_KeepAliveRespCallback, pWdaParams);
+=======
+                             (WDI_KeepAliveCb)WDA_KeepAliveReqCallback, pWdaParams);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     if(IS_WDI_STATUS_FAILURE(wstatus))
     {
@@ -8559,7 +8674,11 @@ VOS_STATUS WDA_ProcessKeepAliveReq(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_WowlAddBcPtrnRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_WowlAddBcPtrnRespCallback(
+=======
+void WDA_WowlAddBcPtrnReqCallback(
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                  WDI_WowlAddBcPtrnRspParamsType *pWdiWowlAddBcstPtrRsp, 
                                  void* pUserData)
 {
@@ -8676,8 +8795,12 @@ VOS_STATUS WDA_ProcessWowlAddBcPtrnReq(tWDA_CbContext *pWDA,
    vos_mem_copy(wdiWowlAddBcPtrnInfo->wdiWowlAddBcPtrnInfo.bssId,
                          pWowlAddBcPtrnParams->bssId, sizeof(wpt_macAddr));
 
+<<<<<<< HEAD
    wdiWowlAddBcPtrnInfo->wdiReqStatusCB = WDA_WowlAddBcPtrnReqCallback;
    wdiWowlAddBcPtrnInfo->pUserData = pWdaParams;
+=======
+   wdiWowlAddBcPtrnInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    /* Store param pointer as passed in by caller */
    /* store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = wdiWowlAddBcPtrnInfo;
@@ -8701,7 +8824,11 @@ VOS_STATUS WDA_ProcessWowlAddBcPtrnReq(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_WowlDelBcPtrnRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_WowlDelBcPtrnRespCallback(
+=======
+void WDA_WowlDelBcPtrnReqCallback(
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                         WDI_WowlDelBcPtrnRspParamsType *pWdiWowlDelBcstPtrRsp, 
                         void* pUserData)
 {
@@ -8786,8 +8913,12 @@ VOS_STATUS WDA_ProcessWowlDelBcPtrnReq(tWDA_CbContext *pWDA,
    vos_mem_copy(wdiWowlDelBcPtrnInfo->wdiWowlDelBcPtrnInfo.bssId,
                          pWowlDelBcPtrnParams->bssId, sizeof(wpt_macAddr));
 
+<<<<<<< HEAD
    wdiWowlDelBcPtrnInfo->wdiReqStatusCB = WDA_WowlDelBcPtrnReqCallback;
    wdiWowlDelBcPtrnInfo->pUserData = pWdaParams;
+=======
+   wdiWowlDelBcPtrnInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    /* Store param pointer as passed in by caller */
    /* store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = wdiWowlDelBcPtrnInfo;
@@ -8811,7 +8942,11 @@ VOS_STATUS WDA_ProcessWowlDelBcPtrnReq(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_WowlEnterRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_WowlEnterRespCallback(WDI_WowlEnterRspParamsType *pwdiWowlEnterRspParam, void* pUserData)
+=======
+void WDA_WowlEnterReqCallback(WDI_WowlEnterRspParamsType *pwdiWowlEnterRspParam, void* pUserData)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
    tWDA_CbContext *pWDA;
@@ -8943,8 +9078,12 @@ VOS_STATUS WDA_ProcessWowlEnterReq(tWDA_CbContext *pWDA,
    wdiWowlEnterInfo->wdiWowlEnterInfo.bssIdx = 
       pWowlEnterParams->bssIdx;
 
+<<<<<<< HEAD
    wdiWowlEnterInfo->wdiReqStatusCB = WDA_WowlEnterReqCallback;
    wdiWowlEnterInfo->pUserData = pWdaParams;
+=======
+   wdiWowlEnterInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    /* Store param pointer as passed in by caller */
    /* store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = wdiWowlEnterInfo;
@@ -8965,10 +9104,17 @@ VOS_STATUS WDA_ProcessWowlEnterReq(tWDA_CbContext *pWDA,
 
 }/*WDA_ProcessWowlEnterReq*/
 /*
+<<<<<<< HEAD
  * FUNCTION: WDA_WowlExitRespCallback
  * 
  */ 
 void WDA_WowlExitRespCallback( WDI_WowlExitRspParamsType *pwdiWowlExitRsp, void* pUserData)
+=======
+ * FUNCTION: WDA_WowlExitReqCallback
+ * 
+ */ 
+void WDA_WowlExitReqCallback( WDI_WowlExitRspParamsType *pwdiWowlExitRsp, void* pUserData)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
    tWDA_CbContext *pWDA;
@@ -9066,8 +9212,12 @@ VOS_STATUS WDA_ProcessWowlExitReq(tWDA_CbContext *pWDA,
    wdiWowlExitInfo->wdiWowlExitInfo.bssIdx = 
       pWowlExitParams->bssIdx;
 
+<<<<<<< HEAD
    wdiWowlExitInfo->wdiReqStatusCB = WDA_WowlExitReqCallback;
    wdiWowlExitInfo->pUserData = pWdaParams;
+=======
+   wdiWowlExitInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store param pointer as passed in by caller */
    /* store Params pass it to WDI */
@@ -9076,7 +9226,11 @@ VOS_STATUS WDA_ProcessWowlExitReq(tWDA_CbContext *pWDA,
    pWdaParams->wdaMsgParam = pWowlExitParams;
 
    wstatus = WDI_WowlExitReq(wdiWowlExitInfo,
+<<<<<<< HEAD
                             (WDI_WowlExitReqCb)WDA_WowlExitRespCallback, pWdaParams);
+=======
+                            (WDI_WowlExitReqCb)WDA_WowlExitReqCallback, pWdaParams);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    if(IS_WDI_STATUS_FAILURE(wstatus))
    {
@@ -9440,7 +9594,11 @@ void WDA_FTMCommandReqCallback(void *ftmCmdRspData,
    if((NULL == pWDA) || (NULL == ftmCmdRspData))
    {
       VOS_TRACE(VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+<<<<<<< HEAD
                 "%s, invalid input %p, %p",__func__,  pWDA, ftmCmdRspData);
+=======
+                "%s, invalid input 0x%x, 0x%x",__func__,  pWDA, ftmCmdRspData);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return;
    }
    /* Release Current FTM Command Request */
@@ -9656,7 +9814,11 @@ void WDA_SetTxPerTrackingReqCallback(WDI_Status wdiStatus, void* pUserData)
  * FUNCTION: WDA_GTKOffloadRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_GTKOffloadRespCallback( WDI_GtkOffloadRspParams  *pwdiGtkOffloadRsparams,
+=======
+void WDA_GTKOffloadReqCallback( WDI_GtkOffloadRspParams  *pwdiGtkOffloadRsparams, 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                         void* pUserData)
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
@@ -9784,7 +9946,11 @@ VOS_STATUS WDA_ProcessGTKOffloadReq(tWDA_CbContext *pWDA,
  * FUNCTION: WDA_GtkOffloadGetInfoRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_GtkOffloadGetInfoRespCallback( WDI_GtkOffloadGetInfoRspParams *pwdiGtkOffloadGetInfoRsparams,
+=======
+void WDA_GtkOffloadGetInfoCallback( WDI_GtkOffloadGetInfoRspParams *pwdiGtkOffloadGetInfoRsparams, 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                     void * pUserData)
 {
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
@@ -10066,8 +10232,12 @@ VOS_STATUS WDA_ProcessGTKOffloadGetInfoReq(tWDA_CbContext *pWDA,
       return VOS_STATUS_E_NOMEM;
    }
 
+<<<<<<< HEAD
    pwdiGtkOffloadGetInfoReqMsg->wdiReqStatusCB = WDA_GtkOffloadGetInfoReqCallback;
    pwdiGtkOffloadGetInfoReqMsg->pUserData = pWdaParams;
+=======
+   pwdiGtkOffloadGetInfoReqMsg->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiGtkOffloadGetInfoReqMsg;
@@ -10078,7 +10248,11 @@ VOS_STATUS WDA_ProcessGTKOffloadGetInfoReq(tWDA_CbContext *pWDA,
    vos_mem_copy(pwdiGtkOffloadGetInfoReqMsg->WDI_GtkOffloadGetInfoReqParams.bssId,
              pGtkOffloadGetInfoRsp->bssId, sizeof (wpt_macAddr));
 
+<<<<<<< HEAD
    status = WDI_GTKOffloadGetInfoReq(pwdiGtkOffloadGetInfoReqMsg, (WDI_GtkOffloadGetInfoCb)WDA_GtkOffloadGetInfoRespCallback, pWdaParams);
+=======
+   status = WDI_GTKOffloadGetInfoReq(pwdiGtkOffloadGetInfoReqMsg, (WDI_GtkOffloadGetInfoCb)WDA_GtkOffloadGetInfoCallback, pWdaParams);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    if(IS_WDI_STATUS_FAILURE(status))
    {
@@ -10143,7 +10317,11 @@ VOS_STATUS WDA_TxComplete( v_PVOID_t pVosContext, vos_pkt_t *pData,
       else
       {
          VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_WARN,
+<<<<<<< HEAD
                            "%s:packet (%p) is already freed",
+=======
+                           "%s:packet (0x%X) is already freed", 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                            __func__, pData);
          //Return from here since we reaching here because the packet already timeout
          return status;
@@ -10189,7 +10367,11 @@ VOS_STATUS WDA_TxPacket(tWDA_CbContext *pWDA,
    if((NULL == pWDA)||(NULL == pFrmBuf)) 
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+<<<<<<< HEAD
                            "%s:pWDA %p or pFrmBuf %p is NULL",
+=======
+                           "%s:pWDA %x or pFrmBuf %x is NULL", 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                            __func__,pWDA,pFrmBuf); 
       VOS_ASSERT(0);
       return VOS_STATUS_E_FAILURE;
@@ -11658,6 +11840,192 @@ void WDA_TimerTrafficStatsInd(tWDA_CbContext *pWDA)
    }
 }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+/*
+ * API to activate/deactivate Traffic Stats timer. Traffic stats timer is only needed
+ * during MCC
+ */
+void WDA_TrafficStatsTimerActivate(wpt_boolean activate)
+{
+   wpt_uint32 enabled;
+   v_VOID_t * pVosContext = vos_get_global_context(VOS_MODULE_ID_WDA, NULL);
+   tWDA_CbContext *pWDA =  vos_get_context(VOS_MODULE_ID_WDA, pVosContext);
+   tpAniSirGlobal pMac = (tpAniSirGlobal )VOS_GET_MAC_CTXT(pVosContext);
+   
+   if (NULL == pMac )
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+<<<<<<< HEAD
+                 "%s: Invoked with invalid MAC context ", __func__ );
+=======
+                           "%s:pWDA is NULL", __func__); 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+      VOS_ASSERT(0);
+      return;
+   }
+
+   if(wlan_cfgGetInt(pMac, WNI_CFG_ENABLE_MCC_ADAPTIVE_SCHED, &enabled) 
+                                                      != eSIR_SUCCESS)
+   {
+      VOS_TRACE(VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                 "Failed to get WNI_CFG_ENABLE_MCC_ADAPTIVE_SCHED");
+      return;
+   }
+
+   if(!enabled)
+   {
+      return;
+   }
+
+   if(NULL == pWDA)
+   {
+      VOS_TRACE(VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                 "%s:WDA context is NULL", __func__);
+      VOS_ASSERT(0);
+      return;
+   }
+
+   if(activate)
+   {
+<<<<<<< HEAD
+      if( VOS_STATUS_SUCCESS != 
+         WDA_START_TIMER(&pWDA->wdaTimers.trafficStatsTimer))
+      {
+         VOS_TRACE(VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+                    "Traffic Stats Timer Start Failed ");
+         return;
+=======
+#ifdef WLAN_SOFTAP_VSTA_FEATURE
+        // We can only do BA on "hard" STAs.  
+         if (!(IS_HWSTA_IDX(curSta)))
+         {
+             continue;
+         }
+#endif //WLAN_SOFTAP_VSTA_FEATURE
+    for(tid = 0 ; tid < STACFG_MAX_TC ; tid++)
+    {
+         WLANTL_STAStateType tlSTAState ;
+         tANI_U32 txPktCount = 0 ;
+         tANI_U8 validStaIndex = pWDA->wdaStaInfo[curSta].ucValidStaIndex ;
+         if((WDA_VALID_STA_INDEX == validStaIndex) &&
+            (VOS_STATUS_SUCCESS == WDA_TL_GET_STA_STATE( pWDA->pVosContext,
+                                                    curSta, &tlSTAState)) &&
+            (VOS_STATUS_SUCCESS == WDA_TL_GET_TX_PKTCOUNT( pWDA->pVosContext,
+                                                    curSta, tid, &txPktCount)))
+         {
+#if 0
+            VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO_LOW,
+             "************* %d:%d, %d ",curSta, txPktCount,
+                                    pWDA->wdaStaInfo[curSta].framesTxed[tid]);
+#endif
+            if(!WDA_GET_BA_TXFLAG(pWDA, curSta, tid) 
+                   && (WLANTL_STA_AUTHENTICATED == tlSTAState)
+                   && (txPktCount >= WDA_LAST_POLLED_THRESHOLD(pWDA, 
+                                                               curSta, tid)))
+            {
+               /* get prepare for sending message to HAL */
+               //baCandidate[baCandidateCount].staIdx = curSta ;
+               baCandidate[baCandidateCount].ucTidBitmap |= 1 << tid ;
+               newBaCandidate = WDA_ENABLE_BA ;
+            }
+            pWDA->wdaStaInfo[curSta].framesTxed[tid] = txPktCount ;
+         }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+      }
+      WDI_DS_ActivateTrafficStats();
+   }
+   else
+   {
+      WDI_DS_DeactivateTrafficStats();
+      WDI_DS_ClearTrafficStats();
+
+      if( VOS_STATUS_SUCCESS !=
+         WDA_STOP_TIMER(&pWDA->wdaTimers.trafficStatsTimer))
+      {
+         VOS_TRACE(VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+                    "Traffic Stats Timer Stop Failed ");
+         return;
+      }
+   }
+}
+
+/*
+ * Traffic Stats Timer handler
+ */
+void WDA_TimerTrafficStatsInd(tWDA_CbContext *pWDA)
+{
+   WDI_Status wdiStatus;
+   WDI_TrafficStatsType *pWdiTrafficStats = NULL;
+   WDI_TrafficStatsIndType trafficStatsIndParams;
+   wpt_uint32 length, enabled;
+   tpAniSirGlobal pMac = (tpAniSirGlobal )VOS_GET_MAC_CTXT(pWDA->pVosContext);
+
+   if (NULL == pMac )
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                 "%s: Invoked with invalid MAC context ", __func__ );
+      VOS_ASSERT(0);
+      return;
+   }
+
+   if(wlan_cfgGetInt(pMac, WNI_CFG_ENABLE_MCC_ADAPTIVE_SCHED, &enabled) 
+                                                      != eSIR_SUCCESS)
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                    "Failed to get WNI_CFG_ENABLE_MCC_ADAPTIVE_SCHED");
+      return;
+   }
+
+   if(!enabled)
+   {
+      WDI_DS_DeactivateTrafficStats();
+      return;
+   }
+
+   WDI_DS_GetTrafficStats(&pWdiTrafficStats, &length);
+
+   if(pWdiTrafficStats != NULL)
+   {
+      trafficStatsIndParams.pTrafficStats = pWdiTrafficStats;
+      trafficStatsIndParams.length = length;
+      trafficStatsIndParams.duration =
+         pWDA->wdaTimers.trafficStatsTimer.initScheduleTimeInMsecs;
+      trafficStatsIndParams.wdiReqStatusCB = WDA_WdiIndicationCallback;
+      trafficStatsIndParams.pUserData = pWDA;
+
+      wdiStatus = WDI_TrafficStatsInd(&trafficStatsIndParams);
+
+      if(WDI_STATUS_PENDING == wdiStatus)
+      {
+         VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+                 "Pending received for %s:%d ",__func__,__LINE__ );
+      }
+      else if( WDI_STATUS_SUCCESS_SYNC != wdiStatus )
+      {
+         VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+                 "Failure in %s:%d ",__func__,__LINE__ );
+      }
+      
+      WDI_DS_ClearTrafficStats();
+   }
+   else
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_WARN,
+         "pWdiTrafficStats is Null");
+   }
+
+   if( VOS_STATUS_SUCCESS != 
+      WDA_START_TIMER(&pWDA->wdaTimers.trafficStatsTimer))
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_WARN,
+                              "Traffic Stats Timer Start Failed ");
+      return;
+   }
+}
+
 /*
  * BA Activity check timer handler
  */
@@ -11978,7 +12346,11 @@ void WDA_PNOScanRespCallback(WDI_Status status, void* pUserData)
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData; 
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
                                           "<------ %s " ,__func__);
+<<<<<<< HEAD
    if(NULL == pWdaParams)
+=======
+    if(NULL == pWdaParams)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
               "%s: pWdaParams received NULL", __func__);
@@ -12030,6 +12402,7 @@ void WDA_UpdateScanParamsRespCallback(WDI_Status status, void* pUserData)
    tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
                                           "<------ %s " ,__func__);
+<<<<<<< HEAD
    if(NULL == pWdaParams)
    {
       VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
@@ -12062,6 +12435,14 @@ void WDA_UpdateScanParamsReqCallback(WDI_Status wdiStatus, void* pUserData)
                  "%s: pWdaParams received NULL", __func__);
       VOS_ASSERT(0);
       return;
+=======
+    if(NULL == pWdaParams)
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+              "%s: pWdaParams received NULL", __func__);
+      VOS_ASSERT(0) ;
+      return ;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    }
 
    if(IS_WDI_STATUS_FAILURE(wdiStatus))
@@ -12135,8 +12516,12 @@ VOS_STATUS WDA_ProcessSetPrefNetworkReq(tWDA_CbContext *pWDA,
    vos_mem_copy( &pwdiPNOScanReqInfo->wdiPNOScanInfo.a5GProbeTemplate,
                 pPNOScanReqParams->p5GProbeTemplate,
                 pwdiPNOScanReqInfo->wdiPNOScanInfo.us5GProbeSize);
+<<<<<<< HEAD
    pwdiPNOScanReqInfo->wdiReqStatusCB = WDA_PNOScanReqCallback;
    pwdiPNOScanReqInfo->pUserData = pWdaParams;
+=======
+   pwdiPNOScanReqInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiPNOScanReqInfo;
@@ -12398,6 +12783,7 @@ void WDA_RssiFilterRespCallback(WDI_Status status, void* pUserData)
 
    VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
                                           "<------ %s " ,__func__);
+<<<<<<< HEAD
 
    if(NULL == pWdaParams)
    {
@@ -12407,6 +12793,16 @@ void WDA_RssiFilterRespCallback(WDI_Status status, void* pUserData)
       return;
    }
 
+=======
+
+   if(NULL == pWdaParams)
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+              "%s: pWdaParams is NULL", __func__);
+      VOS_ASSERT(0);
+      return ;
+   }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    vos_mem_free(pWdaParams->wdaMsgParam) ;
    vos_mem_free(pWdaParams->wdaWdiApiMsgParam);
    vos_mem_free(pWdaParams) ;
@@ -12472,8 +12868,12 @@ VOS_STATUS WDA_ProcessSetRssiFilterReq(tWDA_CbContext *pWDA,
       return VOS_STATUS_E_NOMEM;
    }
    pwdiSetRssiFilterReqInfo->rssiThreshold = pRssiFilterParams->rssiThreshold;
+<<<<<<< HEAD
    pwdiSetRssiFilterReqInfo->wdiReqStatusCB = WDA_RssiFilterReqCallback;
    pwdiSetRssiFilterReqInfo->pUserData = pWdaParams;
+=======
+   pwdiSetRssiFilterReqInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiSetRssiFilterReqInfo;
@@ -12575,8 +12975,12 @@ VOS_STATUS WDA_ProcessUpdateScanParams(tWDA_CbContext *pWDA,
          pUpdateScanParams->aChannels[i];
    }
 
+<<<<<<< HEAD
    wdiUpdateScanParamsInfoType->wdiReqStatusCB = WDA_UpdateScanParamsReqCallback;
    wdiUpdateScanParamsInfoType->pUserData = pWdaParams;
+=======
+   wdiUpdateScanParamsInfoType->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
      /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = wdiUpdateScanParamsInfoType;
@@ -12585,6 +12989,7 @@ VOS_STATUS WDA_ProcessUpdateScanParams(tWDA_CbContext *pWDA,
    pWdaParams->wdaMsgParam = pUpdateScanParams;
  
  
+<<<<<<< HEAD
 
    status = WDI_UpdateScanParamsReq(wdiUpdateScanParamsInfoType, 
                     (WDI_UpdateScanParamsCb)WDA_UpdateScanParamsRespCallback,
@@ -12679,6 +13084,8 @@ void WDA_SetPowerParamsReqCallback(WDI_Status wdiStatus, void* pUserData)
       VOS_ASSERT(0);
       return;
    }
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    if(IS_WDI_STATUS_FAILURE(wdiStatus))
    {
@@ -12689,13 +13096,53 @@ void WDA_SetPowerParamsReqCallback(WDI_Status wdiStatus, void* pUserData)
 
    return;
 }
+<<<<<<< HEAD
+=======
+#endif // FEATURE_WLAN_SCAN_PNO
+/*
+ * FUNCTION: WDA_SetPowerParamsCallback
+ *
+ */
+void WDA_SetPowerParamsCallback(WDI_Status status, void* pUserData)
+{
+   tWDA_ReqParams *pWdaParams = (tWDA_ReqParams *)pUserData;
+
+   VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_INFO,
+         "<------ %s " ,__func__);
+
+   if(NULL == pWdaParams)
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_ERROR,
+            "%s: pWdaParams received NULL", __func__);
+      VOS_ASSERT(0);
+      return;
+   }
+   if( pWdaParams != NULL )
+   {
+      if( pWdaParams->wdaWdiApiMsgParam != NULL )
+      {
+         vos_mem_free(pWdaParams->wdaWdiApiMsgParam);
+      }
+      if( pWdaParams->wdaMsgParam != NULL)
+      {
+         vos_mem_free(pWdaParams->wdaMsgParam);
+      }
+      vos_mem_free(pWdaParams);
+   }
+   return;
+}
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #ifdef WLAN_FEATURE_PACKET_FILTERING
 /*
  * FUNCTION: WDA_8023MulticastListRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_8023MulticastListRespCallback(
+=======
+void WDA_8023MulticastListReqCallback( 
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                         WDI_RcvFltPktSetMcListRspParamsType  *pwdiRcvFltPktSetMcListRspInfo,
                         void * pUserData)
 {
@@ -12796,8 +13243,12 @@ VOS_STATUS WDA_Process8023MulticastListReq (tWDA_CbContext *pWDA,
                    &(pRcvFltMcAddrList->multicastAddr[i]),
                    sizeof(tSirMacAddr));
    }
+<<<<<<< HEAD
    pwdiFltPktSetMcListReqParamsType->wdiReqStatusCB = WDA_8023MulticastListReqCallback;
    pwdiFltPktSetMcListReqParamsType->pUserData = pWdaParams;
+=======
+   pwdiFltPktSetMcListReqParamsType->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiFltPktSetMcListReqParamsType;
@@ -12848,11 +13299,18 @@ void WDA_ReceiveFilterSetFilterRespCallback(
 }
 
 /*
+<<<<<<< HEAD
  * FUNCTION: WDA_ReceiveFilterSetFilterReqCallback
  * Free memory.
  * Invoked when ReceiveFilterSetFilter REQ failed in WDI and no RSP callback is generated.
  */
 void WDA_ReceiveFilterSetFilterReqCallback(WDI_Status   wdiStatus,
+=======
+ * FUNCTION: WDA_ReqCallback
+ *
+ */
+void WDA_ReqCallback(WDI_Status   wdiStatus,
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                      void*        pUserData)
 {
    tWDA_ReqParams        *pWdaParams = (tWDA_ReqParams *)pUserData;
@@ -12973,7 +13431,11 @@ VOS_STATUS WDA_ProcessReceiveFilterSetFilterReq (tWDA_CbContext *pWDA,
                  pwdiSetRcvPktFilterReqParamsType->
                          wdiPktFilterCfg.paramsData[i].dataMask[5]);
    }
+<<<<<<< HEAD
    pwdiSetRcvPktFilterReqParamsType->wdiReqStatusCB = WDA_ReceiveFilterSetFilterReqCallback;
+=======
+   pwdiSetRcvPktFilterReqParamsType->wdiReqStatusCB = WDA_ReqCallback;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    pwdiSetRcvPktFilterReqParamsType->pUserData = pWdaParams;
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiSetRcvPktFilterReqParamsType;
@@ -12997,7 +13459,11 @@ VOS_STATUS WDA_ProcessReceiveFilterSetFilterReq (tWDA_CbContext *pWDA,
  * FUNCTION: WDA_FilterMatchCountRespCallback
  * 
  */ 
+<<<<<<< HEAD
 void WDA_FilterMatchCountRespCallback(
+=======
+void WDA_FilterMatchCountReqCallback(
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
                             WDI_RcvFltPktMatchCntRspParamsType *pwdiRcvFltPktMatchRspParams, 
                             void * pUserData)
 {
@@ -13127,8 +13593,16 @@ VOS_STATUS WDA_ProcessPacketFilterMatchCountReq (tWDA_CbContext *pWDA, tpSirRcvF
       return VOS_STATUS_E_NOMEM;
    }
 
+<<<<<<< HEAD
    pwdiRcvFltPktMatchCntReqParamsType->wdiReqStatusCB = WDA_FilterMatchCountReqCallback;
    pwdiRcvFltPktMatchCntReqParamsType->pUserData = pWdaParams;
+
+   vos_mem_copy( pwdiRcvFltPktMatchCntReqParamsType->bssId,
+                 pRcvFltPktMatchRsp->bssId, 
+                 sizeof(wpt_macAddr));
+=======
+   pwdiRcvFltPktMatchCntReqParamsType->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    vos_mem_copy( pwdiRcvFltPktMatchCntReqParamsType->bssId,
                  pRcvFltPktMatchRsp->bssId, 
@@ -13247,7 +13721,11 @@ VOS_STATUS WDA_ProcessReceiveFilterClearFilterReq (tWDA_CbContext *pWDA,
    vos_mem_copy(pwdiRcvFltPktClearReqParamsType->filterClearParam.bssId,
                          pRcvFltPktClearParam->bssId, sizeof(wpt_macAddr));
 
+<<<<<<< HEAD
    pwdiRcvFltPktClearReqParamsType->wdiReqStatusCB = WDA_ReceiveFilterClearFilterReqCallback;
+=======
+   pwdiRcvFltPktClearReqParamsType->wdiReqStatusCB = WDA_ReqCallback;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    pwdiRcvFltPktClearReqParamsType->pUserData = pWdaParams;
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiRcvFltPktClearReqParamsType;
@@ -13312,10 +13790,14 @@ VOS_STATUS WDA_ProcessSetPowerParamsReq(tWDA_CbContext *pWDA,
       pPowerParams->uEnableBET;
    pwdiSetPowerParamsReqInfo->wdiSetPowerParamsInfo.uBETInterval      = 
       pPowerParams->uBETInterval; 
+<<<<<<< HEAD
    pwdiSetPowerParamsReqInfo->wdiSetPowerParamsInfo.uMaxLIModulatedDTIM =
       pPowerParams->uMaxLIModulatedDTIM;
    pwdiSetPowerParamsReqInfo->wdiReqStatusCB = WDA_SetPowerParamsReqCallback;
    pwdiSetPowerParamsReqInfo->pUserData = pWdaParams;
+=======
+   pwdiSetPowerParamsReqInfo->wdiReqStatusCB = NULL;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Store Params pass it to WDI */
    pWdaParams->wdaWdiApiMsgParam = (void *)pwdiSetPowerParamsReqInfo;
@@ -13705,6 +14187,13 @@ void WDA_TransportChannelDebug
   v_BOOL_t       toggleStallDetect
 )
 {
+   if (NULL != pMac)
+   {
+      VOS_TRACE( VOS_MODULE_ID_WDA, VOS_TRACE_LEVEL_WARN,
+                 "HAL BMU DUMP Request" );
+      /* 17 is BMU dump opcode */
+      WDA_HALDumpCmdReq(pMac, 17, 0, 0, 0, 0, NULL);
+   }
    WDI_TransportChannelDebug(displaySnapshot, toggleStallDetect);
    return;
 }

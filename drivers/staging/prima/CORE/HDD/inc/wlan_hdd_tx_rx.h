@@ -253,6 +253,7 @@ void hdd_mon_tx_mgmt_pkt(hdd_adapter_t* pAdapter);
   @param work: [in] workqueue structure.
   ===========================================================================*/
 void hdd_mon_tx_work_queue(struct work_struct *work);
+<<<<<<< HEAD
 
 /**============================================================================
   @brief hdd_Ibss_GetStaId() - Get the StationID using the Peer Mac address
@@ -263,5 +264,7 @@ void hdd_mon_tx_work_queue(struct work_struct *work);
   ===========================================================================*/
 VOS_STATUS hdd_Ibss_GetStaId(hdd_station_ctx_t *pHddStaCtx,
                                   v_MACADDR_t *pMacAddress, v_U8_t *staId);
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #endif    // end #if !defined( WLAN_HDD_TX_RX_H )

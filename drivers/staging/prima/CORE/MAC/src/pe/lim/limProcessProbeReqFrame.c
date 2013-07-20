@@ -443,7 +443,11 @@ limProcessProbeReqFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo,tpPESession 
                                   || (pMac->lim.gLimHalScanState != eLIM_HAL_IDLE_SCAN_STATE)))
         {
            limLog(pMac, LOG3,
+<<<<<<< HEAD
               FL("While GO is scanning, don't send probe response on diff channel"));
+=======
+              FL("While GO is scanning, don't send probe response on diff channel\n"));
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
            break;
         }
 

@@ -62,7 +62,13 @@
 #include "wniCfgSta.h"
 #include "csrApi.h"
 #include "sapApi.h"
+<<<<<<< HEAD
 #include "dot11f.h"
+=======
+#ifdef FEATURE_WLAN_TDLS
+#include "dot11f.h"
+#endif
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /// Maximum number of scan hash table entries
 #define LIM_MAX_NUM_OF_SCAN_RESULTS 256

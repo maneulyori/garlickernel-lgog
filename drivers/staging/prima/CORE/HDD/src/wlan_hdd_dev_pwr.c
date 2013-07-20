@@ -462,8 +462,13 @@ void hddDevTmTxBlockTimeoutHandler(void *usrData)
 
    /* Resume TX flow */
     
+<<<<<<< HEAD
    netif_tx_wake_all_queues(staAdapater->dev);
    pHddCtx->tmInfo.qBlocked = VOS_FALSE;
+=======
+   netif_tx_start_all_queues(staAdapater->dev);
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    mutex_unlock(&pHddCtx->tmInfo.tmOperationLock);
 
    return;

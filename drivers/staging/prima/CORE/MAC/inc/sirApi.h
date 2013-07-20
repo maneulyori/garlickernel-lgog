@@ -1,4 +1,5 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
@@ -38,6 +39,13 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
+=======
+* Copyright (c) 2012-2013 Qualcomm Atheros, Inc.
+* All Rights Reserved.
+* Qualcomm Atheros Confidential and Proprietary.
+*/
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /*
  * Airgo Networks, Inc proprietary. All rights reserved.
@@ -3900,6 +3908,7 @@ typedef struct sSirTdlsDelAllPeerInd
    tANI_U16               length;
    tANI_U8                sessionId;     // Session ID
 } tSirTdlsDelAllPeerInd, *tpSirTdlsDelAllPeerInd;
+<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
 typedef struct sSirTdlsDisappearAPInd
 {
@@ -3910,6 +3919,8 @@ typedef struct sSirTdlsDisappearAPInd
    tSirMacAddr            staAddr;
 } tSirTdlsDisappearAPInd, *tpSirTdlsDisappearAPInd;
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 typedef struct sSirMgmtTxCompletionInd
 {
    tANI_U16               messageType;

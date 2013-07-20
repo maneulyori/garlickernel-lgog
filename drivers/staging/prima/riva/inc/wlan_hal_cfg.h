@@ -155,8 +155,12 @@
 #define QWLAN_HAL_CFG_ENABLE_DETECT_PS_SUPPORT          101
 #define QWLAN_HAL_CFG_AP_LINK_MONITOR_TIMEOUT           102
 #define QWLAN_HAL_CFG_BTC_DWELL_TIME_MULTIPLIER         103
+<<<<<<< HEAD
 #define QWLAN_HAL_CFG_ENABLE_TDLS_OXYGEN_MODE           104
 #define QWLAN_HAL_CFG_MAX_PARAMS                        105
+=======
+#define QWLAN_HAL_CFG_MAX_PARAMS                        104
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
 

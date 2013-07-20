@@ -134,6 +134,13 @@ when        who    what, where, why
 /*Maximum number of ACs */
 #define WLANTL_MAX_AC                         4
 
+<<<<<<< HEAD
+=======
+
+/* Bit Mask to represent All Stations */
+#define WLAN_ALL_STA                         0xFF
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /* Maximum number of station supported by TL, including BC. */
 #define WLAN_MAX_STA_COUNT  (HAL_NUM_STA)
 #define WLAN_NON32_STA_COUNT   14
@@ -438,10 +445,13 @@ typedef struct
   v_U16_t   ucDesSTAId;
  /*Rssi based on the received packet */
   v_S7_t    rssiAvg;
+<<<<<<< HEAD
  #ifdef FEATURE_WLAN_TDLS
  /* Packet received on direct link/AP link */
   v_U8_t    isStaTdls;
  #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }WLANTL_RxMetaInfoType;
 
 
@@ -2625,6 +2635,7 @@ WLANTL_ClearTxXmitPending
   v_PVOID_t       pvosGCtx
 );
 
+<<<<<<< HEAD
 /*==========================================================================
   FUNCTION   WLANTL_UpdateSTABssIdforIBSS
 
@@ -2666,4 +2677,6 @@ WLANTL_UpdateSTABssIdforIBSS
 
 
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif /* #ifndef WLAN_QCT_WLANTL_H */

@@ -188,9 +188,12 @@ extern int hdd_setBand_helper(struct net_device *dev, tANI_U8* ptr);
 void hdd_getBand_helper(hdd_context_t *pHddCtx, int *pBand);
 static VOS_STATUS hdd_parse_channellist(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8 *pNumChannels);
 static VOS_STATUS hdd_parse_countryrev(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8 *pNumChannels);
+<<<<<<< HEAD
 static VOS_STATUS hdd_parse_send_action_frame_data(tANI_U8 *pValue, tANI_U8 *pTargetApBssid,
                               tANI_U8 *pChannel, tANI_U8 *pDwellTime,
                               tANI_U8 **pBuf, tANI_U8 *pBufLen);
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 static int hdd_netdev_notifier_call(struct notifier_block * nb,
                                          unsigned long state,
@@ -405,6 +408,7 @@ static void hdd_wdi_trace_enable(wpt_moduleid moduleId, v_U32_t bitmask)
       bitmask >>= 1;
    }
 }
+<<<<<<< HEAD
 
 void hdd_checkandupdate_phymode( hdd_adapter_t *pAdapter, char *country_code)
 {
@@ -502,6 +506,8 @@ void hdd_checkandupdate_dfssetting( hdd_adapter_t *pAdapter, char *country_code)
     }
 
 }
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 int hdd_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 {
@@ -2020,8 +2026,38 @@ VOS_STATUS hdd_parse_channellist(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8
             }
         }
 
+<<<<<<< HEAD
         /*removing empty space*/
         while ((SPACE_ASCII_VALUE == *inPtr) && ('\0' != *inPtr)) inPtr++;
+=======
+       if (strncmp(command, "P2P_DEV_ADDR", 12) == 0 )
+       {
+           if (copy_to_user(priv_data.buf, pHddCtx->p2pDeviceAddress.bytes,
+                                                           sizeof(tSirMacAddr)))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,
+                  "%s: failed to copy data to user buffer\n", __func__);
+               ret = -EFAULT;
+           }
+       }
+       else if(strncmp(command, "SETBAND", 7) == 0)
+       {
+           tANI_U8 *ptr = command ;
+           int ret = 0 ;
+
+           /* Change band request received */
+
+           /* First 8 bytes will have "SETBAND " and
+            * 9 byte will have band setting value */
+           VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                    "%s: SetBandCommand Info  comm %s UL %d, TL %d", __func__, command, priv_data.used_len, priv_data.total_len);
+           /* Change band request received */
+           ret = hdd_setBand_helper(dev, ptr);
+       }
+       else if ( strncasecmp(command, "COUNTRY", 7) == 0 )
+       {
+           char *country_code;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
         /*no channel list after the number of channels argument and spaces*/
         if ( '\0' == *inPtr )
@@ -2037,6 +2073,7 @@ VOS_STATUS hdd_parse_channellist(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8
             }
         }
 
+<<<<<<< HEAD
         sscanf(inPtr, "%32s ", buf);
         v = kstrtos32(buf, 10, &tempInt);
         if ((v < 0) ||
@@ -2045,6 +2082,1103 @@ VOS_STATUS hdd_parse_channellist(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8
         {
            return -EINVAL;
         }
+        pChannelList[j] = tempInt;
+=======
+           }
+       }
+#if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
+       else if ( strncasecmp(command, "SETCOUNTRYREV", 13) == 0 )
+       {
+           tANI_U8 *value = command;
+           tANI_U8 countryCode[WNI_CFG_COUNTRY_CODE_LEN] = {0};
+           tANI_U8 revision = 0;
+           eHalStatus status = eHAL_STATUS_SUCCESS;
+           v_REGDOMAIN_t regId;
+
+           status = hdd_parse_countryrev(value, countryCode, &revision);
+           if (eHAL_STATUS_SUCCESS != status)
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: Failed to parse country revision information", __func__);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           /* Validate country code */
+           status = sme_GetRegulatoryDomainForCountry(pHddCtx->hHal, countryCode, &regId);
+           if (eHAL_STATUS_SUCCESS != status)
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: Invalid country code %s", __func__, countryCode);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           /* Validate revision */
+           if ((SME_KR_3 != revision) && (SME_KR_24 != revision) && (SME_KR_25 != revision))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: Invalid revision %d", __func__, revision);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           ret = (int)sme_ChangeCountryCode(pHddCtx->hHal, NULL, countryCode,
+                    pAdapter, pHddCtx->pvosContext);
+           if (0 != ret)
+           {
+               VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
+                       "%s: SME Change Country code fail ret=%d", __func__, ret);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if (0 == strncmp(countryCode, "KR", 2))
+           {
+               status = sme_ChangeCountryValidChannelListByRevision((tHalHandle)(pHddCtx->hHal),
+                                                       revision);
+               if (eHAL_STATUS_SUCCESS != status)
+               {
+                   VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                             "%s: Failed to build valid channel list", __func__);
+                   ret = -EINVAL;
+                   goto exit;
+               }
+           }
+       }
+#endif
+       /*
+          command should be a string having format
+          SET_SAP_CHANNEL_LIST <num of channels> <the channels seperated by spaces>
+       */
+       else if(strncmp(command, "SET_SAP_CHANNEL_LIST", 20) == 0)
+       {
+           tANI_U8 *ptr = command;
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      " Received Command to Set Preferred Channels for SAP in %s", __func__);
+
+           ret = sapSetPreferredChannel(ptr);
+       }
+       else if(strncmp(command, "SETSUSPENDMODE", 14) == 0)
+       {
+           int suspend = 0;
+           tANI_U8 *ptr = (tANI_U8*)command + 15;
+
+           suspend = *ptr - '0';
+           hdd_set_wlan_suspend_mode(suspend);
+       }
+#ifdef WLAN_FEATURE_NEIGHBOR_ROAMING
+       else if (strncmp(command, "SETROAMTRIGGER", 14) == 0)
+       {
+           tANI_U8 *value = command;
+           int rssi = 0;
+           tANI_U8 lookUpThreshold = CFG_NEIGHBOR_LOOKUP_RSSI_THRESHOLD_DEFAULT;
+           eHalStatus status = eHAL_STATUS_SUCCESS;
+
+           /* Move pointer to ahead of SETROAMTRIGGER<delimiter> */
+           value = value + 15;
+
+           sscanf(value, "%d", &rssi);
+           lookUpThreshold = abs(rssi);
+           if ((lookUpThreshold < CFG_NEIGHBOR_LOOKUP_RSSI_THRESHOLD_MIN) ||
+               (lookUpThreshold > CFG_NEIGHBOR_LOOKUP_RSSI_THRESHOLD_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "Neighbor lookup threshold value %d is out of range"
+                      " (Min: %d Max: %d)", lookUpThreshold,
+                      CFG_NEIGHBOR_LOOKUP_RSSI_THRESHOLD_MIN,
+                      CFG_NEIGHBOR_LOOKUP_RSSI_THRESHOLD_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to Set Roam trigger"
+                      " (Neighbor lookup threshold) = %d", __func__, lookUpThreshold);
+
+           pHddCtx->cfg_ini->nNeighborLookupRssiThreshold = lookUpThreshold;
+           status = sme_setNeighborLookupRssiThreshold((tHalHandle)(pHddCtx->hHal), lookUpThreshold);
+           if (eHAL_STATUS_SUCCESS != status)
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: Failed to set roam trigger, try again", __func__);
+               ret = -EPERM;
+               goto exit;
+           }
+
+           /* Set Reassoc threshold to (lookup rssi threshold + 5 dBm) */
+           sme_setNeighborReassocRssiThreshold((tHalHandle)(pHddCtx->hHal), lookUpThreshold + 5);
+       }
+       else if (strncmp(command, "GETROAMTRIGGER", 14) == 0)
+       {
+           tANI_U8 lookUpThreshold = sme_getNeighborLookupRssiThreshold((tHalHandle)(pHddCtx->hHal));
+           int rssi = (-1) * lookUpThreshold;
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", command, rssi);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETROAMSCANPERIOD", 17) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U16 neighborEmptyScanRefreshPeriod = CFG_EMPTY_SCAN_REFRESH_PERIOD_DEFAULT;
+           /* input refresh period is in terms of seconds */
+           /* Move pointer to ahead of SETROAMSCANPERIOD<delimiter> */
+           value = value + 18;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou16(value, 10, &neighborEmptyScanRefreshPeriod);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou16 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou16 failed ",
+                      "Input value may be out of range[%d - %d]",
+                      __func__,
+                      (CFG_EMPTY_SCAN_REFRESH_PERIOD_MIN/1000),
+                      (CFG_EMPTY_SCAN_REFRESH_PERIOD_MAX/1000));
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           neighborEmptyScanRefreshPeriod = neighborEmptyScanRefreshPeriod * 1000;
+           if ((neighborEmptyScanRefreshPeriod < CFG_EMPTY_SCAN_REFRESH_PERIOD_MIN) ||
+               (neighborEmptyScanRefreshPeriod > CFG_EMPTY_SCAN_REFRESH_PERIOD_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "Neighbor empty scan results refresh period value %d is out of range"
+                      " (Min: %d Max: %d)", neighborEmptyScanRefreshPeriod/1000,
+                      (CFG_EMPTY_SCAN_REFRESH_PERIOD_MIN/1000),
+                      (CFG_EMPTY_SCAN_REFRESH_PERIOD_MAX/1000));
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to Set roam scan period"
+                      " (Empty Scan refresh period) = %d", __func__, neighborEmptyScanRefreshPeriod/1000);
+
+           pHddCtx->cfg_ini->nEmptyScanRefreshPeriod = neighborEmptyScanRefreshPeriod;
+           sme_UpdateEmptyScanRefreshPeriod((tHalHandle)(pHddCtx->hHal), neighborEmptyScanRefreshPeriod);
+       }
+       else if (strncmp(command, "GETROAMSCANPERIOD", 17) == 0)
+       {
+           tANI_U16 nEmptyScanRefreshPeriod = sme_getEmptyScanRefreshPeriod((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETROAMSCANPERIOD", (nEmptyScanRefreshPeriod/1000));
+           /* Returned value is in units of seconds */
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETROAMSCANREFRESHPERIOD", 24) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U16 neighborScanRefreshPeriod = CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_DEFAULT;
+           /* input refresh period is in terms of seconds */
+           /* Move pointer to ahead of SETROAMSCANREFRESHPERIOD<delimiter> */
+           value = value + 25;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou16(value, 10, &neighborScanRefreshPeriod);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou16 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou16 failed ",
+                      "Input value may be out of range[%d - %d]",
+                      __func__,
+                      (CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_MIN/1000),
+                      (CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_MAX/1000));
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           neighborScanRefreshPeriod = neighborScanRefreshPeriod * 1000;
+           if ((neighborScanRefreshPeriod < CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_MIN) ||
+               (neighborScanRefreshPeriod > CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "Neighbor scan results refresh period value %d is out of range"
+                      " (Min: %d Max: %d)", neighborScanRefreshPeriod/1000,
+                      (CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_MIN/1000),
+                      (CFG_NEIGHBOR_SCAN_RESULTS_REFRESH_PERIOD_MAX/1000));
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to Set roam scan refresh period"
+                      " (Scan refresh period) = %d", __func__, neighborScanRefreshPeriod/1000);
+
+           pHddCtx->cfg_ini->nNeighborResultsRefreshPeriod = neighborScanRefreshPeriod;
+           sme_setNeighborScanRefreshPeriod((tHalHandle)(pHddCtx->hHal), neighborScanRefreshPeriod);
+       }
+       else if (strncmp(command, "GETROAMSCANREFRESHPERIOD", 24) == 0)
+       {
+           tANI_U16 value = sme_getNeighborScanRefreshPeriod((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETROAMSCANREFRESHPERIOD", (value/1000));
+           /* Returned value is in units of seconds */
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+#endif
+#if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
+       else if (strncmp(command, "SETROAMDELTA", 12) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 roamRssiDiff = CFG_ROAM_RSSI_DIFF_DEFAULT;
+
+           /* Move pointer to ahead of SETROAMDELTA<delimiter> */
+           value = value + 13;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &roamRssiDiff);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_ROAM_RSSI_DIFF_MIN,
+                      CFG_ROAM_RSSI_DIFF_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((roamRssiDiff < CFG_ROAM_RSSI_DIFF_MIN) ||
+               (roamRssiDiff > CFG_ROAM_RSSI_DIFF_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "Roam rssi diff value %d is out of range"
+                      " (Min: %d Max: %d)", roamRssiDiff,
+                      CFG_ROAM_RSSI_DIFF_MIN,
+                      CFG_ROAM_RSSI_DIFF_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to Set roam rssi diff = %d", __func__, roamRssiDiff);
+
+           pHddCtx->cfg_ini->RoamRssiDiff = roamRssiDiff;
+           sme_UpdateRoamRssiDiff((tHalHandle)(pHddCtx->hHal), roamRssiDiff);
+       }
+       else if (strncmp(priv_data.buf, "GETROAMDELTA", 12) == 0)
+       {
+           tANI_U8 roamRssiDiff = sme_getRoamRssiDiff((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", command, roamRssiDiff);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+#endif
+#if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
+       else if (strncmp(command, "GETBAND", 7) == 0)
+       {
+           int band = -1;
+           char extra[32];
+           tANI_U8 len = 0;
+           hdd_getBand_helper(pHddCtx, &band);
+
+           len = snprintf(extra, sizeof(extra), "%s %d", command, band);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "GETCOUNTRYREV", 13) == 0)
+       {
+           tANI_U8 pBuf[WNI_CFG_COUNTRY_CODE_LEN];
+           tANI_U8 uBufLen = WNI_CFG_COUNTRY_CODE_LEN;
+           tANI_U8 revision = 0;
+           /* The format of the data copied to the user is GETCOUNTRYREV KR 25,
+              hence size of the array is country code + whitespace + 2 byte revision + ASCII NUL */
+           char extra[32] = {0};
+           tANI_U8 len = 0;
+
+           if (eHAL_STATUS_SUCCESS != sme_GetCountryCode( (tHalHandle)(pHddCtx->hHal), pBuf, &uBufLen ))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,
+                  "%s: failed to get country code", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+           pBuf[uBufLen] = '\0';
+           sme_GetCountryRevision((tHalHandle)(pHddCtx->hHal), &revision);
+
+           if (0 == strncmp(pBuf, "KR", 2))
+               len = snprintf(extra, sizeof(extra), "%s %s %u", command, pBuf, revision);
+           else
+               len = snprintf(extra, sizeof(extra), "%s %s", command, pBuf);
+
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETROAMSCANCHANNELS", 19) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 ChannelList[WNI_CFG_VALID_CHANNEL_LIST_LEN] = {0};
+           tANI_U8 numChannels = 0;
+           eHalStatus status = eHAL_STATUS_SUCCESS;
+
+           status = hdd_parse_channellist(value, ChannelList, &numChannels);
+           if (eHAL_STATUS_SUCCESS != status)
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: Failed to parse channel list information", __func__);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if (numChannels > WNI_CFG_VALID_CHANNEL_LIST_LEN)
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: number of channels (%d) supported exceeded max (%d)", __func__,
+                   numChannels, WNI_CFG_VALID_CHANNEL_LIST_LEN);
+               ret = -EINVAL;
+               goto exit;
+           }
+           status = sme_ChangeRoamScanChannelList((tHalHandle)(pHddCtx->hHal), ChannelList,
+                                                  numChannels);
+           if (eHAL_STATUS_SUCCESS != status)
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: Failed to update channel list information", __func__);
+               ret = -EINVAL;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "GETROAMSCANCHANNELS", 19) == 0)
+       {
+           tANI_U8 ChannelList[WNI_CFG_VALID_CHANNEL_LIST_LEN] = {0};
+           tANI_U8 numChannels = 0;
+           tANI_U8 len = 0, j = 0;
+           char extra[128] = {0};
+
+           if (eHAL_STATUS_SUCCESS != sme_getRoamScanChannelList( (tHalHandle)(pHddCtx->hHal),
+                                              ChannelList, &numChannels ))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,
+                  "%s: failed to get roam scan channel list", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+           /* output channel list is of the format
+           [Number of roam scan channels][Channel1][Channel2]... */
+           /* copy the number of channels in the 0th index */
+           len = snprintf(extra, sizeof(extra), "%s %d", command, numChannels);
+           for (j = 0; (j < numChannels); j++)
+           {
+               len += snprintf(extra + len, sizeof(extra) - len, " %d", ChannelList[j]);
+           }
+
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "GETCCXMODE", 10) == 0)
+       {
+           tANI_BOOLEAN ccxMode = sme_getIsCcxFeatureEnabled((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETCCXMODE", ccxMode);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "GETOKCMODE", 10) == 0)
+       {
+           tANI_BOOLEAN okcMode = hdd_is_okc_mode_enabled(pHddCtx);
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETOKCMODE", okcMode);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "GETFASTROAM", 10) == 0)
+       {
+           tANI_BOOLEAN lfrMode = sme_getIsLfrFeatureEnabled((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETFASTROAM", lfrMode);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "GETFASTTRANSITION", 17) == 0)
+       {
+           tANI_BOOLEAN ft = sme_getIsFtFeatureEnabled((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETFASTTRANSITION", ft);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETROAMSCANCHANNELMINTIME", 25) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 minTime = CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_DEFAULT;
+
+           /* Move pointer to ahead of SETROAMSCANCHANNELMINTIME<delimiter> */
+           value = value + 26;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &minTime);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_MIN,
+                      CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((minTime < CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_MIN) ||
+               (minTime > CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "scan min channel time value %d is out of range"
+                      " (Min: %d Max: %d)", minTime,
+                      CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_MIN,
+                      CFG_NEIGHBOR_SCAN_MIN_CHAN_TIME_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change channel min time = %d", __func__, minTime);
+
+           pHddCtx->cfg_ini->nNeighborScanMinChanTime = minTime;
+           sme_setNeighborScanMinChanTime((tHalHandle)(pHddCtx->hHal), minTime);
+       }
+       else if (strncmp(command, "GETROAMSCANCHANNELMINTIME", 25) == 0)
+       {
+           tANI_U16 val = sme_getNeighborScanMinChanTime((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           /* value is interms of msec */
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETROAMSCANCHANNELMINTIME", val);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETSCANCHANNELTIME", 18) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 maxTime = CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_DEFAULT;
+
+           /* Move pointer to ahead of SETSCANCHANNELTIME<delimiter> */
+           value = value + 19;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &maxTime);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_MIN,
+                      CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((maxTime < CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_MIN) ||
+               (maxTime > CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "lfr mode value %d is out of range"
+                      " (Min: %d Max: %d)", maxTime,
+                      CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_MIN,
+                      CFG_NEIGHBOR_SCAN_MAX_CHAN_TIME_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change channel max time = %d", __func__, maxTime);
+
+           pHddCtx->cfg_ini->nNeighborScanMaxChanTime = maxTime;
+           sme_setNeighborScanMaxChanTime((tHalHandle)(pHddCtx->hHal), maxTime);
+       }
+       else if (strncmp(command, "GETSCANCHANNELTIME", 18) == 0)
+       {
+           tANI_U16 val = sme_getNeighborScanMaxChanTime((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           /* value is interms of msec */
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETSCANCHANNELTIME", val);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETSCANHOMETIME", 15) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U16 val = CFG_NEIGHBOR_SCAN_TIMER_PERIOD_DEFAULT;
+
+           /* Move pointer to ahead of SETSCANHOMETIME<delimiter> */
+           value = value + 16;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou16(value, 10, &val);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou16 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou16 failed range [%d - %d]", __func__,
+                      CFG_NEIGHBOR_SCAN_TIMER_PERIOD_MIN,
+                      CFG_NEIGHBOR_SCAN_TIMER_PERIOD_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((val < CFG_NEIGHBOR_SCAN_TIMER_PERIOD_MIN) ||
+               (val > CFG_NEIGHBOR_SCAN_TIMER_PERIOD_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "scan home time value %d is out of range"
+                      " (Min: %d Max: %d)", val,
+                      CFG_NEIGHBOR_SCAN_TIMER_PERIOD_MIN,
+                      CFG_NEIGHBOR_SCAN_TIMER_PERIOD_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change scan home time = %d", __func__, val);
+
+           pHddCtx->cfg_ini->nNeighborScanPeriod = val;
+           sme_setNeighborScanPeriod((tHalHandle)(pHddCtx->hHal), val);
+       }
+       else if (strncmp(command, "GETSCANHOMETIME", 15) == 0)
+       {
+           tANI_U16 val = sme_getNeighborScanPeriod((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           /* value is interms of msec */
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETSCANHOMETIME", val);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+       else if (strncmp(command, "SETROAMINTRABAND", 16) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 val = CFG_ROAM_INTRA_BAND_DEFAULT;
+
+           /* Move pointer to ahead of SETROAMINTRABAND<delimiter> */
+           value = value + 17;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &val);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_ROAM_INTRA_BAND_MIN,
+                      CFG_ROAM_INTRA_BAND_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((val < CFG_ROAM_INTRA_BAND_MIN) ||
+               (val > CFG_ROAM_INTRA_BAND_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "intra band mode value %d is out of range"
+                      " (Min: %d Max: %d)", val,
+                      CFG_ROAM_INTRA_BAND_MIN,
+                      CFG_ROAM_INTRA_BAND_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change intra band = %d", __func__, val);
+
+           pHddCtx->cfg_ini->nRoamIntraBand = val;
+           sme_setRoamIntraBand((tHalHandle)(pHddCtx->hHal), val);
+       }
+       else if (strncmp(command, "GETROAMINTRABAND", 16) == 0)
+       {
+           tANI_U16 val = sme_getRoamIntraBand((tHalHandle)(pHddCtx->hHal));
+           char extra[32];
+           tANI_U8 len = 0;
+
+           /* value is interms of msec */
+           len = snprintf(extra, sizeof(extra), "%s %d", "GETROAMINTRABAND", val);
+           if (copy_to_user(priv_data.buf, &extra, len + 1))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  "%s: failed to copy data to user buffer", __func__);
+               ret = -EFAULT;
+               goto exit;
+           }
+       }
+
+#endif
+#ifdef FEATURE_WLAN_LFR
+       else if (strncmp(command, "SETFASTROAM", 11) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 lfrMode = CFG_LFR_FEATURE_ENABLED_DEFAULT;
+
+           /* Move pointer to ahead of SETFASTROAM<delimiter> */
+           value = value + 12;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &lfrMode);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_LFR_FEATURE_ENABLED_MIN,
+                      CFG_LFR_FEATURE_ENABLED_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((lfrMode < CFG_LFR_FEATURE_ENABLED_MIN) ||
+               (lfrMode > CFG_LFR_FEATURE_ENABLED_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "lfr mode value %d is out of range"
+                      " (Min: %d Max: %d)", lfrMode,
+                      CFG_LFR_FEATURE_ENABLED_MIN,
+                      CFG_LFR_FEATURE_ENABLED_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change lfr mode = %d", __func__, lfrMode);
+
+           pHddCtx->cfg_ini->isFastRoamIniFeatureEnabled = lfrMode;
+           sme_UpdateIsFastRoamIniFeatureEnabled((tHalHandle)(pHddCtx->hHal), lfrMode);
+       }
+#endif
+#ifdef WLAN_FEATURE_VOWIFI_11R
+       else if (strncmp(command, "SETFASTTRANSITION", 17) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 ft = CFG_FAST_TRANSITION_ENABLED_NAME_DEFAULT;
+
+           /* Move pointer to ahead of SETFASTROAM<delimiter> */
+           value = value + 18;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &ft);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_FAST_TRANSITION_ENABLED_NAME_MIN,
+                      CFG_FAST_TRANSITION_ENABLED_NAME_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((ft < CFG_FAST_TRANSITION_ENABLED_NAME_MIN) ||
+               (ft > CFG_FAST_TRANSITION_ENABLED_NAME_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "ft mode value %d is out of range"
+                      " (Min: %d Max: %d)", ft,
+                      CFG_FAST_TRANSITION_ENABLED_NAME_MIN,
+                      CFG_FAST_TRANSITION_ENABLED_NAME_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change ft mode = %d", __func__, ft);
+
+           pHddCtx->cfg_ini->isFastTransitionEnabled = ft;
+           sme_UpdateFastTransitionEnabled((tHalHandle)(pHddCtx->hHal), ft);
+       }
+#endif
+#ifdef FEATURE_WLAN_CCX
+       else if (strncmp(command, "SETCCXMODE", 10) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 ccxMode = CFG_CCX_FEATURE_ENABLED_DEFAULT;
+
+           /* Move pointer to ahead of SETCCXMODE<delimiter> */
+           value = value + 11;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &ccxMode);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_CCX_FEATURE_ENABLED_MIN,
+                      CFG_CCX_FEATURE_ENABLED_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((ccxMode < CFG_CCX_FEATURE_ENABLED_MIN) ||
+               (ccxMode > CFG_CCX_FEATURE_ENABLED_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "Ccx mode value %d is out of range"
+                      " (Min: %d Max: %d)", ccxMode,
+                      CFG_CCX_FEATURE_ENABLED_MIN,
+                      CFG_CCX_FEATURE_ENABLED_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change ccx mode = %d", __func__, ccxMode);
+
+           pHddCtx->cfg_ini->isCcxIniFeatureEnabled = ccxMode;
+           sme_UpdateIsCcxFeatureEnabled((tHalHandle)(pHddCtx->hHal), ccxMode);
+       }
+#endif
+#ifdef FEATURE_WLAN_OKC
+       else if (strncmp(command, "SETOKCMODE", 10) == 0)
+       {
+           tANI_U8 *value = command;
+           tANI_U8 okcMode = CFG_OKC_FEATURE_ENABLED_DEFAULT;
+
+           /* Move pointer to ahead of SETOKCMODE<delimiter> */
+           value = value + 11;
+           /* Convert the value from ascii to integer */
+           ret = kstrtou8(value, 10, &okcMode);
+           if (ret < 0)
+           {
+               /* If the input value is greater than max value of datatype, then also
+                  kstrtou8 fails */
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "%s: kstrtou8 failed range [%d - %d]", __func__,
+                      CFG_OKC_FEATURE_ENABLED_MIN,
+                      CFG_OKC_FEATURE_ENABLED_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           if ((okcMode < CFG_OKC_FEATURE_ENABLED_MIN) ||
+               (okcMode > CFG_OKC_FEATURE_ENABLED_MAX))
+           {
+               VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                      "Okc mode value %d is out of range"
+                      " (Min: %d Max: %d)", okcMode,
+                      CFG_OKC_FEATURE_ENABLED_MIN,
+                      CFG_OKC_FEATURE_ENABLED_MAX);
+               ret = -EINVAL;
+               goto exit;
+           }
+
+           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+                      "%s: Received Command to change okc mode = %d", __func__, okcMode);
+
+           pHddCtx->cfg_ini->isOkcIniFeatureEnabled = okcMode;
+       }
+#endif
+       else {
+           hddLog( VOS_TRACE_LEVEL_WARN, "%s: Unsupported GUI command %s",
+                   __func__, command);
+       }
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
+
+        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH,
+                   "Channel %d added to preferred channel list",
+                   pChannelList[j] );
+    }
+
+    return VOS_STATUS_SUCCESS;
+}
+
+#if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
+void hdd_getBand_helper(hdd_context_t *pHddCtx, int *pBand)
+{
+    eCsrBand band = -1;
+    sme_GetFreqBand((tHalHandle)(pHddCtx->hHal), &band);
+    switch (band)
+    {
+        case eCSR_BAND_ALL:
+            *pBand = WLAN_HDD_UI_BAND_AUTO;
+            break;
+
+        case eCSR_BAND_24:
+            *pBand = WLAN_HDD_UI_BAND_2_4_GHZ;
+            break;
+
+        case eCSR_BAND_5G:
+            *pBand = WLAN_HDD_UI_BAND_5_GHZ;
+            break;
+
+        default:
+            hddLog( VOS_TRACE_LEVEL_WARN, "%s: Invalid Band %d", __func__, band);
+            *pBand = -1;
+            break;
+    }
+}
+
+/**---------------------------------------------------------------------------
+
+  \brief hdd_parse_countryrev() - HDD Parse country code revision
+
+  This function parses the country code revision passed in the format
+  SETCOUNTRYREV<space><Country code><space>revision
+
+  \param  - pValue Pointer to input country code revision
+  \param  - pCountryCode Pointer to local output array to record country code
+  \param  - pRevision Pointer to store revision integer number
+
+  \return - 0 for success non-zero for failure
+
+  --------------------------------------------------------------------------*/
+VOS_STATUS hdd_parse_countryrev(tANI_U8 *pValue, tANI_U8 *pCountryCode, tANI_U8 *pRevision)
+{
+    tANI_U8 *inPtr = pValue;
+    int tempInt;
+
+    inPtr = strnchr(pValue, strlen(pValue), SPACE_ASCII_VALUE);
+    /*no argument after the command*/
+    if (NULL == inPtr)
+    {
+        return -EINVAL;
+    }
+
+    /*no space after the command*/
+    else if (SPACE_ASCII_VALUE != *inPtr)
+    {
+        return -EINVAL;
+    }
+
+    /*removing empty spaces*/
+    while ((SPACE_ASCII_VALUE  == *inPtr)&& ('\0' !=  *inPtr) ) inPtr++;
+
+    /*no argument followed by spaces*/
+    if ('\0' == *inPtr)
+    {
+        return -EINVAL;
+    }
+
+    /*getting the first argument ie the country code */
+    sscanf(inPtr, "%3s ", pCountryCode);
+
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH,
+               "Country code is : %s", pCountryCode);
+
+    /*inPtr pointing to the beginning of first space after country code */
+    inPtr = strpbrk( inPtr, " " );
+    /*no revision number after the country code argument */
+    if (NULL == inPtr)
+    {
+        return -EINVAL;
+    }
+
+    inPtr++;
+
+    /*removing empty space*/
+    while ((SPACE_ASCII_VALUE == *inPtr) && ('\0' != *inPtr) ) inPtr++;
+
+    /*no channel list after the number of channels argument and spaces*/
+    if (0 == strncmp(pCountryCode, "KR", 2))
+    {
+        if ('\0' == *inPtr)
+        {
+            return -EINVAL;
+        }
+
+        sscanf(inPtr, "%d", &tempInt);
+        *pRevision = tempInt;
+    }
+    else
+    {
+        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH,
+               "Revision input is required only for Country KR");
+        return -EINVAL;
+    }
+    return VOS_STATUS_SUCCESS;
+}
+
+/**---------------------------------------------------------------------------
+
+  \brief hdd_parse_channellist() - HDD Parse channel list
+
+  This function parses the channel list passed in the format
+  SETROAMSCANCHANNELS<space><Number of channels><space>Channel 1<space>Channel 2<space>Channel N
+  if the Number of channels (N) does not match with the actual number of channels passed
+  then take the minimum of N and count of (Ch1, Ch2, ...Ch M)
+  For example, if SETROAMSCANCHANNELS 3 36 40 44 48, only 36, 40 and 44 shall be taken.
+  If SETROAMSCANCHANNELS 5 36 40 44 48, ignore 5 and take 36, 40, 44 and 48.
+  This function does not take care of removing duplicate channels from the list
+
+  \param  - pValue Pointer to input channel list
+  \param  - ChannelList Pointer to local output array to record channel list
+  \param  - pNumChannels Pointer to number of roam scan channels
+
+  \return - 0 for success non-zero for failure
+
+  --------------------------------------------------------------------------*/
+VOS_STATUS hdd_parse_channellist(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8 *pNumChannels)
+{
+    tANI_U8 *inPtr = pValue;
+    int tempInt;
+    int j = 0;
+    int v = 0;
+    char buf[32];
+
+    inPtr = strnchr(pValue, strlen(pValue), SPACE_ASCII_VALUE);
+    /*no argument after the command*/
+    if (NULL == inPtr)
+    {
+        return -EINVAL;
+    }
+
+    /*no space after the command*/
+    else if (SPACE_ASCII_VALUE != *inPtr)
+    {
+        return -EINVAL;
+    }
+
+    /*removing empty spaces*/
+    while ((SPACE_ASCII_VALUE  == *inPtr)&& ('\0' !=  *inPtr) ) inPtr++;
+
+    /*no argument followed by spaces*/
+    if ('\0' == *inPtr)
+    {
+        return -EINVAL;
+    }
+
+    /*getting the first argument ie the number of channels*/
+    sscanf(inPtr, "%32s ", buf);
+    v = kstrtos32(buf, 10, &tempInt);
+    if ((v < 0) || (tempInt <= 0)) return -EINVAL;
+
+    *pNumChannels = tempInt;
+
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH,
+               "Number of channels are: %d", *pNumChannels);
+
+    for (j = 0; j < (*pNumChannels); j++)
+    {
+        /*inPtr pointing to the beginning of first space after number of channels*/
+        inPtr = strpbrk( inPtr, " " );
+        /*no channel list after the number of channels argument*/
+        if (NULL == inPtr)
+        {
+            if (0 != j)
+            {
+                *pNumChannels = j;
+                return VOS_STATUS_SUCCESS;
+            }
+            else
+            {
+                return -EINVAL;
+            }
+        }
+
+        /*removing empty space*/
+        while ((SPACE_ASCII_VALUE == *inPtr) && ('\0' != *inPtr) ) inPtr++;
+
+        /*no channel list after the number of channels argument and spaces*/
+        if ( '\0' == *inPtr )
+        {
+            if (0 != j)
+            {
+                *pNumChannels = j;
+                return VOS_STATUS_SUCCESS;
+            }
+            else
+            {
+                return -EINVAL;
+            }
+        }
+
+        sscanf(inPtr, "%s ", buf);
+        v = kstrtos32(buf, 10, &tempInt);
+        if ((v < 0) || (tempInt <= 0)) return -EINVAL;
         pChannelList[j] = tempInt;
 
         VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH,
@@ -2055,6 +3189,7 @@ VOS_STATUS hdd_parse_channellist(tANI_U8 *pValue, tANI_U8 *pChannelList, tANI_U8
     return VOS_STATUS_SUCCESS;
 }
 
+#endif
 /**---------------------------------------------------------------------------
 
   \brief hdd_open() - HDD Open function
@@ -3021,7 +4156,10 @@ void hdd_set_pwrparams(hdd_context_t *pHddCtx)
    tSirSetPowerParamsReq powerRequest = { 0 };
 
    powerRequest.uIgnoreDTIM = 1;
+<<<<<<< HEAD
    powerRequest.uMaxLIModulatedDTIM = pHddCtx->cfg_ini->fMaxLIModulatedDTIM;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    if (pHddCtx->cfg_ini->enableModulatedDTIM)
    {
@@ -3054,7 +4192,10 @@ void hdd_reset_pwrparams(hdd_context_t *pHddCtx)
 
    powerRequest.uIgnoreDTIM = pHddCtx->hdd_actual_ignore_DTIM_value;
    powerRequest.uListenInterval = pHddCtx->hdd_actual_LI_value;
+<<<<<<< HEAD
    powerRequest.uMaxLIModulatedDTIM = pHddCtx->cfg_ini->fMaxLIModulatedDTIM;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Update ignoreDTIM and ListedInterval in CFG with default values */
    ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_IGNORE_DTIM, powerRequest.uIgnoreDTIM,
@@ -4701,7 +5842,11 @@ void hdd_allow_suspend(void)
 void hdd_allow_suspend_timeout(v_U32_t timeout)
 {
 #ifdef WLAN_OPEN_SOURCE
+<<<<<<< HEAD
     wake_lock_timeout(&wlan_wake_lock, msecs_to_jiffies(timeout));
+=======
+    wake_lock_timeout(&wlan_wake_lock, timeout);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #else
     /* Do nothing as there is no API in wcnss for timeout*/
 #endif
@@ -4869,7 +6014,7 @@ int hdd_wlan_startup(struct device *dev )
    /*
     * cfg80211: wiphy allocation
     */
-   wiphy = wlan_hdd_cfg80211_init(sizeof(hdd_context_t)) ;
+   wiphy = wlan_hdd_cfg80211_wiphy_alloc(sizeof(hdd_context_t)) ;
 
    if(wiphy == NULL)
    {
@@ -4933,13 +6078,13 @@ int hdd_wlan_startup(struct device *dev )
    }
 
    /*
-    * cfg80211: Initialization and registration ...
+    * cfg80211: Initialization  ...
     */
-   if (0 < wlan_hdd_cfg80211_register(dev, wiphy, pHddCtx->cfg_ini))
+   if (0 < wlan_hdd_cfg80211_init(dev, wiphy, pHddCtx->cfg_ini))
    {
       hddLog(VOS_TRACE_LEVEL_FATAL, 
-              "%s: wlan_hdd_cfg80211_register return failure", __func__);
-      goto err_wiphy_reg;
+              "%s: wlan_hdd_cfg80211_init return failure", __func__);
+      goto err_config;
    }
 
    // Update VOS trace levels based upon the cfg.ini
@@ -4996,7 +6141,11 @@ int hdd_wlan_startup(struct device *dev )
       if(!VOS_IS_STATUS_SUCCESS( status ))
       {
          hddLog(VOS_TRACE_LEVEL_FATAL,"%s: vos_watchdog_open failed",__func__);
+<<<<<<< HEAD
          goto err_wiphy_reg;
+=======
+         goto err_wdclose;
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
       }
    }
 
@@ -5154,6 +6303,14 @@ int hdd_wlan_startup(struct device *dev )
       hddLog(VOS_TRACE_LEVEL_FATAL,"%s: hdd_post_voss_start_config failed", 
          __func__);
       goto err_vosstop;
+   }
+   wlan_hdd_cfg80211_update_reg_info( wiphy );
+
+   /* registration of wiphy dev with cfg80211 */
+   if (0 > wlan_hdd_cfg80211_register(wiphy))
+   {
+       hddLog(VOS_TRACE_LEVEL_ERROR,"%s: wiphy register failed", __func__);
+       goto err_vosstop;
    }
 
    if (VOS_STA_SAP_MODE == hdd_get_conparam())
@@ -5379,6 +6536,7 @@ err_bap_close:
 
 err_close_adapter:
    hdd_close_all_adapters( pHddCtx );
+   wiphy_unregister(wiphy) ;
 
 err_vosstop:
    vos_stop(pVosContext);
@@ -5399,9 +6557,12 @@ err_wdclose:
    if(pHddCtx->cfg_ini->fIsLogpEnabled)
       vos_watchdog_close(pVosContext);
 
+<<<<<<< HEAD
 err_wiphy_reg:
    wiphy_unregister(wiphy) ; 
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 err_config:
    kfree(pHddCtx->cfg_ini);
    pHddCtx->cfg_ini= NULL;

@@ -336,6 +336,7 @@ typedef struct sAniSirLim
     tLimScanResultNode
            *gLimCachedScanHashTable[LIM_MAX_NUM_OF_SCAN_RESULTS];
 
+<<<<<<< HEAD
     /// This indicates total length of 'matched' scan results
     tANI_U16   gLimMlmLfrScanResultLength;
 
@@ -350,6 +351,8 @@ typedef struct sAniSirLim
     tLimScanResultNode
         *gLimCachedLfrScanHashTable[LIM_MAX_NUM_OF_SCAN_RESULTS];
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     /// Place holder for current channel ID
     /// being scanned during background scanning
     tANI_U32   gLimBackgroundScanChannelId;
@@ -1064,6 +1067,7 @@ typedef struct sAniSirGlobal
 } tAniSirGlobal;
 
 #ifdef FEATURE_WLAN_TDLS
+<<<<<<< HEAD
 
 #define RFC1042_HDR_LENGTH      (6)
 #define GET_BE16(x)             ((tANI_U16) (((x)[0] << 8) | (x)[1]))
@@ -1072,6 +1076,16 @@ typedef struct sAniSirGlobal
 #define PAYLOAD_TYPE_TDLS_SIZE  (1)
 #define PAYLOAD_TYPE_TDLS       (2)
 
+=======
+
+#define RFC1042_HDR_LENGTH      (6)
+#define GET_BE16(x)             ((tANI_U16) (((x)[0] << 8) | (x)[1]))
+#define ETH_TYPE_89_0d          (0x890d)
+#define ETH_TYPE_LEN            (2)
+#define PAYLOAD_TYPE_TDLS_SIZE  (1)
+#define PAYLOAD_TYPE_TDLS       (2)
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
 #endif /* _ANIGLOBAL_H */

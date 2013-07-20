@@ -2523,11 +2523,19 @@ eHalStatus pmcSetHostOffload (tHalHandle hHal, tpSirHostOffloadReq pRequest,
     vos_msg_t msg;
     tpAniSirGlobal pMac = PMAC_STRUCT(hHal);
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, sessionId );
+<<<<<<< HEAD
 
     VOS_TRACE( VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, "%s: IP address = %d.%d.%d.%d", __func__,
         pRequest->params.hostIpv4Addr[0], pRequest->params.hostIpv4Addr[1],
         pRequest->params.hostIpv4Addr[2], pRequest->params.hostIpv4Addr[3]);
 
+=======
+
+    VOS_TRACE( VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, "%s: IP address = %d.%d.%d.%d", __func__,
+        pRequest->params.hostIpv4Addr[0], pRequest->params.hostIpv4Addr[1],
+        pRequest->params.hostIpv4Addr[2], pRequest->params.hostIpv4Addr[3]);
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     if(NULL == pSession )
     {
         VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, "%s: SESSION not Found\n", __func__);
@@ -2914,7 +2922,11 @@ pmcPrepareProbeReqTemplate(tpAniSirGlobal pMac,
     else if ( DOT11F_WARNED( nStatus ) )
     {
         VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, 
+<<<<<<< HEAD
             "There were warnings while packing a Probe Request" );
+=======
+            "There were warnings while packing a Probe Request (0x%08x)." );
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 
     *pusLen = nPayload + sizeof(tSirMacMgmtHdr); 
@@ -3132,7 +3144,11 @@ eHalStatus pmcGetFilterMatchCount
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, sessionId );
 
     VOS_TRACE( VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, 
+<<<<<<< HEAD
         "%s", __func__);
+=======
+        "%s: filterId = %d", __func__);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     if(NULL == pSession )
     {
@@ -3255,6 +3271,7 @@ eHalStatus pmcGetGTKOffload(tHalHandle hHal, GTKOffloadGetInfoCallback callbackR
 
     VOS_TRACE( VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, "%s: filterId = %d", 
                 __func__);
+<<<<<<< HEAD
 
     if(NULL == pSession )
     {
@@ -3263,6 +3280,16 @@ eHalStatus pmcGetGTKOffload(tHalHandle hHal, GTKOffloadGetInfoCallback callbackR
         return eHAL_STATUS_FAILURE;
     }
 
+=======
+
+    if(NULL == pSession )
+    {
+        VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, 
+                  "%s: Session not found ", __func__);
+        return eHAL_STATUS_FAILURE;
+    }
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pRequestBuf = (tpSirGtkOffloadGetInfoRspParams)
                         vos_mem_malloc(sizeof (tSirGtkOffloadGetInfoRspParams));
     if (NULL == pRequestBuf)

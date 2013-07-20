@@ -2151,6 +2151,18 @@ void pmmEnterWowlRequestHandler(tpAniSirGlobal pMac, tpSirMsgQ pMsg)
 #endif //FEATURE_WLAN_DIAG_SUPPORT
 
     pSmeWowlParams = (tpSirSmeWowlEnterParams)(pMbMsg->data);
+<<<<<<< HEAD
+=======
+
+    if((pSessionEntry = peFindSessionByBssid(pMac,pSmeWowlParams->bssId,&peSessionId))== NULL)
+    {
+         limLog(pMac, LOGE,
+               FL("session does not exist for given BSSId"));
+        goto end;
+    }
+    pMac->pmm.sessionId = peSessionId;
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     if (NULL == pSmeWowlParams)
     {
         limLog(pMac, LOGE,

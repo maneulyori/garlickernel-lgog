@@ -9538,6 +9538,7 @@ WDI_SsrTimerCB
   void *pUserData
 );
 
+<<<<<<< HEAD
 /**
  @brief WDI_SetEnableSSR -
     This API is called to enable/disable SSR on WDI timeout.
@@ -9549,6 +9550,8 @@ WDI_SsrTimerCB
 */
 void WDI_SetEnableSSR(wpt_boolean  enableSSR);
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #ifdef __cplusplus
  }
 #endif 

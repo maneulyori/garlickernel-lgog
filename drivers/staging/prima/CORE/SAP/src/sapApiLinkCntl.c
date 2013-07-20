@@ -228,9 +228,14 @@ WLANSAP_ScanCallback
       psapContext->channel = operChannel;
     }
 
+<<<<<<< HEAD
     sme_SelectCBMode(halHandle,
           sapConvertSapPhyModeToCsrPhyMode(psapContext->csrRoamProfile.phyMode),
           psapContext->channel);
+=======
+    wlan_sap_select_cbmode(pTempHddCtx, psapContext->csrRoamProfile.phyMode,
+                           psapContext->channel);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #ifdef SOFTAP_CHANNEL_RANGE
     if(psapContext->channelList != NULL)
     {

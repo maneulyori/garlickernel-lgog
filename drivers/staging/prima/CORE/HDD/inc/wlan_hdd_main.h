@@ -103,6 +103,7 @@
 #define HDD_DEFAULT_MTU         (1500)
 
 /**event flags registered net device*/
+<<<<<<< HEAD
 #define NET_DEVICE_REGISTERED  (0)
 #define SME_SESSION_OPENED     (1)
 #define INIT_TX_RX_SUCCESS     (2)
@@ -110,6 +111,15 @@
 #define SOFTAP_BSS_STARTED     (4)
 #define DEVICE_IFACE_OPENED    (5)
 #define TDLS_INIT_DONE         (6)
+=======
+#define NET_DEVICE_REGISTERED  (1<<0)
+#define SME_SESSION_OPENED     (1<<1)
+#define INIT_TX_RX_SUCCESS     (1<<2)
+#define WMM_INIT_DONE          (1<<3)
+#define SOFTAP_BSS_STARTED     (1<<4)
+#define DEVICE_IFACE_OPENED    (1<<5)
+#define TDLS_INIT_DONE         (1<<6)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /** Maximum time(ms)to wait for disconnect to complete **/
 #define WLAN_WAIT_TIME_DISCONNECT  500
@@ -130,8 +140,11 @@
 /** Maximum time(ms) to wait for tdls mgmt to complete **/
 #define WAIT_TIME_TDLS_MGMT         11000
 
+<<<<<<< HEAD
 /** Maximum time(ms) to wait for tdls initiator to start direct communication **/
 #define WAIT_TIME_TDLS_INITIATOR    600
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /* Maximum time to get crda entry settings */
 #define CRDA_WAIT_TIME 300
 
@@ -164,6 +177,7 @@
 #define WLAN_HDD_PUBLIC_ACTION_FRAME_TYPE_OFFSET 30
 #define WLAN_HDD_P2P_SOCIAL_CHANNELS 3
 #define WLAN_HDD_P2P_SINGLE_CHANNEL_SCAN 1
+<<<<<<< HEAD
 
 #define WLAN_HDD_IS_SOCIAL_CHANNEL(center_freq) \
 (((center_freq) == 2412) || ((center_freq) == 2437) || ((center_freq) == 2462))
@@ -172,13 +186,24 @@
 #define WLAN_HDD_SA_QUERY_ACTION_FRAME 8
 #endif
 
+=======
+
+#ifdef WLAN_FEATURE_11W
+#define WLAN_HDD_SA_QUERY_ACTION_FRAME 8
+#endif
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #define WLAN_HDD_PUBLIC_ACTION_TDLS_DISC_RESP 14
 #define WLAN_HDD_TDLS_ACTION_FRAME 12
 #ifdef WLAN_FEATURE_HOLD_RX_WAKELOCK
 #define HDD_WAKE_LOCK_DURATION 500 //in msecs
 #endif
 
+<<<<<<< HEAD
 #define HDD_SAP_WAKE_LOCK_DURATION 10000 //in msecs
+=======
+#define HDD_SAP_WAKE_LOCK_DURATION 10000 //10 sec
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /* Maximum number of interfaces allowed(STA, P2P Device, P2P Interface) */
 #define WLAN_MAX_INTERFACES 3
@@ -188,9 +213,12 @@
 #define GTK_OFFLOAD_DISABLE 1
 #endif
 
+<<<<<<< HEAD
 #define HDD_MAC_ADDR_LEN    6
 typedef v_U8_t tWlanHddMacAddr[HDD_MAC_ADDR_LEN];
 
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 typedef struct hdd_tx_rx_stats_s
 {
    // start_xmit stats
@@ -423,7 +451,10 @@ typedef enum device_mode
    WLAN_HDD_P2P_GO,
    WLAN_HDD_MONITOR,
    WLAN_HDD_FTM,
+<<<<<<< HEAD
    WLAN_HDD_IBSS,
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
    WLAN_HDD_P2P_DEVICE
 }device_mode_t;
 
@@ -548,8 +579,11 @@ struct hdd_station_ctx
 #ifdef WLAN_FEATURE_GTK_OFFLOAD
    hddGtkOffloadParams gtkOffloadRequestParams;
 #endif
+<<<<<<< HEAD
    /*Increment whenever ibss New peer joins and departs the network */
    int ibss_sta_generation;
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 };
 
 #define BSS_STOP    0 
@@ -834,10 +868,14 @@ typedef struct hdd_dynamic_mcbcfilter_s
 #define WLAN_HDD_GET_HOSTAP_STATE_PTR(pAdapter) (&(pAdapter)->sessionCtx.ap.HostapdState)
 #define WLAN_HDD_GET_CFG_STATE_PTR(pAdapter)  (&(pAdapter)->cfg80211State)
 #ifdef FEATURE_WLAN_TDLS
+<<<<<<< HEAD
 #define WLAN_HDD_GET_TDLS_CTX_PTR(pAdapter) \
         (((WLAN_HDD_INFRA_STATION != pAdapter->device_mode) && \
         (WLAN_HDD_P2P_CLIENT != pAdapter->device_mode)) ? NULL : \
         (tdlsCtx_t*)(pAdapter)->sessionCtx.station.pHddTdlsCtx)
+=======
+#define WLAN_HDD_GET_TDLS_CTX_PTR(pAdapter) ((tdlsCtx_t*)(pAdapter)->sessionCtx.station.pHddTdlsCtx)
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
 typedef struct hdd_adapter_list_node
@@ -1057,7 +1095,10 @@ void hdd_abort_mac_scan(hdd_context_t *pHddCtx);
 void wlan_hdd_set_monitor_tx_adapter( hdd_context_t *pHddCtx, hdd_adapter_t *pAdapter );
 void hdd_cleanup_actionframe( hdd_context_t *pHddCtx, hdd_adapter_t *pAdapter );
 v_BOOL_t is_crda_regulatory_entry_valid(void);
+<<<<<<< HEAD
 void crda_regulatory_entry_default(v_U8_t *countryCode, int domain_id);
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 void wlan_hdd_set_concurrency_mode(hdd_context_t *pHddCtx, tVOS_CON_MODE mode);
 void wlan_hdd_clear_concurrency_mode(hdd_context_t *pHddCtx, tVOS_CON_MODE mode);
 void wlan_hdd_reset_prob_rspies(hdd_adapter_t* pHostapdAdapter);
@@ -1070,6 +1111,11 @@ void hdd_set_ssr_required(e_hdd_ssr_required value);
 VOS_STATUS hdd_enable_bmps_imps(hdd_context_t *pHddCtx);
 VOS_STATUS hdd_disable_bmps_imps(hdd_context_t *pHddCtx, tANI_U8 session_type);
 
+<<<<<<< HEAD
+=======
+eHalStatus hdd_smeCloseSessionCallback(void *pContext);
+void wlan_hdd_cfg80211_update_reg_info(struct wiphy *wiphy);
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 VOS_STATUS wlan_hdd_restart_driver(hdd_context_t *pHddCtx);
 void hdd_exchange_version_and_caps(hdd_context_t *pHddCtx);
 void hdd_set_pwrparams(hdd_context_t *pHddCtx);

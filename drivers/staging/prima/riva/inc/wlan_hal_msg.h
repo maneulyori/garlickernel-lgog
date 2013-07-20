@@ -368,10 +368,14 @@ typedef enum
    WLAN_HAL_DEL_BA_IND                      = 188,
    WLAN_HAL_DHCP_START_IND                  = 189,
    WLAN_HAL_DHCP_STOP_IND                   = 190,
+<<<<<<< HEAD
    WLAN_START_ROAM_CANDIDATE_LOOKUP_REQ     = 191,
    WLAN_START_ROAM_CANDIDATE_LOOKUP_RSP     = 192,
    WLAN_HAL_WIFI_PROXIMITY_REQ              = 193,
    WLAN_HAL_WIFI_PROXIMITY_RSP              = 194,
+=======
+
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
   WLAN_HAL_MSG_MAX = WLAN_HAL_MSG_TYPE_MAX_ENUM_SIZE
 }tHalHostMsgType;
 
@@ -4923,6 +4927,9 @@ typedef PACKED_PRE struct PACKED_POST
 /*Max number of channels that a network can be found on*/
 #define WLAN_HAL_PNO_MAX_NETW_CHANNELS_EX  60
 
+/*Max number of channels that a network can be found on*/
+#define WLAN_HAL_PNO_MAX_NETW_CHANNELS_EX  60
+
 /*Maximum numbers of networks supported by PNO*/
 #define WLAN_HAL_PNO_MAX_SUPP_NETWORKS  16
 
@@ -5650,8 +5657,12 @@ typedef enum {
     BCN_FILTER         = 19,
     RTT                = 20,
     RATECTRL           = 21,
+<<<<<<< HEAD
     WOW                = 22,
     WLAN_ROAM_SCAN_OFFLOAD = 23,
+=======
+    WOW                = 22
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
     //MAX_FEATURE_SUPPORTED = 128
 } placeHolderInCapBitmap;
 
@@ -5671,9 +5682,12 @@ typedef PACKED_PRE struct PACKED_POST{
 #define IS_SLM_SESSIONIZATION_SUPPORTED_BY_HOST (!!(halMsg_GetHostWlanFeatCaps(SLM_SESSIONIZATION)))
 #define IS_FEATURE_SUPPORTED_BY_HOST(featEnumValue) (!!halMsg_GetHostWlanFeatCaps(featEnumValue))
 #define IS_WLANACTIVE_OFFLOAD_SUPPORTED_BY_HOST (!!(halMsg_GetHostWlanFeatCaps(WLANACTIVE_OFFLOAD)))
+<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 #define IS_ROAM_SCAN_OFFLOAD_SUPPORTED_BY_HOST (!!(halMsg_GetHostWlanFeatCaps(WLAN_ROAM_SCAN_OFFLOAD)))
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 tANI_U8 halMsg_GetHostWlanFeatCaps(tANI_U8 feat_enum_value);
 
@@ -5963,6 +5977,7 @@ typedef PACKED_PRE struct PACKED_POST {
    tStatsClassBIndParams statsClassBIndParams;
 } tStatsClassBInd, *tpStatsClassBInd;
 
+<<<<<<< HEAD
 /*Wifi Proximity paramters in AP mode*/
 #ifdef FEATURE_WIFI_PROXIMITY
 
@@ -5997,6 +6012,8 @@ typedef PACKED_PRE struct PACKED_POST{
 }  tSetWifiProximityRspMsg, *tpSetWifiProxmityRspMsg;
 
 #endif
+=======
+>>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #if defined(__ANI_COMPILER_PRAGMA_PACK_STACK)
 #pragma pack(pop)
 #elif defined(__ANI_COMPILER_PRAGMA_PACK)
