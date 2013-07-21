@@ -830,30 +830,17 @@ tSirRetStatus limCreateRICBlockAckIE(tpAniSirGlobal pMac, tANI_U8 tid, tCfgTraff
     vos_mem_copy((v_VOID_t *)&baTimeout, (v_VOID_t *)&pTrafficClass->tuTxBAWaitTimeout, sizeof(baTimeout));
     baSsnControl.fragNumber = 0;
     baSsnControl.ssn = LIM_FT_RIC_BA_SSN;
-<<<<<<< HEAD
     if (ricIe.RICDescriptor.num_variableData < sizeof (ricIe.RICDescriptor.variableData)) {
-=======
-    if ( ricIe.RICDescriptor.num_variableData < sizeof (ricIe.RICDescriptor.variableData)) {
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         dot11fPackFfAddBAParameterSet(pMac, &baParamSet, &ricIe.RICDescriptor.variableData[ricIe.RICDescriptor.num_variableData]);
         //vos_mem_copy(&ricIe.RICDescriptor.variableData[ricIe.RICDescriptor.num_variableData], &baParamSet, sizeof(tDot11fFfAddBAParameterSet));
         ricIe.RICDescriptor.num_variableData += sizeof(tDot11fFfAddBAParameterSet);
     }
-<<<<<<< HEAD
     if (ricIe.RICDescriptor.num_variableData < sizeof (ricIe.RICDescriptor.variableData)) {
-=======
-
-    if ( ricIe.RICDescriptor.num_variableData < sizeof (ricIe.RICDescriptor.variableData)) {
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         dot11fPackFfBATimeout(pMac, &baTimeout, &ricIe.RICDescriptor.variableData[ricIe.RICDescriptor.num_variableData]);
         //vos_mem_copy(&ricIe.RICDescriptor.variableData[ricIe.RICDescriptor.num_variableData], &baTimeout, sizeof(tDot11fFfBATimeout));
         ricIe.RICDescriptor.num_variableData += sizeof(tDot11fFfBATimeout);
     }
-<<<<<<< HEAD
     if (ricIe.RICDescriptor.num_variableData < sizeof (ricIe.RICDescriptor.variableData)) {
-=======
-    if ( ricIe.RICDescriptor.num_variableData < sizeof (ricIe.RICDescriptor.variableData)) {
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         dot11fPackFfBAStartingSequenceControl(pMac, &baSsnControl, &ricIe.RICDescriptor.variableData[ricIe.RICDescriptor.num_variableData]);
         //vos_mem_copy(&ricIe.RICDescriptor.variableData[ricIe.RICDescriptor.num_variableData], &baSsnControl, sizeof(tDot11fFfBAStartingSequenceControl));
         ricIe.RICDescriptor.num_variableData += sizeof(tDot11fFfBAStartingSequenceControl);
@@ -1121,10 +1108,7 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
          * from CFG. Log error.
          */
         limLog(pMac, LOGE, FL("could not retrieve ReassocFailureTimeout value"));
-<<<<<<< HEAD
         palFreeMemory(pMac->hHdd, pMlmReassocReq);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -1135,10 +1119,7 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
          * from CFG. Log error.
          */
         limLog(pMac, LOGE, FL("could not retrieve Capabilities value"));
-<<<<<<< HEAD
         palFreeMemory(pMac->hHdd, pMlmReassocReq);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
     pMlmReassocReq->capabilityInfo = caps;
@@ -1147,7 +1128,6 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
     pMlmReassocReq->sessionId = psessionEntry->peSessionId;
 
     /* If telescopic beaconing is enabled, set listen interval to WNI_CFG_TELE_BCN_MAX_LI */
-<<<<<<< HEAD
     if (wlan_cfgGetInt(pMac, WNI_CFG_TELE_BCN_WAKEUP_EN, &teleBcnEn) !=
        eSIR_SUCCESS)
     {
@@ -1155,29 +1135,17 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
        palFreeMemory(pMac->hHdd, pMlmReassocReq);
        return;
     }
-=======
-    if(wlan_cfgGetInt(pMac, WNI_CFG_TELE_BCN_WAKEUP_EN, &teleBcnEn) != 
-       eSIR_SUCCESS) 
-       limLog(pMac, LOGP, FL("Couldn't get WNI_CFG_TELE_BCN_WAKEUP_EN"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     if (teleBcnEn)
     {
-<<<<<<< HEAD
        if (wlan_cfgGetInt(pMac, WNI_CFG_TELE_BCN_MAX_LI, &val) != eSIR_SUCCESS)
-=======
-       if(wlan_cfgGetInt(pMac, WNI_CFG_TELE_BCN_MAX_LI, &val) != eSIR_SUCCESS)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
        {
           /**
             * Could not get ListenInterval value
             * from CFG. Log error.
           */
           limLog(pMac, LOGE, FL("could not retrieve ListenInterval"));
-<<<<<<< HEAD
           palFreeMemory(pMac->hHdd, pMlmReassocReq);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
           return;
        }
     }
@@ -1190,10 +1158,7 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
             * from CFG. Log error.
             */
          limLog(pMac, LOGE, FL("could not retrieve ListenInterval"));
-<<<<<<< HEAD
          palFreeMemory(pMac->hHdd, pMlmReassocReq);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
          return;
       }
     }
@@ -1204,7 +1169,6 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
         return;
     }
 
-<<<<<<< HEAD
     if (limSetLinkState(pMac, eSIR_LINK_PREASSOC_STATE, psessionEntry->bssId,
                         psessionEntry->selfMacAddr, NULL, NULL) != eSIR_SUCCESS)
     {
@@ -1212,8 +1176,6 @@ void limProcessMlmFTReassocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf,
         return;
     }
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pMlmReassocReq->listenInterval = (tANI_U16) val;
 
     psessionEntry->pLimMlmReassocReq = pMlmReassocReq;
@@ -1301,7 +1263,6 @@ tANI_BOOLEAN limProcessFTUpdateKey(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf )
     pAddBssParams->extSetStaKeyParam.encType = pKeyInfo->keyMaterial.edType;
     palCopyMemory( pMac->hHdd, (tANI_U8 *) &pAddBssParams->extSetStaKeyParam.key,
                   (tANI_U8 *) &pKeyInfo->keyMaterial.key, sizeof( tSirKeys ));
-<<<<<<< HEAD
     if(eSIR_SUCCESS != wlan_cfgGetInt(pMac, WNI_CFG_SINGLE_TID_RC, &val))
     {
         limLog( pMac, LOGP, FL( "Unable to read WNI_CFG_SINGLE_TID_RC" ));
@@ -1313,12 +1274,6 @@ tANI_BOOLEAN limProcessFTUpdateKey(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf )
                 pAddBssParams->extSetStaKeyParam.key[0].keyLength);)
 
     pAddBssParams->extSetStaKeyParam.staIdx = 0;
-=======
-  if(eSIR_SUCCESS != wlan_cfgGetInt(pMac, WNI_CFG_SINGLE_TID_RC, &val))
-  {
-     limLog( pMac, LOGP, FL( "Unable to read WNI_CFG_SINGLE_TID_RC" ));
-  }
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     PELOG1(limLog(pMac, LOG1,
          FL("BSSID = %02X-%02X-%02X-%02X-%02X-%02X"),

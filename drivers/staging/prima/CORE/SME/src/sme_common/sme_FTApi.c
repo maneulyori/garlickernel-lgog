@@ -278,18 +278,11 @@ eHalStatus sme_FTSendUpdateKeyInd(tHalHandle hHal, tCsrRoamSetKey * pFTKeyInfo)
 #if defined WLAN_FEATURE_VOWIFI_11R_DEBUG
     int i = 0;
 
-<<<<<<< HEAD
     smsLog(pMac, LOG1, FL("keyLength %d"), pFTKeyInfo->keyLength);
 
     for (i=0; i<pFTKeyInfo->keyLength; i++)
       smsLog(pMac, LOG1, FL("%02x"), pFTKeyInfo->Key[i]);
 #endif
-=======
-    smsLog(pMac, LOGE, FL("keyLength %d"), pFTKeyInfo->keyLength);
-
-      for(i=0; i<pFTKeyInfo->keyLength; i++)
-          smsLog(pMac, LOGE, FL("%02x"), pFTKeyInfo->Key[i]);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     msgLen  = sizeof( tANI_U16) + sizeof( tANI_U16 ) + 
        sizeof( pMsg->keyMaterial.length ) + sizeof( pMsg->keyMaterial.edType ) + 
@@ -338,7 +331,6 @@ eHalStatus sme_FTSendUpdateKeyInd(tHalHandle hHal, tCsrRoamSetKey * pFTKeyInfo)
                        pFTKeyInfo->Key, pFTKeyInfo->keyLength );
         if(pFTKeyInfo->keyLength == 16)
         {
-<<<<<<< HEAD
           smsLog(pMac, LOG1, "SME Set Update Ind keyIdx (%d) encType(%d) key = "
           "%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X",
           pMsg->keyMaterial.key[0].keyId, (tAniEdType)pMsg->keyMaterial.edType,
@@ -350,12 +342,6 @@ eHalStatus sme_FTSendUpdateKeyInd(tHalHandle hHal, tCsrRoamSetKey * pFTKeyInfo)
           pMsg->keyMaterial.key[0].key[10], pMsg->keyMaterial.key[0].key[11],
           pMsg->keyMaterial.key[0].key[12], pMsg->keyMaterial.key[0].key[13],
           pMsg->keyMaterial.key[0].key[14], pMsg->keyMaterial.key[0].key[15]);
-=======
-            smsLog(pMac, LOG1, "  SME Set keyIdx (%d) encType(%d) key = %02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X-%02X",
-            pFTKeyInfo->keyId, edType, pFTKeyInfo->Key[0], pFTKeyInfo->Key[1], pFTKeyInfo->Key[2], pFTKeyInfo->Key[3], pFTKeyInfo->Key[4],
-            pFTKeyInfo->Key[5], pFTKeyInfo->Key[6], pFTKeyInfo->Key[7], pFTKeyInfo->Key[8],
-            pFTKeyInfo->Key[9], pFTKeyInfo->Key[10], pFTKeyInfo->Key[11], pFTKeyInfo->Key[12], pFTKeyInfo->Key[13], pFTKeyInfo->Key[14], pFTKeyInfo->Key[15]);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
     }
 
@@ -411,7 +397,6 @@ eHalStatus sme_FTUpdateKey( tHalHandle hHal, tCsrRoamSetKey * pFTKeyInfo )
     switch(pMac->ft.ftSmeContext.FTState)
     {
     case eFT_SET_KEY_WAIT:
-<<<<<<< HEAD
     if (sme_GetFTPreAuthState (hHal) == TRUE)
       {
           status = sme_FTSendUpdateKeyInd(pMac, pFTKeyInfo);
@@ -434,13 +419,6 @@ eHalStatus sme_FTUpdateKey( tHalHandle hHal, tCsrRoamSetKey * pFTKeyInfo )
 #ifdef WLAN_FEATURE_VOWIFI_11R_DEBUG
       smsLog( pMac, LOG1, "%s: state changed to %d status %d", __func__,
               pMac->ft.ftSmeContext.FTState, status);
-=======
-       status = eHAL_STATUS_FT_PREAUTH_KEY_WAIT;
-       pMac->ft.ftSmeContext.FTState = eFT_START_READY;
-#ifdef WLAN_FEATURE_VOWIFI_11R_DEBUG
-       smsLog( pMac, LOG1, "%s: state changed to %d", __func__,
-               pMac->ft.ftSmeContext.FTState);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
        break;
           

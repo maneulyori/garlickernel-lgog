@@ -101,15 +101,12 @@ static void cbNotifySetRoamIntraBand(hdd_context_t *pHddCtx, unsigned long Notif
 {
     sme_setRoamIntraBand((tHalHandle)(pHddCtx->hHal), pHddCtx->cfg_ini->nRoamIntraBand);
 }
-<<<<<<< HEAD
 
 static void cbNotifySetWESMode(hdd_context_t *pHddCtx, unsigned long NotifyId)
 {
     // at the point this routine is called, the value in the cfg_ini table has already been updated
     sme_UpdateWESMode((tHalHandle)(pHddCtx->hHal), pHddCtx->cfg_ini->isWESModeEnabled);
 }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
 #ifdef FEATURE_WLAN_OKC
@@ -178,7 +175,6 @@ static void cbNotifySetNeighborScanMaxChanTime(hdd_context_t *pHddCtx, unsigned 
     sme_setNeighborScanMaxChanTime((tHalHandle)(pHddCtx->hHal), pHddCtx->cfg_ini->nNeighborScanMaxChanTime);
 }
 #endif
-<<<<<<< HEAD
 
 static void cbNotifySetEnableSSR(hdd_context_t *pHddCtx, unsigned long NotifyId)
 {
@@ -191,8 +187,6 @@ static void cbNotifyUpdateRoamScanOffloadEnabled(hdd_context_t *pHddCtx, unsigne
     sme_UpdateRoamScanOffloadEnabled((tHalHandle)(pHddCtx->hHal), pHddCtx->cfg_ini->isRoamOffloadScanEnabled);
 }
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 REG_TABLE_ENTRY g_registry_table[] =
 {
@@ -854,7 +848,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                  CFG_REST_TIME_CONC_MIN,
                  CFG_REST_TIME_CONC_MAX ),
 
-<<<<<<< HEAD
    REG_VARIABLE( CFG_NUM_STA_CHAN_COMBINED_CONC_NAME, WLAN_PARAM_Integer,
                  hdd_config_t, nNumStaChanCombinedConc,
                  VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
@@ -868,14 +861,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                  CFG_NUM_P2P_CHAN_COMBINED_CONC_DEFAULT,
                  CFG_NUM_P2P_CHAN_COMBINED_CONC_MIN,
                  CFG_NUM_P2P_CHAN_COMBINED_CONC_MAX ),
-=======
-   REG_VARIABLE( CFG_NUM_CHAN_COMBINED_CONC_NAME, WLAN_PARAM_Integer,
-                 hdd_config_t, nNumChanCombinedConc,
-                 VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-                 CFG_NUM_CHAN_COMBINED_CONC_DEFAULT,
-                 CFG_NUM_CHAN_COMBINED_CONC_MIN,
-                 CFG_NUM_CHAN_COMBINED_CONC_MAX ),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
    REG_VARIABLE( CFG_MAX_PS_POLL_NAME, WLAN_PARAM_Integer,
@@ -913,7 +898,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                  CFG_IGNORE_DTIM_MIN,
                  CFG_IGNORE_DTIM_MAX ),
 
-<<<<<<< HEAD
    REG_VARIABLE( CFG_MAX_LI_MODULATED_DTIM_NAME, WLAN_PARAM_Integer,
                  hdd_config_t, fMaxLIModulatedDTIM,
                  VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
@@ -921,8 +905,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                  CFG_MAX_LI_MODULATED_DTIM_MIN,
                  CFG_MAX_LI_MODULATED_DTIM_MAX ),
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
    REG_VARIABLE( CFG_RX_ANT_CONFIGURATION_NAME, WLAN_PARAM_Integer,
                 hdd_config_t, nRxAnt,
                 VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
@@ -1073,13 +1055,8 @@ REG_TABLE_ENTRY g_registry_table[] =
                  VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
                  CFG_LFR_FEATURE_ENABLED_DEFAULT,
                  CFG_LFR_FEATURE_ENABLED_MIN,
-<<<<<<< HEAD
                  CFG_LFR_FEATURE_ENABLED_MAX,
                  NotifyIsFastRoamIniFeatureEnabled, 0 ),
-=======
-                       CFG_LFR_FEATURE_ENABLED_MAX,
-                       NotifyIsFastRoamIniFeatureEnabled, 0 ),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif // FEATURE_WLAN_LFR
 
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
@@ -1109,7 +1086,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                          CFG_IMMEDIATE_ROAM_RSSI_DIFF_MIN,
                          CFG_IMMEDIATE_ROAM_RSSI_DIFF_MAX,
                          cbNotifySetImmediateRoamRssiDiff, 0),
-<<<<<<< HEAD
 
    REG_DYNAMIC_VARIABLE( CFG_ENABLE_WES_MODE_NAME, WLAN_PARAM_Integer,
                          hdd_config_t, isWESModeEnabled,
@@ -1118,8 +1094,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                          CFG_ENABLE_WES_MODE_NAME_MIN,
                          CFG_ENABLE_WES_MODE_NAME_MAX,
                          cbNotifySetWESMode, 0),
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 #ifdef FEATURE_WLAN_OKC
    REG_DYNAMIC_VARIABLE( CFG_OKC_FEATURE_ENABLED_NAME, WLAN_PARAM_Integer,
@@ -1129,7 +1103,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                  CFG_OKC_FEATURE_ENABLED_MIN,
                  CFG_OKC_FEATURE_ENABLED_MAX,
                  cbNotifySetOkcFeatureEnabled, 0 ),
-<<<<<<< HEAD
 #endif
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
    REG_DYNAMIC_VARIABLE( CFG_ROAM_SCAN_OFFLOAD_ENABLED, WLAN_PARAM_Integer,
@@ -1139,8 +1112,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                          CFG_ROAM_SCAN_OFFLOAD_ENABLED_MIN,
                          CFG_ROAM_SCAN_OFFLOAD_ENABLED_MAX,
                          cbNotifyUpdateRoamScanOffloadEnabled, 0),
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
    REG_VARIABLE( CFG_QOS_WMM_PKT_CLASSIFY_BASIS_NAME , WLAN_PARAM_Integer,
                  hdd_config_t, PktClassificationBasis,
@@ -1690,7 +1661,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                  CFG_BAND_CAPABILITY_DEFAULT,
                  CFG_BAND_CAPABILITY_MIN,
                  CFG_BAND_CAPABILITY_MAX ),
-<<<<<<< HEAD
 
    REG_VARIABLE( CFG_ENABLE_BEACON_EARLY_TERMINATION_NAME, WLAN_PARAM_Integer,
                 hdd_config_t, fEnableBeaconEarlyTermination,
@@ -1755,72 +1725,6 @@ REG_TABLE_ENTRY g_registry_table[] =
                 CFG_VOS_TRACE_ENABLE_MIN,
                 CFG_VOS_TRACE_ENABLE_MAX ),
 
-=======
-
-   REG_VARIABLE( CFG_ENABLE_BEACON_EARLY_TERMINATION_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, fEnableBeaconEarlyTermination,
-                VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-                CFG_ENABLE_BEACON_EARLY_TERMINATION_DEFAULT,
-                CFG_ENABLE_BEACON_EARLY_TERMINATION_MIN,
-                CFG_ENABLE_BEACON_EARLY_TERMINATION_MAX ),
-/* CFG_VOS_TRACE_ENABLE Parameters */
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_BAP_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableBAP,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_TL_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableTL,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_WDI_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableWDI,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_HDD_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableHDD,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_SME_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableSME,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_PE_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnablePE,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_WDA_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableWDA,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
-   REG_VARIABLE( CFG_VOS_TRACE_ENABLE_SYS_NAME, WLAN_PARAM_Integer,
-                hdd_config_t, vosTraceEnableSYS,
-                VAR_FLAGS_OPTIONAL,
-                CFG_VOS_TRACE_ENABLE_DEFAULT,
-                CFG_VOS_TRACE_ENABLE_MIN,
-                CFG_VOS_TRACE_ENABLE_MAX ),
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
    REG_VARIABLE( CFG_VOS_TRACE_ENABLE_VOSS_NAME, WLAN_PARAM_Integer,
                 hdd_config_t, vosTraceEnableVOSS,
                 VAR_FLAGS_OPTIONAL,
@@ -2107,7 +2011,6 @@ REG_VARIABLE( CFG_NUM_BUFF_ADVERT_NAME, WLAN_PARAM_Integer,
               CFG_NUM_BUFF_ADVERT_DEFAULT,
               CFG_NUM_BUFF_ADVERT_MIN,
               CFG_NUM_BUFF_ADVERT_MAX ),
-<<<<<<< HEAD
 
 REG_VARIABLE( CFG_MCC_CONFIG_PARAM_NAME, WLAN_PARAM_Integer,
              hdd_config_t, configMccParam,
@@ -2324,197 +2227,6 @@ REG_VARIABLE_STRING( CFG_LIST_OF_NON_11AC_COUNTRY_CODE, WLAN_PARAM_String,
              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
              (void *)CFG_LIST_OF_NON_11AC_COUNTRY_CODE_DEFAULT),
 
-=======
-
- REG_VARIABLE( CFG_ENABLE_IGNORE_CHAN165, WLAN_PARAM_Integer,
-              hdd_config_t, ignore_chan165,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_ENABLE_IGNORE_CHAN165_DEFAULT,
-              CFG_ENABLE_IGNORE_CHAN165_MIN,
-              CFG_ENABLE_IGNORE_CHAN165_MAX ),
-
-REG_VARIABLE( CFG_MCC_CONFIG_PARAM_NAME, WLAN_PARAM_Integer,
-             hdd_config_t, configMccParam,
-             VAR_FLAGS_OPTIONAL,
-             CFG_MCC_CONFIG_PARAM_DEFAULT,
-             CFG_MCC_CONFIG_PARAM_MIN,
-             CFG_MCC_CONFIG_PARAM_MAX ),
-REG_VARIABLE( CFG_ENABLE_RX_STBC, WLAN_PARAM_Integer,
-              hdd_config_t, enableRxSTBC,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_ENABLE_RX_STBC_DEFAULT,
-              CFG_ENABLE_RX_STBC_MIN,
-              CFG_ENABLE_RX_STBC_MAX ),
-#ifdef FEATURE_WLAN_TDLS
-REG_VARIABLE( CFG_TDLS_SUPPORT_ENABLE, WLAN_PARAM_Integer,
-              hdd_config_t, fEnableTDLSSupport,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_SUPPORT_ENABLE_DEFAULT,
-              CFG_TDLS_SUPPORT_ENABLE_MIN,
-              CFG_TDLS_SUPPORT_ENABLE_MAX ),
-
-REG_VARIABLE( CFG_TDLS_IMPLICIT_TRIGGER, WLAN_PARAM_Integer,
-              hdd_config_t, fEnableTDLSImplicitTrigger,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_IMPLICIT_TRIGGER_DEFAULT,
-              CFG_TDLS_IMPLICIT_TRIGGER_MIN,
-              CFG_TDLS_IMPLICIT_TRIGGER_MAX ),
-
-REG_VARIABLE( CFG_TDLS_TX_STATS_PERIOD, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSTxStatsPeriod,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_TX_STATS_PERIOD_DEFAULT,
-              CFG_TDLS_TX_STATS_PERIOD_MIN,
-              CFG_TDLS_TX_STATS_PERIOD_MAX ),
-
-REG_VARIABLE( CFG_TDLS_TX_PACKET_THRESHOLD, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSTxPacketThreshold,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_TX_PACKET_THRESHOLD_DEFAULT,
-              CFG_TDLS_TX_PACKET_THRESHOLD_MIN,
-              CFG_TDLS_TX_PACKET_THRESHOLD_MAX ),
-
-REG_VARIABLE( CFG_TDLS_DISCOVERY_PERIOD, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSDiscoveryPeriod,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_DISCOVERY_PERIOD_DEFAULT,
-              CFG_TDLS_DISCOVERY_PERIOD_MIN,
-              CFG_TDLS_DISCOVERY_PERIOD_MAX ),
-
-REG_VARIABLE( CFG_TDLS_MAX_DISCOVERY_ATTEMPT, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSMaxDiscoveryAttempt,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_MAX_DISCOVERY_ATTEMPT_DEFAULT,
-              CFG_TDLS_MAX_DISCOVERY_ATTEMPT_MIN,
-              CFG_TDLS_MAX_DISCOVERY_ATTEMPT_MAX ),
-
-REG_VARIABLE( CFG_TDLS_IDLE_TIMEOUT, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSIdleTimeout,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_IDLE_TIMEOUT_DEFAULT,
-              CFG_TDLS_IDLE_TIMEOUT_MIN,
-              CFG_TDLS_IDLE_TIMEOUT_MAX ),
-
-REG_VARIABLE( CFG_TDLS_IDLE_PACKET_THRESHOLD, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSIdlePacketThreshold,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_IDLE_PACKET_THRESHOLD_DEFAULT,
-              CFG_TDLS_IDLE_PACKET_THRESHOLD_MIN,
-              CFG_TDLS_IDLE_PACKET_THRESHOLD_MAX ),
-
-REG_VARIABLE( CFG_TDLS_RSSI_HYSTERESIS, WLAN_PARAM_Integer,
-              hdd_config_t, fTDLSRSSIHysteresis,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_RSSI_HYSTERESIS_DEFAULT,
-              CFG_TDLS_RSSI_HYSTERESIS_MIN,
-              CFG_TDLS_RSSI_HYSTERESIS_MAX ),
-
-REG_VARIABLE( CFG_TDLS_RSSI_TRIGGER_THRESHOLD, WLAN_PARAM_SignedInteger,
-              hdd_config_t, fTDLSRSSITriggerThreshold,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_RSSI_TRIGGER_THRESHOLD_DEFAULT,
-              CFG_TDLS_RSSI_TRIGGER_THRESHOLD_MIN,
-              CFG_TDLS_RSSI_TRIGGER_THRESHOLD_MAX ),
-
-REG_VARIABLE( CFG_TDLS_RSSI_TEARDOWN_THRESHOLD, WLAN_PARAM_SignedInteger,
-              hdd_config_t, fTDLSRSSITeardownThreshold,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TDLS_RSSI_TEARDOWN_THRESHOLD_DEFAULT,
-              CFG_TDLS_RSSI_TEARDOWN_THRESHOLD_MIN,
-              CFG_TDLS_RSSI_TEARDOWN_THRESHOLD_MAX ),
-#endif
-
-#ifdef WLAN_SOFTAP_VSTA_FEATURE
-REG_VARIABLE( CFG_VSTA_SUPPORT_ENABLE, WLAN_PARAM_Integer,
-              hdd_config_t, fEnableVSTASupport,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_VSTA_SUPPORT_ENABLE_DEFAULT,
-              CFG_VSTA_SUPPORT_ENABLE_MIN,
-              CFG_VSTA_SUPPORT_ENABLE_MAX ),
-#endif
-REG_VARIABLE( CFG_ENABLE_LPWR_IMG_TRANSITION_NAME, WLAN_PARAM_Integer,
-             hdd_config_t, enableLpwrImgTransition,
-             VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-             CFG_ENABLE_LPWR_IMG_TRANSITION_DEFAULT,
-             CFG_ENABLE_LPWR_IMG_TRANSITION_MIN,
-             CFG_ENABLE_LPWR_IMG_TRANSITION_MAX ),
-
-#ifdef WLAN_ACTIVEMODE_OFFLOAD_FEATURE
-REG_VARIABLE( CFG_ACTIVEMODE_OFFLOAD_ENABLE, WLAN_PARAM_Integer,
-              hdd_config_t, fEnableActiveModeOffload,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_ACTIVEMODE_OFFLOAD_ENABLE_DEFAULT,
-              CFG_ACTIVEMODE_OFFLOAD_ENABLE_MIN,
-              CFG_ACTIVEMODE_OFFLOAD_ENABLE_MAX ),
-#endif
-REG_VARIABLE( CFG_ENABLE_LPWR_IMG_TRANSITION_NAME, WLAN_PARAM_Integer,
-             hdd_config_t, enableLpwrImgTransition,
-             VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-             CFG_ENABLE_LPWR_IMG_TRANSITION_DEFAULT,
-             CFG_ENABLE_LPWR_IMG_TRANSITION_MIN,
-             CFG_ENABLE_LPWR_IMG_TRANSITION_MAX ),
-
-
-REG_VARIABLE( CFG_SCAN_AGING_PARAM_NAME, WLAN_PARAM_Integer,
-             hdd_config_t, scanAgingTimeout,
-             VAR_FLAGS_OPTIONAL,
-             CFG_SCAN_AGING_PARAM_DEFAULT,
-             CFG_SCAN_AGING_PARAM_MIN,
-             CFG_SCAN_AGING_PARAM_MAX ),
-
-REG_VARIABLE( CFG_TX_LDPC_ENABLE_FEATURE, WLAN_PARAM_Integer,
-              hdd_config_t, enableTxLdpc,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_TX_LDPC_ENABLE_FEATURE_DEFAULT,
-              CFG_TX_LDPC_ENABLE_FEATURE_MIN,
-              CFG_TX_LDPC_ENABLE_FEATURE_MAX ),
-
-REG_VARIABLE( CFG_ENABLE_MCC_ADATIVE_SCHEDULER_ENABLED_NAME, WLAN_PARAM_Integer,
-             hdd_config_t, enableMCCAdaptiveScheduler,
-             VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-             CFG_ENABLE_MCC_ADATIVE_SCHEDULER_ENABLED_DEFAULT,
-             CFG_ENABLE_MCC_ADATIVE_SCHEDULER_ENABLED_MIN,
-             CFG_ENABLE_MCC_ADATIVE_SCHEDULER_ENABLED_MAX ),
-
-REG_VARIABLE( CFG_ANDRIOD_POWER_SAVE_NAME, WLAN_PARAM_Integer,
-              hdd_config_t, isAndroidPsEn,
-              VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-              CFG_ANDRIOD_POWER_SAVE_DEFAULT,
-              CFG_ANDRIOD_POWER_SAVE_MIN,
-              CFG_ANDRIOD_POWER_SAVE_MAX),
-
-#ifdef WLAN_FEATURE_11AC
-REG_VARIABLE( CFG_VHT_SU_BEAMFORMEE_CAP_FEATURE, WLAN_PARAM_Integer,
-             hdd_config_t, enableTxBF,
-             VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-             CFG_VHT_SU_BEAMFORMEE_CAP_FEATURE_DEFAULT,
-             CFG_VHT_SU_BEAMFORMEE_CAP_FEATURE_MIN,
-             CFG_VHT_SU_BEAMFORMEE_CAP_FEATURE_MAX ),
-
-REG_VARIABLE( CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED, WLAN_PARAM_Integer,
-             hdd_config_t, txBFCsnValue,
-             VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-             CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED_DEFAULT,
-             CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED_MIN,
-             CFG_VHT_CSN_BEAMFORMEE_ANT_SUPPORTED_MAX ),
-
-#endif
-
-REG_VARIABLE( CFG_SAP_ALLOW_ALL_CHANNEL_PARAM_NAME, WLAN_PARAM_Integer,
-             hdd_config_t, sapAllowAllChannel,
-             VAR_FLAGS_OPTIONAL,
-             CFG_SAP_ALLOW_ALL_CHANNEL_PARAM_DEFAULT,
-             CFG_SAP_ALLOW_ALL_CHANNEL_PARAM_MIN,
-             CFG_SAP_ALLOW_ALL_CHANNEL_PARAM_MAX ),
-#ifdef WLAN_FEATURE_11AC
-REG_VARIABLE( CFG_DISABLE_LDPC_WITH_TXBF_AP, WLAN_PARAM_Integer,
-             hdd_config_t, disableLDPCWithTxbfAP,
-             VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
-             CFG_DISABLE_LDPC_WITH_TXBF_AP_DEFAULT,
-             CFG_DISABLE_LDPC_WITH_TXBF_AP_MIN,
-             CFG_DISABLE_LDPC_WITH_TXBF_AP_MAX ),
-#endif
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 };
 
 /*
@@ -2807,10 +2519,7 @@ static void print_hdd_cfg(hdd_context_t *pHddCtx)
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [RoamRssiDiff] Value = [%lu] ",pHddCtx->cfg_ini->RoamRssiDiff);
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [ImmediateRoamRssiDiff] Value = [%lu] ",pHddCtx->cfg_ini->nImmediateRoamRssiDiff);
-<<<<<<< HEAD
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [isWESModeEnabled] Value = [%lu] ",pHddCtx->cfg_ini->isWESModeEnabled);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 #ifdef FEATURE_WLAN_OKC
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [OkcEnabled] Value = [%lu] ",pHddCtx->cfg_ini->isOkcIniFeatureEnabled);
@@ -2894,16 +2603,10 @@ static void print_hdd_cfg(hdd_context_t *pHddCtx)
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [enableFirstScan2GOnly] Value = [%u] ",pHddCtx->cfg_ini->enableFirstScan2GOnly);
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [skipDfsChnlInP2pSearch] Value = [%u] ",pHddCtx->cfg_ini->skipDfsChnlInP2pSearch);
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [ignoreDynamicDtimInP2pMode] Value = [%u] ",pHddCtx->cfg_ini->ignoreDynamicDtimInP2pMode);
-<<<<<<< HEAD
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [enableRxSTBC] Value = [%u] ",pHddCtx->cfg_ini->enableRxSTBC);
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [gEnableLpwrImgTransition] Value = [%u] ",pHddCtx->cfg_ini->enableLpwrImgTransition);
   VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [gEnableSSR] Value = [%u] ",pHddCtx->cfg_ini->enableSSR);
 
-=======
-  VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [gIgnore_Chan165] Value = [%u] ",pHddCtx->cfg_ini->ignore_chan165);
-  VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [enableRxSTBC] Value = [%u] ",pHddCtx->cfg_ini->enableRxSTBC);
-  VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO_HIGH, "Name = [gEnableLpwrImgTransition] Value = [%u] ",pHddCtx->cfg_ini->enableLpwrImgTransition);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }
 
 
@@ -3450,13 +3153,8 @@ v_BOOL_t hdd_update_config_dat( hdd_context_t *pHddCtx )
 
    hdd_config_t *pConfig = pHddCtx->cfg_ini;
    tSirMacHTCapabilityInfo htCapInfo;
-<<<<<<< HEAD
 
 
-=======
-
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
    if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_SHORT_GI_20MHZ,
       pConfig->ShortGI20MhzEnable, NULL, eANI_BOOLEAN_FALSE)==eHAL_STATUS_FAILURE)
    {
@@ -4088,13 +3786,9 @@ VOS_STATUS hdd_set_sme_config( hdd_context_t *pHddCtx )
    smeConfig.csrConfig.nPassiveMaxChnTimeConc   = pConfig->nPassiveMaxChnTimeConc;
    smeConfig.csrConfig.nPassiveMinChnTimeConc   = pConfig->nPassiveMinChnTimeConc;
    smeConfig.csrConfig.nRestTimeConc            = pConfig->nRestTimeConc;
-<<<<<<< HEAD
    smeConfig.csrConfig.nNumStaChanCombinedConc  = pConfig->nNumStaChanCombinedConc;
    smeConfig.csrConfig.nNumP2PChanCombinedConc  = pConfig->nNumP2PChanCombinedConc;
 
-=======
-   smeConfig.csrConfig.nNumChanCombinedConc     = pConfig->nNumChanCombinedConc;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
    smeConfig.csrConfig.Is11eSupportEnabled      = pConfig->b80211eIsEnabled;
    smeConfig.csrConfig.WMMSupportMode           = pConfig->WmmMode;
@@ -4110,12 +3804,8 @@ VOS_STATUS hdd_set_sme_config( hdd_context_t *pHddCtx )
     smeConfig.csrConfig.enableTxBF = pConfig->enableTxBF;
     smeConfig.csrConfig.txBFCsnValue = pConfig->txBFCsnValue;
 #endif
-<<<<<<< HEAD
    smeConfig.csrConfig.AdHocChannel5G            = pConfig->AdHocChannel5G;
    smeConfig.csrConfig.AdHocChannel24            = pConfig->AdHocChannel24G;
-=======
-   smeConfig.csrConfig.AdHocChannel5G            = 44;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
    smeConfig.csrConfig.ProprietaryRatesEnabled   = 0;
    smeConfig.csrConfig.HeartbeatThresh50         = 40;
    smeConfig.csrConfig.bandCapability            = pConfig->nBandCapability;
@@ -4131,10 +3821,6 @@ VOS_STATUS hdd_set_sme_config( hdd_context_t *pHddCtx )
    smeConfig.csrConfig.nTxPowerCap = pConfig->nTxPowerCap;
    smeConfig.csrConfig.fEnableBypass11d          = pConfig->enableBypass11d;
    smeConfig.csrConfig.fEnableDFSChnlScan        = pConfig->enableDFSChnlScan;
-<<<<<<< HEAD
-=======
-   smeConfig.csrConfig.fIgnore_chan165           = pConfig->ignore_chan165;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
    smeConfig.csrConfig.nRoamPrefer5GHz           = pConfig->nRoamPrefer5GHz;
    smeConfig.csrConfig.nRoamIntraBand            = pConfig->nRoamIntraBand;
@@ -4184,13 +3870,10 @@ VOS_STATUS hdd_set_sme_config( hdd_context_t *pHddCtx )
    smeConfig.csrConfig.isFastTransitionEnabled = pConfig->isFastTransitionEnabled;
    smeConfig.csrConfig.RoamRssiDiff = pConfig->RoamRssiDiff;
    smeConfig.csrConfig.nImmediateRoamRssiDiff = pConfig->nImmediateRoamRssiDiff;
-<<<<<<< HEAD
    smeConfig.csrConfig.isWESModeEnabled = pConfig->isWESModeEnabled;
 #endif
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
    smeConfig.csrConfig.isRoamOffloadScanEnabled = pConfig->isRoamOffloadScanEnabled;
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 #ifdef WLAN_FEATURE_NEIGHBOR_ROAMING
    smeConfig.csrConfig.neighborRoamConfig.nNeighborReassocRssiThreshold = pConfig->nNeighborReassocRssiThreshold;
@@ -4219,12 +3902,9 @@ VOS_STATUS hdd_set_sme_config( hdd_context_t *pHddCtx )
 
    smeConfig.csrConfig.enableTxLdpc = pConfig->enableTxLdpc;
 
-<<<<<<< HEAD
    /* update SSR config */
    sme_UpdateEnableSSR((tHalHandle)(pHddCtx->hHal), pHddCtx->cfg_ini->enableSSR);
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
    halStatus = sme_UpdateConfig( pHddCtx->hHal, &smeConfig);
    if ( !HAL_STATUS_SUCCESS( halStatus ) )
    {

@@ -1983,11 +1983,7 @@ void limProcessStaMlmDelBssRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ,tpPESessi
 
     if (NULL == pDelBssParams)
     {
-<<<<<<< HEAD
         limLog( pMac, LOGE, FL( "Invalid body pointer in message"));
-=======
-        limLog( pMac, LOGE, FL( "Invalid body pointer in message\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
     if( eHAL_STATUS_SUCCESS == pDelBssParams->status )
@@ -2130,11 +2126,7 @@ void limProcessMlmDelStaRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ )
     if(NULL == pDeleteStaParams ||
        NULL == (psessionEntry = peFindSessionBySessionId(pMac, pDeleteStaParams->sessionId)))
     {
-<<<<<<< HEAD
         limLog(pMac, LOGP,FL("Session Does not exist or invalid body pointer in message"));
-=======
-        limLog(pMac, LOGP,FL("Session Does not exist or invalid body pointer in message\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         if(pDeleteStaParams != NULL)
             palFreeMemory( pMac->hHdd, (void *) pDeleteStaParams );
         return;
@@ -2277,11 +2269,7 @@ void limProcessStaMlmDelStaRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ,tpPESessi
     }
     else
     {
-<<<<<<< HEAD
         limLog( pMac, LOGE, FL( "DEL_STA failed for sta Id %d" ), pDelStaParams->staIdx);
-=======
-        limLog( pMac, LOGE, FL( "DEL_STA failed for sta Id %d\n" ), pStaDs->staIndex);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         statusCode = eSIR_SME_REFUSED;
     }
 end:
@@ -2299,11 +2287,7 @@ void limProcessBtAmpApMlmAddStaRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ,tpPES
 
     if (NULL == pAddStaParams)
     {
-<<<<<<< HEAD
         limLog( pMac, LOGE, FL( "Invalid body pointer in message"));
-=======
-        limLog( pMac, LOGE, FL( "Invalid body pointer in message\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
 
@@ -2527,11 +2511,7 @@ limProcessIbssMlmAddBssRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ ,tpPESession 
 
     if (NULL == pAddBssParams)
     {
-<<<<<<< HEAD
         limLog( pMac, LOGE, FL( "Invalid body pointer in message"));
-=======
-        limLog( pMac, LOGE, FL( "Invalid body pointer in message\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
     if( eHAL_STATUS_SUCCESS == pAddBssParams->status )
@@ -2560,12 +2540,8 @@ limProcessIbssMlmAddBssRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ ,tpPESession 
         schEdcaProfileUpdate(pMac, psessionEntry);
         //TBD-RAJESH limInitPreauthList should re removed for IBSS also ?????
        //limInitPreAuthList(pMac);
-<<<<<<< HEAD
         if (0 == psessionEntry->freePeerIdxHead)
             limInitPeerIdxpool(pMac,psessionEntry);
-=======
-        limInitPeerIdxpool(pMac,psessionEntry);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         // Create timers used by LIM
 #ifdef FIXME_GEN6  //following code may not be required, as limCreateTimers is now invoked from limInitialize (peStart)
         if (!pMac->lim.gLimTimersCreated)
@@ -2612,11 +2588,7 @@ limProcessStaMlmAddBssRspPreAssoc( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ, tpPES
 
     if (NULL == pAddBssParams)
     {
-<<<<<<< HEAD
         limLog( pMac, LOGE, FL( "Invalid body pointer in message"));
-=======
-        limLog( pMac, LOGE, FL( "Invalid body pointer in message\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto joinFailure;
     }
     if( eHAL_STATUS_SUCCESS == pAddBssParams->status )
@@ -2731,7 +2703,6 @@ void limSetLinkStateForPostAssocCallback(tpAniSirGlobal pMac, void *msgParam )
 
     /* Sanity Checks */
     if (pCbackParams == NULL)
-<<<<<<< HEAD
     {
         PELOGE(limLog(pMac, LOGE, FL("Invalid parameters"));)
         goto end;
@@ -2740,40 +2711,10 @@ void limSetLinkStateForPostAssocCallback(tpAniSirGlobal pMac, void *msgParam )
     pAddBssParams = (tpAddBssParams)(pCbackParams->cbackDataPtr);
 
     if (pAddBssParams == NULL)
-=======
-    {
-        PELOGE(limLog(pMac, LOGE, FL("Invalid parameters\n"));)
-        goto end;
-    }
-
-    pAddBssParams = (tpAddBssParams)(pCbackParams->cbackDataPtr);
-
-    if (pAddBssParams == NULL)
-    {
-        PELOGE(limLog(pMac, LOGE, FL("Invalid parameters\n"));)
-        goto end;
-    }
-
-    if((psessionEntry = peFindSessionBySessionId(pMac,pAddBssParams->sessionId))== NULL)
-    {
-        limLog( pMac, LOGE, FL( "Session Does not exist for given sessionId\n" ));
-            if( NULL != pAddBssParams )
-                palFreeMemory( pMac->hHdd, (void *) pAddBssParams );
-        goto end;
-    }
-
-    pMlmReassocReq = (tLimMlmReassocReq *)(psessionEntry->pLimMlmReassocReq);
-
-    limPrintMacAddr(pMac, pAddBssParams->bssId, LOG1);
-
-    if ((pStaDs = dphAddHashEntry(pMac, pAddBssParams->bssId, DPH_STA_HASH_INDEX_PEER,
-        &psessionEntry->dph.dphHashTable)) == NULL)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     {
         PELOGE(limLog(pMac, LOGE, FL("Invalid parameters"));)
         goto end;
     }
-<<<<<<< HEAD
 
     if((psessionEntry = peFindSessionBySessionId(pMac,pAddBssParams->sessionId))== NULL)
     {
@@ -2793,8 +2734,6 @@ void limSetLinkStateForPostAssocCallback(tpAniSirGlobal pMac, void *msgParam )
         limPrintMacAddr(pMac, pAddBssParams->staContext.staMac, LOGE);
         goto end;
     }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     // Prepare and send Reassociation request frame
     // start reassoc timer.
     pMac->lim.limTimers.gLimReassocFailureTimer.sessionId = psessionEntry->peSessionId;
@@ -2953,11 +2892,8 @@ end:
     /* Update PE session Id*/
     if (psessionEntry != NULL)
         mlmReassocCnf.sessionId = psessionEntry->peSessionId;
-<<<<<<< HEAD
     else
         mlmReassocCnf.sessionId = 0;
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     limPostSmeMessage(pMac, LIM_MLM_REASSOC_CNF, (tANI_U32 *) &mlmReassocCnf);
 }
@@ -2983,21 +2919,13 @@ limProcessStaMlmAddBssRspFT(tpAniSirGlobal pMac, tpSirMsgQ limMsgQ, tpPESession 
 
     if( eHAL_STATUS_SUCCESS != palAllocateMemory( pMac->hHdd, (void **) &pCbackParam, sizeof( tSetLinkCbackParams )))
     {
-<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE,  FL("Could not allocate memory for LinkState callback params"));)
-=======
-        PELOGE(limLog(pMac, LOGE,  FL("Could not allocate memory for LinkState callback params\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
 
     if( eHAL_STATUS_SUCCESS != palAllocateMemory( pMac->hHdd, (void **) &pAddBssCbackInfo, sizeof( tAddBssParams )))
     {
-<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE,  FL("Could not allocate memory for Add BSS info callback param"));)
-=======
-        PELOGE(limLog(pMac, LOGE,  FL("Could not allocate memory for Add BSS info callback param\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
 
@@ -3011,11 +2939,7 @@ limProcessStaMlmAddBssRspFT(tpAniSirGlobal pMac, tpSirMsgQ limMsgQ, tpPESession 
             (tpSetLinkStateCallback)limSetLinkStateForPostAssocCallback, 
                         (void *)pCbackParam) != eSIR_SUCCESS)
     {
-<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE,  FL("Failed to set the LinkState"));)
-=======
-        PELOGE(limLog(pMac, LOGE,  FL("Failed to set the LinkState\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
 
@@ -3159,12 +3083,6 @@ limProcessStaMlmAddBssRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ,tpPESession ps
                 PELOGE(limLog(pMac, LOGE, FL("could not Add Self Entry for the station"));)
                 mlmAssocCnf.resultCode = (tSirResultCodes) eSIR_SME_REFUSED;
             }
-#ifdef FEATURE_WLAN_TDLS
-            else {
-               /* initialize TDLS peer related data */
-               limInitTdlsData(pMac,psessionEntry);
-            }
-#endif            
         }
     }
     else
@@ -3781,11 +3699,7 @@ static void limProcessSwitchChannelJoinReq(tpAniSirGlobal pMac, tpPESession pses
         // Activate Join Periodic Probe Req timer
         if (tx_timer_activate(&pMac->lim.limTimers.gLimPeriodicJoinProbeReqTimer) != TX_SUCCESS)
         {
-<<<<<<< HEAD
             limLog(pMac, LOGP, FL("could not activate Periodic Join req failure timer"));
-=======
-            limLog(pMac, LOGP, FL("could not activate Periodic Join req failure timer\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             goto error;
         }
     }
@@ -4611,11 +4525,7 @@ limProcessBtampAddBssRsp( tpAniSirGlobal pMac, tpSirMsgQ limMsgQ ,tpPESession ps
 
     if (NULL == pAddBssParams)
     {
-<<<<<<< HEAD
         limLog( pMac, LOGE, FL( "Invalid body pointer in message"));
-=======
-        limLog( pMac, LOGE, FL( "Invalid body pointer in message\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         goto end;
     }
     if( eHAL_STATUS_SUCCESS == pAddBssParams->status )

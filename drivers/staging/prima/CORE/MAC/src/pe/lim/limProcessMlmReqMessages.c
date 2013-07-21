@@ -275,21 +275,13 @@ limSuspendLink(tpAniSirGlobal pMac, tSirLinkTrafficCheck trafficCheck,  SUSPEND_
 {
    if( NULL == callback )
    {
-<<<<<<< HEAD
       limLog( pMac, LOGE, "%s:%d: Invalid parameters", __func__, __LINE__ );
-=======
-      limLog( pMac, LOGE, "%s:%d: Invalid parameters\n", __func__, __LINE__ );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return;
    }
 
    if( pMac->lim.gpLimSuspendCallback )
    {
-<<<<<<< HEAD
       limLog( pMac, LOGE, "%s:%d: gLimSuspendLink callback is not NULL...something is wrong", __func__, __LINE__ );
-=======
-      limLog( pMac, LOGE, "%s:%d: gLimSuspendLink callback is not NULL...something is wrong\n", __func__, __LINE__ );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       callback( pMac, eHAL_STATUS_FAILURE, data ); 
       return;
    }
@@ -326,21 +318,13 @@ limResumeLink(tpAniSirGlobal pMac, SUSPEND_RESUME_LINK_CALLBACK callback, tANI_U
 {
    if( NULL == callback )
    {
-<<<<<<< HEAD
       limLog( pMac, LOGE, "%s:%d: Invalid parameters", __func__, __LINE__ );
-=======
-      limLog( pMac, LOGE, "%s:%d: Invalid parameters\n", __func__, __LINE__ );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return;
    }
 
    if( pMac->lim.gpLimResumeCallback )
    {
-<<<<<<< HEAD
       limLog( pMac, LOGE, "%s:%d: gLimResumeLink callback is not NULL...something is wrong", __func__, __LINE__ );
-=======
-      limLog( pMac, LOGE, "%s:%d: gLimResumeLink callback is not NULL...something is wrong\n", __func__, __LINE__ );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       callback( pMac, eHAL_STATUS_FAILURE, data ); 
       return;
    }
@@ -717,7 +701,6 @@ void limSetDFSChannelList(tpAniSirGlobal pMac,tANI_U8 channelNum, tSirDFSChannel
 {
 
     tANI_BOOLEAN passiveToActive = TRUE;
-<<<<<<< HEAD
     if ((1 <= channelNum) && (165 >= channelNum))
     {
        if (eANI_BOOLEAN_TRUE == limIsconnectedOnDFSChannel(channelNum))
@@ -747,29 +730,6 @@ void limSetDFSChannelList(tpAniSirGlobal pMac,tANI_U8 channelNum, tSirDFSChannel
     }
 
     return;
-=======
-    if (eANI_BOOLEAN_TRUE == limIsconnectedOnDFSChannel(channelNum))
-    {
-        if (dfsChannelList->timeStamp[channelNum] == 0)
-        {
-            //Received first beacon; Convert DFS channel to Active channel.
-            PELOG1(limLog(pMac, LOG1, FL("Received first beacon on DFS channel:  %d"), channelNum);)
-            limCovertChannelScanType(pMac,channelNum, passiveToActive);
-        }
-        dfsChannelList->timeStamp[channelNum] = vos_timer_get_system_time();
-    }
-    else
-    {
-        PELOG1(limLog(pMac, LOG1, FL("Channel %d is Active"), channelNum);)
-        return;
-    }
-    if (!tx_timer_running(&pMac->lim.limTimers.gLimActiveToPassiveChannelTimer))
-    {
-        tx_timer_activate(&pMac->lim.limTimers.gLimActiveToPassiveChannelTimer);
-    }
-
-    return ;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }
 
 
@@ -1610,11 +1570,7 @@ mlm_add_sta(
 #endif
     limFillSupportedRatesInfo(pMac, NULL, &pSta->supportedRates,psessionEntry);
     
-<<<<<<< HEAD
     limLog( pMac, LOGE, FL( "GF: %d, ChnlWidth: %d, MimoPS: %d, lsigTXOP: %d, dsssCCK: %d, SGI20: %d, SGI40%d") ,
-=======
-    limLog( pMac, LOGE, FL( "GF: %d, ChnlWidth: %d, MimoPS: %d, lsigTXOP: %d, dsssCCK: %d, SGI20: %d, SGI40%d\n") ,
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                           pSta->greenFieldCapable, pSta->txChannelWidthSet, pSta->mimoPS, pSta->lsigTxopProtection, 
                                           pSta->fDsssCckMode40Mhz,pSta->fShortGI20Mhz, pSta->fShortGI40Mhz);
 
@@ -1713,11 +1669,7 @@ limMlmAddBss (
         pMlmStartReq->ssId.length);
     pAddBssParams->ssId.length = pMlmStartReq->ssId.length;
     pAddBssParams->bHiddenSSIDEn = pMlmStartReq->ssidHidden;
-<<<<<<< HEAD
     limLog( pMac, LOGE, FL( "TRYING TO HIDE SSID %d" ),pAddBssParams->bHiddenSSIDEn);
-=======
-    limLog( pMac, LOGE, FL( "TRYING TO HIDE SSID %d\n" ),pAddBssParams->bHiddenSSIDEn);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     // CR309183. Disable Proxy Probe Rsp.  Host handles Probe Requests.  Until FW fixed. 
     pAddBssParams->bProxyProbeRespEn = 0;
     pAddBssParams->obssProtEnabled = pMlmStartReq->obssProtEnabled;
@@ -2026,11 +1978,7 @@ limProcessMlmScanReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
              * Could not get max channel value
              * from CFG. Log error.
              */
-<<<<<<< HEAD
             limLog(pMac, LOGP, FL("could not retrieve passive max channel value"));
-=======
-            limLog(pMac, LOGP, FL("could not retrieve passive max channel value\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
             /* use a default value of 110ms */
             val = 110;
@@ -2167,11 +2115,7 @@ limProcessMlmPostJoinSuspendLink(tpAniSirGlobal pMac, eHalStatus status, tANI_U3
 
     if( eHAL_STATUS_SUCCESS != status )
     {
-<<<<<<< HEAD
        limLog(pMac, LOGE, FL("Suspend link(NOTIFY_BSS) failed. still proceeding with join"));
-=======
-       limLog(pMac, LOGE, FL("Suspend link(NOTIFY_BSS) failed. still proceeding with join\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
     psessionEntry->limPrevMlmState = psessionEntry->limMlmState;
     psessionEntry->limMlmState = eLIM_MLM_WT_JOIN_BEACON_STATE;
@@ -2601,11 +2545,7 @@ limProcessMlmAssocReq(tpAniSirGlobal pMac, tANI_U32 *pMsgBuf)
     {
        if(limSetLinkState(pMac, eSIR_LINK_BTAMP_POSTASSOC_STATE, currentBssId, 
            psessionEntry->selfMacAddr, NULL, NULL) != eSIR_SUCCESS)
-<<<<<<< HEAD
             PELOGE(limLog(pMac, LOGE,  FL("Failed to set the LinkState"));)
-=======
-            PELOGE(limLog(pMac, LOGE,  FL("Failed to set the LinkState\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
         /// Start association failure timer
         MTRACE(macTrace(pMac, TRACE_CODE_TIMER_ACTIVATE, psessionEntry->peSessionId, eLIM_ASSOC_FAIL_TIMER));
@@ -2987,20 +2927,12 @@ tANI_BOOLEAN limCheckDisassocDeauthAckPending(tpAniSirGlobal pMac,
                               sizeof(tSirMacAddr))))
        )
     {
-<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE,FL("Disassoc/Deauth ack pending"));)
-=======
-        PELOGE(limLog(pMac, LOGE,FL("Disassoc/Deauth ack pending\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eANI_BOOLEAN_TRUE;
     }
      else
      {
-<<<<<<< HEAD
         PELOGE(limLog(pMac, LOGE,FL("Disassoc/Deauth Ack not pending"));)
-=======
-        PELOGE(limLog(pMac, LOGE,FL("Disassoc/Deauth Ack not pending\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eANI_BOOLEAN_FALSE;
      }
 }
@@ -4079,11 +4011,7 @@ static void limProcessPeriodicJoinProbeReqTimer(tpAniSirGlobal pMac)
 
     if((psessionEntry = peFindSessionBySessionId(pMac, pMac->lim.limTimers.gLimPeriodicJoinProbeReqTimer.sessionId))== NULL)
     {
-<<<<<<< HEAD
         limLog(pMac, LOGE,FL("session does not exist for given SessionId"));
-=======
-        limLog(pMac, LOGE,FL("session does not exist for given SessionId\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return;
     }
 
@@ -4105,11 +4033,7 @@ static void limProcessPeriodicJoinProbeReqTimer(tpAniSirGlobal pMac)
         // Activate Join Periodic Probe Req timer
         if (tx_timer_activate(&pMac->lim.limTimers.gLimPeriodicJoinProbeReqTimer) != TX_SUCCESS)
         {
-<<<<<<< HEAD
             limLog(pMac, LOGP, FL("could not activate Periodic Join req failure timer"));
-=======
-            limLog(pMac, LOGP, FL("could not activate Periodic Join req failure timer\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return;
         }
     }
@@ -4206,15 +4130,6 @@ limProcessAuthRspTimeout(tpAniSirGlobal pMac, tANI_U32 authIndex)
     pAuthNode = limGetPreAuthNodeFromIndex(pMac, &pMac->lim.gLimPreAuthTimerTable, authIndex);
 
     if (NULL == pAuthNode)
-<<<<<<< HEAD
-=======
-    {
-        limLog(pMac, LOGW, FL("Invalid auth node\n"));
-        return;
-    } 
-
-    if ((psessionEntry = peFindSessionByBssid(pMac, pAuthNode->peerMacAddr, &sessionId)) == NULL)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     {
         limLog(pMac, LOGW, FL("Invalid auth node"));
         return;
@@ -4817,11 +4732,7 @@ ePhyChanBondState limGet11ACPhyCBState(tpAniSirGlobal pMac, tANI_U8 channel, tAN
             cbState =  PHY_QUADRUPLE_CHANNEL_20MHZ_LOW_40MHZ_HIGH;
         else 
             limLog (pMac, LOGP, 
-<<<<<<< HEAD
                        FL("Invalid Channel Number = %d Center Chan = %d "),
-=======
-                       FL("Invalid Channel Number = %d Center Chan = %d \n"), 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                  channel, peerCenterChan);
     }
     if ( (htSecondaryChannelOffset 
@@ -4836,11 +4747,7 @@ ePhyChanBondState limGet11ACPhyCBState(tpAniSirGlobal pMac, tANI_U8 channel, tAN
             cbState =  PHY_QUADRUPLE_CHANNEL_20MHZ_HIGH_40MHZ_HIGH;
         else 
            limLog (pMac, LOGP, 
-<<<<<<< HEAD
                          FL("Invalid Channel Number = %d Center Chan = %d "),
-=======
-                         FL("Invalid Channel Number = %d Center Chan = %d \n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                             channel, peerCenterChan);
     }
     return cbState;

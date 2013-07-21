@@ -149,11 +149,7 @@ tpPESession peCreateSession(tpAniSirGlobal pMac, tANI_U8 *bssid , tANI_U8* sessi
                     (void **) &pMac->lim.gpSession[i].gpLimPeerIdxpool, 
                     sizeof(*pMac->lim.gpSession[i].gpLimPeerIdxpool) * (numSta+1)))
             {
-<<<<<<< HEAD
                 PELOGE(limLog(pMac, LOGE, FL("memory allocate failed!"));)
-=======
-                PELOGE(limLog(pMac, LOGE, FL("memory allocate failed!\n"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 palFreeMemory(pMac->hHdd,pMac->lim.gpSession[i].dph.dphHashTable.pHashTable);
                 palFreeMemory(pMac->hHdd,pMac->lim.gpSession[i].dph.dphHashTable.pDphNodeArray);
                 return NULL;

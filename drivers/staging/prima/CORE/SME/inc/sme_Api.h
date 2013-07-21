@@ -2310,7 +2310,6 @@ eHalStatus sme_UpdateRoamRssiDiff(tHalHandle hHal, v_U8_t RoamRssiDiff);
 
 eHalStatus sme_UpdateFastTransitionEnabled(tHalHandle hHal,
         v_BOOL_t isFastTransitionEnabled);
-<<<<<<< HEAD
 
 /* ---------------------------------------------------------------------------
     \fn sme_UpdateWESMode
@@ -2334,8 +2333,6 @@ eHalStatus sme_UpdateWESMode(tHalHandle hHal, v_BOOL_t isWESModeEnabled);
           Other status means SME failure to update
     -------------------------------------------------------------------------*/
 eHalStatus sme_SetRoamScanControl(tHalHandle hHal, v_BOOL_t roamScanControl);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif /* (WLAN_FEATURE_VOWIFI_11R) || (FEATURE_WLAN_CCX) || (FEATURE_WLAN_LFR) */
 
 #ifdef FEATURE_WLAN_LFR
@@ -2601,7 +2598,6 @@ eHalStatus sme_GetCountryRevision(tHalHandle hHal, tANI_U8 *pRevision);
 tANI_BOOLEAN sme_getIsCcxFeatureEnabled(tHalHandle hHal);
 
 /*--------------------------------------------------------------------------
-<<<<<<< HEAD
   \brief sme_getWESMode() - getWES Mode
   This is a synchronous call
   \param hHal - The handle returned by macOpen.
@@ -2631,8 +2627,6 @@ v_BOOL_t sme_GetRoamScanControl(tHalHandle hHal);
     -------------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------------
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
   \brief sme_getIsLfrFeatureEnabled() - get LFR feature enabled or not
   This is a synchronuous call
   \param hHal - The handle returned by macOpen.
@@ -2654,7 +2648,6 @@ tANI_BOOLEAN sme_getIsFtFeatureEnabled(tHalHandle hHal);
 
 #endif
 
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 /*--------------------------------------------------------------------------
   \brief sme_UpdateRoamScanOffloadEnabled() - enable/disable roam scan offload feaure
@@ -2671,8 +2664,6 @@ eHalStatus sme_UpdateRoamScanOffloadEnabled(tHalHandle hHal, v_BOOL_t nRoamScanO
 #endif
 
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /* ---------------------------------------------------------------------------
     \fn sme_IsFeatureSupportedByFW
     \brief  Check if an feature is enabled by FW
@@ -2752,7 +2743,6 @@ v_U8_t sme_GetTdlsDiscoveryResult(tHalHandle hHal,
                                  tSmeTdlsDisResult *disResult, v_U8_t listType);
 VOS_STATUS sme_StartTdlsLinkSetupReq(tHalHandle hHal, tANI_U8 sessionId, tSirMacAddr peerMac);
 VOS_STATUS sme_StartTdlsLinkTeardownReq(tHalHandle hHal, tANI_U8 sessionId, tSirMacAddr peerMac);
-<<<<<<< HEAD
 #endif /* FEATURE_WLAN_TDLS */
 eHalStatus sme_UpdateDfsSetting(tHalHandle hHal, tANI_U8 fUpdateEnableDFSChnlScan);
 
@@ -2793,9 +2783,5 @@ eCsrPhyMode sme_GetPhyMode(tHalHandle hHal);
  * SME API to determine the channel bonding mode
  */
 VOS_STATUS sme_SelectCBMode(tHalHandle hHal, eCsrPhyMode eCsrPhyMode, tANI_U8 channel);
-=======
-
-#endif /* FEATURE_WLAN_TDLS */
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #endif //#if !defined( __SME_API_H )

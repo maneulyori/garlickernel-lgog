@@ -132,12 +132,9 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
         case HAL_DEL_STA_REASON_CODE_KEEP_ALIVE:
         case HAL_DEL_STA_REASON_CODE_TIM_BASED:
              PELOGE(limLog(pMac, LOGE, FL(" Deleting station: staId = %d, reasonCode = %d"), pMsg->staId, pMsg->reasonCode);)
-<<<<<<< HEAD
              if (eLIM_STA_IN_IBSS_ROLE == psessionEntry->limSystemRole)
                  return;
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
              pStaDs = dphLookupAssocId(pMac, pMsg->staId, &pMsg->assocId, &psessionEntry->dph.dphHashTable);
 
              if (!pStaDs)
@@ -194,7 +191,6 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
                     mlmDeauthInd.deauthTrigger =  pStaDs->mlmStaContext.cleanupTrigger;
 
 #ifdef FEATURE_WLAN_TDLS
-<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
                     if ((TRUE == pMac->lim.gLimTDLSOxygenSupport) &&
                         (limGetTDLSPeerCount(pMac, psessionEntry) != 0)) {
@@ -203,8 +199,6 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
                             return ;
                     }
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     /* Delete all TDLS peers connected before leaving BSS*/
                     limDeleteTDLSPeers(pMac, psessionEntry);
 #endif
@@ -216,7 +210,6 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
 #endif
              }
              break;        
-<<<<<<< HEAD
 
         case HAL_DEL_STA_REASON_CODE_UNKNOWN_A2:
              PELOGE(limLog(pMac, LOGE, FL(" Deleting Unknown station "));)
@@ -224,15 +217,6 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
              limSendDeauthMgmtFrame( pMac, eSIR_MAC_CLASS3_FRAME_FROM_NON_ASSOC_STA_REASON, pMsg->addr2, psessionEntry, FALSE);
              break;
 
-=======
-
-        case HAL_DEL_STA_REASON_CODE_UNKNOWN_A2:
-             PELOGE(limLog(pMac, LOGE, FL(" Deleting Unknown station "));)
-             limPrintMacAddr(pMac, pMsg->addr2, LOGE);
-             limSendDeauthMgmtFrame( pMac, eSIR_MAC_CLASS3_FRAME_FROM_NON_ASSOC_STA_REASON, pMsg->addr2, psessionEntry, FALSE);
-             break;
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         default:
              PELOGE(limLog(pMac, LOGE, FL(" Unknown reason code "));)
              break;
@@ -395,7 +379,6 @@ limTearDownLinkWithAp(tpAniSirGlobal pMac, tANI_U8 sessionId, tSirMacReasonCodes
         tLimMlmDeauthInd  mlmDeauthInd;
 
 #ifdef FEATURE_WLAN_TDLS
-<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
         if ((TRUE == pMac->lim.gLimTDLSOxygenSupport) &&
             (limGetTDLSPeerCount(pMac, psessionEntry) != 0)) {
@@ -403,8 +386,6 @@ limTearDownLinkWithAp(tpAniSirGlobal pMac, tANI_U8 sessionId, tSirMacReasonCodes
                 return;
         }
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         /* Delete all TDLS peers connected before leaving BSS*/
         limDeleteTDLSPeers(pMac, psessionEntry);
 #endif

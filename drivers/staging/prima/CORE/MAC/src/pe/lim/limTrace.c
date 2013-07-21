@@ -188,11 +188,7 @@ void limTraceDump(tpAniSirGlobal pMac, tpTraceRecord pRecord, tANI_U16 recIndex)
             }
             else
             {
-<<<<<<< HEAD
                 limLog(pMac, LOGE, "%04d    %012u  S%d    %-14s  %-30s(%d)    SN: %d ", recIndex, pRecord->time, pRecord->session,
-=======
-                limLog(pMac, LOGE, "%04d    %012u  S%d    %-14s  %-30s(%d)    SN: %d \n", recIndex, pRecord->time, pRecord->session,
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                             "RX Mgmt:", frameSubtypeStr[LIM_TRACE_GET_SUBTYPE(pRecord->data)],
                                             LIM_TRACE_GET_SUBTYPE(pRecord->data),
                                             LIM_TRACE_GET_SSN(pRecord->data) );
@@ -225,20 +221,12 @@ void limTraceDump(tpAniSirGlobal pMac, tpTraceRecord pRecord, tANI_U16 recIndex)
             break;
 
         case TRACE_CODE_TX_WDA_MSG:
-<<<<<<< HEAD
             limLog(pMac, LOGE, "%04d    %012u  S%d    %-14s  %-30s(0x%x) ", recIndex, pRecord->time, pRecord->session,
-=======
-            limLog(pMac, LOGE, "%04d    %012u  S%d    %-14s  %-30s(0x%x) \n", recIndex, pRecord->time, pRecord->session,
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                             "TX WDA Msg:", macTraceGetWdaMsgString((tANI_U16)pRecord->data), pRecord->data );
             break;
 
         case TRACE_CODE_RX_WDA_MSG:
-<<<<<<< HEAD
             limLog(pMac, LOGE, "%04d    %012u  S%d    %-14s  %-30s(0x%x) ", recIndex, pRecord->time, pRecord->session,
-=======
-            limLog(pMac, LOGE, "%04d    %012u  S%d    %-14s  %-30s(0x%x) \n", recIndex, pRecord->time, pRecord->session,
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                             LIM_TRACE_GET_DEFRD_OR_DROPPED(pRecord->data) ? "Def/Drp LIM Msg:": "RX WDA Msg:",
                                             macTraceGetWdaMsgString((tANI_U16)pRecord->data), pRecord->data );
             break;

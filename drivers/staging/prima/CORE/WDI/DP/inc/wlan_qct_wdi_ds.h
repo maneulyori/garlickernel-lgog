@@ -166,13 +166,10 @@ typedef struct
 #ifdef WLAN_FEATURE_11W
    wpt_uint32 rmf:1;
 #endif
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
    wpt_uint32 offloadScanLearn;
    wpt_uint32 roamCandidateInd;
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 } WDI_DS_RxMetaInfoType;
 
 typedef struct sPktMetaInfo

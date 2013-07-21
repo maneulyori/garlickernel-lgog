@@ -245,7 +245,6 @@ VOS_STATUS csrNeighborRoamChannelsFilterByCurrentBand(
                       tANI_U8*  pOutputChannelList,
                       int*      pMergedOutputNumOfChannels
                       );
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 #define ROAM_SCAN_OFFLOAD_START                     1
 #define ROAM_SCAN_OFFLOAD_STOP                      2
@@ -264,8 +263,6 @@ VOS_STATUS csrNeighborRoamChannelsFilterByCurrentBand(
 #define REASON_EMPTY_SCAN_REF_PERIOD_CHANGED        10
 #define REASON_PREAUTH_FAILED_FOR_ALL               11
 #define REASON_NO_CAND_FOUND_OR_NOT_ROAMING_NOW     12
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 eHalStatus csrRoamOffloadScan(tpAniSirGlobal pMac, tANI_U8 command, tANI_U8 reason);
 eHalStatus csrNeighborRoamCandidateFoundIndHdlr(tpAniSirGlobal pMac, void* pMsg);

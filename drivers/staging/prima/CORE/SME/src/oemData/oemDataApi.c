@@ -230,11 +230,7 @@ eHalStatus oemData_SendMBOemDataReq(tpAniSirGlobal pMac, tOemDataReq *pOemDataRe
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, pOemDataReq->sessionId );
 
     smsLog(pMac, LOGW, "OEM_DATA: entering Function %s", __func__);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     msgLen = (tANI_U16)(sizeof(tSirOemDataReq));
 
     status = palAllocateMemory(pMac->hHdd, (void**)&pMsg, msgLen);
@@ -396,20 +392,11 @@ eHalStatus oemData_IsOemDataReqAllowed(tHalHandle hHal)
     {
         if(CSR_IS_SESSION_VALID(pMac, sessionId))
         {
-<<<<<<< HEAD
             //co-exist with IBSS or BT-AMP mode is not supported
             if(csrIsConnStateIbss(pMac, sessionId) || csrIsBTAMP(pMac, sessionId) )
             {
                 //co-exist with IBSS or BT-AMP mode is not supported
                 smsLog(pMac, LOGW, "OEM DATA REQ is not allowed due to IBSS|BTAMP exist in session %d", sessionId);
-=======
-            if(csrIsConnStateIbss(pMac, sessionId) || csrIsBTAMP(pMac, sessionId) 
-               || csrIsConnStateConnectedInfraAp(pMac, sessionId)
-               )
-            {
-                //co-exist with IBSS or BT-AMP or Soft-AP mode is not supported
-                smsLog(pMac, LOGW, "OEM DATA REQ is not allowed due to IBSS|BTAMP|SAP exist in session %d", sessionId);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 status = eHAL_STATUS_CSR_WRONG_STATE;
                 break;
             }

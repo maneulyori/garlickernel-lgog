@@ -355,11 +355,7 @@ static void limHandleUnknownA2IndexFrames(tpAniSirGlobal pMac, void *pRxPacketIn
 
         if (limIsGroupAddr(pMacHdr->addr2))
         {
-<<<<<<< HEAD
             PELOG2(limLog(pMac, LOG2, FL("Ignoring A2 Invalid Packet received for MC/BC:"));
-=======
-            PELOG2(limLog(pMac, LOG2, FL("Ignoring A2 Invalid Packet received for MC/BC:\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     limPrintMacAddr(pMac, pMacHdr->addr2, LOG2);)
 
                 return;
@@ -370,11 +366,7 @@ static void limHandleUnknownA2IndexFrames(tpAniSirGlobal pMac, void *pRxPacketIn
         {
             /* ADD handling of Public Action Frame */
             LIM_LOG_TDLS(VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, \
-<<<<<<< HEAD
                         ("limHandleUnknownA2IndexFrames: type=0x%x, subtype=0x%x"),pMacHdr->fc.type, pMacHdr->fc.subType));
-=======
-                        ("limHandleUnknownA2IndexFrames: type=0x%x, subtype=0x%x\n"),pMacHdr->fc.type, pMacHdr->fc.subType)); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             switch (pMacHdr->fc.type)
             {
                 case SIR_MAC_MGMT_FRAME:
@@ -400,10 +392,6 @@ static void limHandleUnknownA2IndexFrames(tpAniSirGlobal pMac, void *pRxPacketIn
         }
     }
 #endif
-<<<<<<< HEAD
-
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
     return;
@@ -820,11 +808,7 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
             tANI_U8 *rfc1042Hdr = (tANI_U8 *)(dataOffset + RFC1042_HDR_LENGTH) ;
             tANI_U16 ethType = GET_BE16(rfc1042Hdr) ;
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
-<<<<<<< HEAD
                                 ("TDLS frame with 80211 Header")) ;
-=======
-                                ("TDLS frame with 80211 Header\n")) ;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             if(ETH_TYPE_89_0d == ethType)
             {
                 tANI_U8 payloadType = (rfc1042Hdr + ETH_TYPE_LEN)[0] ;
@@ -1076,11 +1060,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                 {
                     if(!(pMac->lim.deferredMsgCnt & 0xF))
                     {
-<<<<<<< HEAD
                         PELOGE(limLog(pMac, LOGE, FL("Unable to Defer message(0x%X) limSmeState %d (prev sme state %d) sysRole %d mlm state %d (prev mlm state %d)"),
-=======
-                    PELOGE(limLog(pMac, LOGE, FL("Unable to Defer message(0x%X) limSmeState %d (prev sme state %d) sysRole %d mlm state %d (prev mlm state %d)\n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                         limMsg->type, pMac->lim.gLimSmeState,  pMac->lim.gLimPrevSmeState,
                         pMac->lim.gLimSystemRole,  pMac->lim.gLimMlmState,  pMac->lim.gLimPrevMlmState);)
                     }
@@ -1289,10 +1269,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
         case eWNI_SME_DEL_STA_SELF_REQ:
         case eWNI_SME_REGISTER_MGMT_FRAME_REQ:
         case eWNI_SME_UPDATE_NOA:
-<<<<<<< HEAD
-=======
-        case eWNI_SME_CLEAR_DFS_CHANNEL_LIST:
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             // These messages are from HDD
             limProcessNormalHddMsg(pMac, limMsg, false);   //no need to response to hdd
             break;
@@ -1336,13 +1312,8 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             tpPESession psessionEntry = &pMac->lim.gpSession[0];
             tANI_U8  i;
             tANI_U8 p2pGOExists = 0;
-<<<<<<< HEAD
 
             limLog(pMac, LOG1, "LIM received NOA start %x", limMsg->type);
-=======
-            
-            limLog(pMac, LOG1, "LIM received NOA start %x\n", limMsg->type);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
             /* Since insert NOA is done and NOA start msg received, we should deactivate the Insert NOA timer */
             limDeactivateAndChangeTimer(pMac, eLIM_INSERT_SINGLESHOT_NOA_TIMER);
@@ -1358,11 +1329,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                     if (psessionEntry->p2pGoPsNoaStartInd.status != eHAL_STATUS_SUCCESS)
                     {
                         limLog(pMac, LOGW, FL("GO NOA start failure status %d reported by FW."
-<<<<<<< HEAD
                             " - still go ahead with deferred sme req. This is just info"),
-=======
-                            " - still go ahead with deferred sme req. This is just info\n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                             psessionEntry->p2pGoPsNoaStartInd.status);
                     }
                     break;
@@ -1372,11 +1339,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             if (p2pGOExists == 0)
             {
                 limLog(pMac, LOGW, FL("By the time, we received NOA start, GO is already removed."
-<<<<<<< HEAD
                         " - still go ahead with deferred sme req. This is just info"));
-=======
-                        " - still go ahead with deferred sme req. This is just info\n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             }
 
             /* We received the NOA start indication. Now we can send down the SME request which requires off-channel operation */
@@ -1391,11 +1354,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                 tpPESession psessionEntry = &pMac->lim.gpSession[0];  
                 tANI_U8  i;
                 
-<<<<<<< HEAD
                 limLog(pMac, LOGW, FL("Received message Noa_ATTR %x"), limMsg->type);
-=======
-                limLog(pMac, LOGW, FL("Received message Noa_ATTR %x\n"), limMsg->type);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 for(i=0; i < pMac->lim.maxBssId; i++)
                 {
                     psessionEntry = &pMac->lim.gpSession[i];
@@ -1406,11 +1365,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                         palCopyMemory(pMac->hHdd,&psessionEntry->p2pGoPsUpdate, limMsg->bodyptr,sizeof(tSirP2PNoaAttr));
                         
                         
-<<<<<<< HEAD
                         limLog(pMac, LOG2, FL(" &psessionEntry->bssId%02x:%02x:%02x:%02x:%02x:%02x ctWin=%d oppPsFlag=%d"),
-=======
-                        limLog(pMac, LOG2, FL(" &psessionEntry->bssId%02x:%02x:%02x:%02x:%02x:%02x ctWin=%d oppPsFlag=%d\n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                      psessionEntry->bssId[0],
                                      psessionEntry->bssId[1],
                                      psessionEntry->bssId[2],
@@ -1420,11 +1375,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                                      psessionEntry->p2pGoPsUpdate.ctWin,
                                      psessionEntry->p2pGoPsUpdate.oppPsFlag);
 
-<<<<<<< HEAD
                         limLog(pMac, LOG2, FL(" uNoa1IntervalCnt=%d uNoa1Duration=%d uNoa1Interval=%d uNoa1StartTime=%d"),
-=======
-                        limLog(pMac, LOG2, FL(" uNoa1IntervalCnt=%d uNoa1Duration=%d uNoa1Interval=%d uNoa1StartTime=%d\n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                      psessionEntry->p2pGoPsUpdate.uNoa1IntervalCnt,
                                      psessionEntry->p2pGoPsUpdate.uNoa1Duration,
                                      psessionEntry->p2pGoPsUpdate.uNoa1Interval,
@@ -1582,11 +1533,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                 // Defer processsing this message
                 if (limDeferMsg(pMac, limMsg) != TX_SUCCESS)
                 {
-<<<<<<< HEAD
                     PELOGE(limLog(pMac, LOGE, FL("Unable to Defer message(0x%X) limSmeState %d (prev sme state %d) sysRole %d mlm state %d (prev mlm state %d)"),
-=======
-                    PELOGE(limLog(pMac, LOGE, FL("Unable to Defer message(0x%X) limSmeState %d (prev sme state %d) sysRole %d mlm state %d (prev mlm state %d)\n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                         limMsg->type, pMac->lim.gLimSmeState,  pMac->lim.gLimPrevSmeState,
                         pMac->lim.gLimSystemRole,  pMac->lim.gLimMlmState,  pMac->lim.gLimPrevMlmState);)
                     limLogSessionStates(pMac);
@@ -1594,7 +1541,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             }
             else
             {
-<<<<<<< HEAD
 #if defined(FEATURE_WLAN_TDLS) && defined(FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP)
                  tpPESession psessionEntry = &pMac->lim.gpSession[0];
                  for (i=0; i < pMac->lim.maxBssId; i++)
@@ -1615,8 +1561,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                      }
                  }
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                  if (NULL == limMsg->bodyptr)
                  {
                      limHandleHeartBeatTimeout(pMac);
@@ -1625,11 +1569,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                  {
                      limHandleHeartBeatTimeoutForSession(pMac, (tpPESession)limMsg->bodyptr);
                  }
-<<<<<<< HEAD
             }
-=======
-            }            
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             break;
 
         case SIR_LIM_PROBE_HB_FAILURE_TIMEOUT:
@@ -1728,20 +1668,12 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                          pMac->lim.limTimers.gLimTdlsDisRspWaitTimer.sessionId) ;
             if(NULL == psessionEntry) 
             {
-<<<<<<< HEAD
               limLog(pMac, LOGP,FL("Session Does not exist for given sessionID %d"), pMac->lim.limTimers.gLimTdlsDisRspWaitTimer.sessionId);
-=======
-              limLog(pMac, LOGP,FL("Session Does not exist for given sessionID %d\n"), pMac->lim.limTimers.gLimTdlsDisRspWaitTimer.sessionId);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
               return;
             }
             
             VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR, 
-<<<<<<< HEAD
                                 ("Discovery Rsp timer expires ")) ;
-=======
-                                ("Discovery Rsp timer expires \n")) ;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #if 0 // TDLS_hklee: D13 no need to open Addr2 unknown data packet 
             /* restore RXP filters */
             limSetLinkState(pMac, eSIR_LINK_FINISH_TDLS_DISCOVERY_STATE,
@@ -1762,19 +1694,11 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             tLimTdlsLinkSetupPeer *setupPeer = NULL ;
  
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR,
-<<<<<<< HEAD
                                 ("TDLS setup rsp timer expires ")) ;
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
                        ("TDLS setup rsp timer expires for peer:")) ;
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
                     ("%02X, %02X, %02X,%02X, %02X, %02X"),
-=======
-                                ("TDLS setup rsp timer expires \n")) ;
-            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
-                       ("TDLS setup rsp timer expires for peer:\n")) ;
-            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
-                    ("%02X, %02X, %02X,%02X, %02X, %02X\n"), 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                     peerMac[0],
                                     peerMac[1],
                                     peerMac[2],
@@ -1798,19 +1722,11 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             tLimTdlsLinkSetupPeer *setupPeer = NULL ;
 
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR,
-<<<<<<< HEAD
                                 ("TDLS setup CNF timer expires ")) ;
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
                       ("TDLS setup CNF timer expires for peer:")) ;
             VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
                          ("%02X, %02X, %02X,%02X, %02X, %02X"),
-=======
-                                ("TDLS setup CNF timer expires \n")) ;
-            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
-                      ("TDLS setup CNF timer expires for peer:\n")) ;
-            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
-                         ("%02X, %02X, %02X,%02X, %02X, %02X\n"), 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                     peerMac[0],
                                     peerMac[1],
                                     peerMac[2],
@@ -1963,11 +1879,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                // sending beacon filtering information down to HAL
                if (limSendBeaconFilterInfo(pMac, psessionEntry) != eSIR_SUCCESS)
                {
-<<<<<<< HEAD
                   limLog(pMac, LOGE, FL("Fail to send Beacon Filter Info "));
-=======
-                  limLog(pMac, LOGE, FL("Fail to send Beacon Filter Info \n"));
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                }
             }
             vos_mem_free((v_VOID_t *)(limMsg->bodyptr));

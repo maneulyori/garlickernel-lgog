@@ -1410,11 +1410,7 @@ tANI_U8 *pBody;
     PELOG2(sirDumpBuf( pMac, SIR_DBG_MODULE_ID, LOG2, pBody, frameLen );)
   }
 
-<<<<<<< HEAD
   limLog( pMac, LOGE,
-=======
-  limLog( pMac, LOGW,
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       FL( "ADDBA Rsp from STA with AID %d, tid = %d, status = %d" ),
       aid, frmAddBARsp.AddBAParameterSet.tid, frmAddBARsp.Status.status);
 
@@ -1423,11 +1419,7 @@ tANI_U8 *pBody;
   if(eSIR_SUCCESS != limSearchAndDeleteDialogueToken(pMac, frmAddBARsp.DialogToken.token,
         pSta->assocId, frmAddBARsp.AddBAParameterSet.tid))
   {
-<<<<<<< HEAD
       PELOGW(limLog(pMac, LOGE, FL("dialogueToken in received addBARsp did not match with outstanding requests"));)
-=======
-      PELOGW(limLog(pMac, LOGW, FL("dialogueToken in received addBARsp did not match with outstanding requests"));)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return;
   }
 
@@ -2079,7 +2071,6 @@ limProcessActionFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo,tpPESession ps
         }
         break;
 #endif
-<<<<<<< HEAD
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
         case SIR_MAC_ACTION_VENDOR_SPECIFIC_CATEGORY:
             {
@@ -2118,8 +2109,6 @@ limProcessActionFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo,tpPESession ps
            }
            break;
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     case SIR_MAC_ACTION_PUBLIC_USAGE:
         switch(pActionHdr->actionID) {
         case SIR_MAC_ACTION_VENDOR_SPECIFIC:

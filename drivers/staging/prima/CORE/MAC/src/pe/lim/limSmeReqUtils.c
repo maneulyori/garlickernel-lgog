@@ -376,11 +376,7 @@ limSetRSNieWPAiefromSmeStartBSSReqMessage(tpAniSirGlobal pMac,
                 (SIR_MAC_WPA_OUI != val)))
             {
                 limLog(pMac, LOGE,
-<<<<<<< HEAD
                   FL("WPA IE len %d not [%d,%d] OR data 0x%x not 0x%x"),
-=======
-                  FL("WPA IE len %d not [%d,%d] OR data 0x%x not 0x%x\n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                   pRSNie->rsnIEdata[1], SIR_MAC_RSN_IE_MIN_LENGTH,
                   SIR_MAC_RSN_IE_MAX_LENGTH, val, SIR_MAC_WPA_OUI);
 

@@ -270,15 +270,11 @@ static void csrNeighborRoamTriggerHandoff(tpAniSirGlobal pMac,
                                           tpCsrNeighborRoamControlInfo pNeighborRoamInfo)
 {
 #ifdef WLAN_FEATURE_VOWIFI_11R
-<<<<<<< HEAD
     if ((pNeighborRoamInfo->is11rAssoc)
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
      && !csrRoamIsRoamOffloadScanEnabled(pMac)
 #endif
     )
-=======
-    if (pNeighborRoamInfo->is11rAssoc)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     {
         if (eCSR_NEIGHBOR_ROAM_STATE_REPORT_SCAN == pNeighborRoamInfo->neighborRoamState)
         {
@@ -294,15 +290,11 @@ static void csrNeighborRoamTriggerHandoff(tpAniSirGlobal pMac,
 #endif
 
 #ifdef FEATURE_WLAN_CCX
-<<<<<<< HEAD
         if ((pNeighborRoamInfo->isCCXAssoc)
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
         && !csrRoamIsRoamOffloadScanEnabled(pMac)
 #endif
         )
-=======
-        if (pNeighborRoamInfo->isCCXAssoc)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         {
             if (eCSR_NEIGHBOR_ROAM_STATE_REPORT_SCAN == pNeighborRoamInfo->neighborRoamState)
             {
@@ -319,15 +311,11 @@ static void csrNeighborRoamTriggerHandoff(tpAniSirGlobal pMac,
 #ifdef FEATURE_WLAN_LFR
             if (csrRoamIsFastRoamEnabled(pMac, CSR_SESSION_ID_INVALID))
             {
-<<<<<<< HEAD
                 if ((eCSR_NEIGHBOR_ROAM_STATE_REPORT_SCAN == pNeighborRoamInfo->neighborRoamState)
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
                 || csrRoamIsRoamOffloadScanEnabled(pMac)
 #endif
                 )
-=======
-                if (eCSR_NEIGHBOR_ROAM_STATE_REPORT_SCAN == pNeighborRoamInfo->neighborRoamState)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 {
                     csrNeighborRoamIssuePreauthReq(pMac);
                 }
@@ -1083,7 +1071,6 @@ eHalStatus csrNeighborRoamPreauthRspHandler(tpAniSirGlobal pMac, tSirRetStatus l
         if (eHAL_STATUS_SUCCESS == csrNeighborRoamIssuePreauthReq(pMac))
         goto DEQ_PREAUTH; 
 
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
         if (csrRoamIsRoamOffloadScanEnabled(pMac))
         {
@@ -1117,32 +1104,6 @@ eHalStatus csrNeighborRoamPreauthRspHandler(tpAniSirGlobal pMac, tSirRetStatus l
           {
              smsLog(pMac, LOGE, FL("Neighbor results refresh timer start failed with status %d"), status);
           }
-=======
-        CSR_NEIGHBOR_ROAM_STATE_TRANSITION(eCSR_NEIGHBOR_ROAM_STATE_REPORT_SCAN);
-
-        /* Register Neighbor Lookup threshold callback with TL for UP event now */
-        NEIGHBOR_ROAM_DEBUG(pMac, LOGE, FL("No more pre-auth candidates-"
-                "register UP indication with TL. RSSI = %d,"), NEIGHBOR_ROAM_LOOKUP_UP_THRESHOLD * (-1));
-
-        vosStatus = WLANTL_RegRSSIIndicationCB(pMac->roam.gVosContext,
-                            (v_S7_t)NEIGHBOR_ROAM_LOOKUP_UP_THRESHOLD * (-1),
-                            WLANTL_HO_THRESHOLD_UP,
-                            csrNeighborRoamNeighborLookupUPCallback,
-                            VOS_MODULE_ID_SME, pMac);
-        if(!VOS_IS_STATUS_SUCCESS(vosStatus))
-        {
-            //err msg
-            smsLog(pMac, LOGE, FL(" Couldn't register csrNeighborRoamNeighborLookupCallback UP event with TL: Status = %d"), status);
-        }
-
-        /* Start the neighbor results refresh timer and transition to REPORT_SCAN state to perform scan again */
-        status = palTimerStart(pMac->hHdd, pNeighborRoamInfo->neighborResultsRefreshTimer, 
-                        pNeighborRoamInfo->cfgParams.neighborResultsRefreshPeriod * PAL_TIMER_TO_MS_UNIT, 
-                        eANI_BOOLEAN_FALSE);
-        if (eHAL_STATUS_SUCCESS != status)
-        {
-            smsLog(pMac, LOGE, FL("Neighbor results refresh timer start failed with status %d"), status);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     }
@@ -1191,13 +1152,11 @@ eHalStatus csrNeighborRoamPrepareScanProfileFilter(tpAniSirGlobal pMac, tCsrScan
         smsLog(pMac, LOGE, FL("Scan Filter SSID mem alloc failed"));
         return eHAL_STATUS_FAILED_ALLOC;
     }
-    vos_mem_zero(pScanFilter->SSIDs.SSIDList, sizeof(tCsrSSIDInfo));
     pScanFilter->SSIDs.SSIDList->handoffPermitted = 1;
     pScanFilter->SSIDs.SSIDList->ssidHidden = 0;
     pScanFilter->SSIDs.SSIDList->SSID.length =  pCurProfile->SSID.length;
     vos_mem_copy((void *)pScanFilter->SSIDs.SSIDList->SSID.ssId, (void *)pCurProfile->SSID.ssId, pCurProfile->SSID.length); 
 
-<<<<<<< HEAD
     NEIGHBOR_ROAM_DEBUG(pMac, LOGE, FL("Filtering from scan results for"
                         "SSID = 0x%08lx%08lx%08lx%08lx%08lx%08lx%08lx%08lx\nSSID Length = %d"),
                         pScanFilter->SSIDs.SSIDList->SSID.ssId[0],
@@ -1209,10 +1168,6 @@ eHalStatus csrNeighborRoamPrepareScanProfileFilter(tpAniSirGlobal pMac, tCsrScan
                         pScanFilter->SSIDs.SSIDList->SSID.ssId[24],
                         pScanFilter->SSIDs.SSIDList->SSID.ssId[28],
                         pScanFilter->SSIDs.SSIDList->SSID.length);
-=======
-    NEIGHBOR_ROAM_DEBUG(pMac, LOGE, FL("Filtering for SSID %s from scan results.. SSID Length = %d"),
-                        pScanFilter->SSIDs.SSIDList->SSID.ssId, pScanFilter->SSIDs.SSIDList->SSID.length);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pScanFilter->authType.numEntries = 1;
     pScanFilter->authType.authType[0] = pCurProfile->AuthType;
 
@@ -1417,7 +1372,6 @@ static tANI_BOOLEAN csrNeighborRoamProcessScanResults(tpAniSirGlobal pMac,
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
         if (!csrRoamIsRoamOffloadScanEnabled(pMac))
         {
-<<<<<<< HEAD
 #endif
           if (pNeighborRoamInfo->isCCXAssoc)
           {
@@ -1465,41 +1419,6 @@ static tANI_BOOLEAN csrNeighborRoamProcessScanResults(tpAniSirGlobal pMac,
               }
           }
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
-=======
-            if (pNeighborRoamInfo->isVOAdmitted)
-            {
-                smsLog(pMac, LOG1, FL("New AP has %x BW available"), (unsigned int)pScanResult->BssDescriptor.QBSSLoad_avail);
-                smsLog(pMac, LOG1, FL("We need %x BW available"),(unsigned int)pNeighborRoamInfo->MinQBssLoadRequired);
-                if (pScanResult->BssDescriptor.QBSSLoad_avail < pNeighborRoamInfo->MinQBssLoadRequired) 
-                {
-                    VOS_TRACE (VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, 
-                        "[INFOLOG]BSSID : %02x:%02x:%02x:%02x:%02x:%02x has no bandwidth ignoring..not adding to roam list",
-                        pScanResult->BssDescriptor.bssId[0],
-                        pScanResult->BssDescriptor.bssId[1],
-                        pScanResult->BssDescriptor.bssId[2],
-                        pScanResult->BssDescriptor.bssId[3],
-                        pScanResult->BssDescriptor.bssId[4],
-                        pScanResult->BssDescriptor.bssId[5]);
-                    continue;
-                }
-            }
-        }
-        else
-        {
-            smsLog(pMac, LOGE, FL("No QBss %x %x"), (unsigned int)pScanResult->BssDescriptor.QBSSLoad_avail, (unsigned int)pScanResult->BssDescriptor.QBSSLoad_present);
-            if (pNeighborRoamInfo->isVOAdmitted)
-            {
-                VOS_TRACE (VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO, 
-                    "[INFOLOG]BSSID : %02x:%02x:%02x:%02x:%02x:%02x has no QBSSLoad IE, ignoring..not adding to roam list",
-                    pScanResult->BssDescriptor.bssId[0],
-                    pScanResult->BssDescriptor.bssId[1],
-                    pScanResult->BssDescriptor.bssId[2],
-                    pScanResult->BssDescriptor.bssId[3],
-                    pScanResult->BssDescriptor.bssId[4],
-                    pScanResult->BssDescriptor.bssId[5]);
-                continue;
-            }
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
 #endif
 #endif /* FEATURE_WLAN_CCX */
@@ -1555,15 +1474,11 @@ static tANI_BOOLEAN csrNeighborRoamProcessScanResults(tpAniSirGlobal pMac,
         csrLLInsertTail(&pNeighborRoamInfo->roamableAPList, &pBssInfo->List, LL_ACCESS_LOCK);
 
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
-<<<<<<< HEAD
         if ((abs(abs(CurrAPRssi) - abs(pScanResult->BssDescriptor.rssi)) >= immediateRoamRssiDiff)
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
             && !csrRoamIsRoamOffloadScanEnabled(pMac)
 #endif
         )
-=======
-        if (abs(abs(CurrAPRssi) - abs(pScanResult->BssDescriptor.rssi)) >= immediateRoamRssiDiff)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         {
             VOS_TRACE (VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
                        "%s: [INFOLOG] potential candidate to roam immediately (diff=%d, expected=%d)", 
@@ -1571,7 +1486,6 @@ static tANI_BOOLEAN csrNeighborRoamProcessScanResults(tpAniSirGlobal pMac,
                        immediateRoamRssiDiff);
             roamNow = eANI_BOOLEAN_TRUE;
         }
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
         /* If we are here means, FW already found candidates to roam, so we are
            good to go with pre-auth */
@@ -1580,8 +1494,6 @@ static tANI_BOOLEAN csrNeighborRoamProcessScanResults(tpAniSirGlobal pMac,
             roamNow = eANI_BOOLEAN_TRUE;
         }
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
     }
 
@@ -1673,31 +1585,20 @@ static VOS_STATUS csrNeighborRoamHandleEmptyScanResult(tpAniSirGlobal pMac)
     {
         pNeighborRoamInfo->uEmptyScanCount = eFifthEmptyScan;
     }
-<<<<<<< HEAD
     if (((0 != pNeighborRoamInfo->cfgParams.channelInfo.numOfChannels) ||
          (abs(pNeighborRoamInfo->lookupDOWNRssi) >
          abs(pNeighborRoamInfo->cfgParams.neighborReassocThreshold))) &&
-=======
-    if ((abs(pNeighborRoamInfo->lookupDOWNRssi) >
-         abs(pNeighborRoamInfo->cfgParams.neighborReassocThreshold)) &&
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         ((pNeighborRoamInfo->uEmptyScanCount == eSecondEmptyScan) ||
          (pNeighborRoamInfo->uEmptyScanCount == eFourthEmptyScan)))
     {
         /*
          * If the scan was triggered due to lookupDOWNRssi > reassoc threshold,
          * then it would be a contiguous scan on all valid non-DFS channels.
-<<<<<<< HEAD
          * If channels are configured in INI, then only those channels need
          * to be scanned.
          * In either of these modes, there is no need to trigger an immediate
          * scan upon empty scan results for the second and fourth time (which
          * would be equivalent to scanning on channels in non-occupied list).
-=======
-         * In this mode, there is no need to trigger an immediate scan upon
-         * empty scan results for the second and fourth time (which would
-         * be equivalent to scanning on channels in non-occupied list).
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
          * Incrementing uEmptyScanCount will correspond to skipping this step.
          * NOTE: double increment of uEmptyScanCount corresponds to completion
          * of scans on all valid channels.
@@ -1797,11 +1698,7 @@ static VOS_STATUS csrNeighborRoamHandleEmptyScanResult(tpAniSirGlobal pMac)
                         (pNeighborRoamInfo->cfgParams.emptyScanRefreshPeriod));
             }
         }
-<<<<<<< HEAD
         else if (eThirdEmptyScan == pNeighborRoamInfo->uEmptyScanCount)
-=======
-        else
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         {
             /* Start neighbor scan results refresh timer */
             if (eHAL_STATUS_SUCCESS !=
@@ -1972,7 +1869,6 @@ static eHalStatus csrNeighborRoamProcessScanComplete (tpAniSirGlobal pMac)
 
             if (roamNow)
             {
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
                 if(!csrRoamIsRoamOffloadScanEnabled(pMac))
                 {
@@ -1995,23 +1891,6 @@ static eHalStatus csrNeighborRoamProcessScanComplete (tpAniSirGlobal pMac)
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
                 }
 #endif
-=======
-                NEIGHBOR_ROAM_DEBUG(pMac, LOG2,
-                    FL("Immediate roam-deregister UP indication. RSSI = %d"),
-                    NEIGHBOR_ROAM_LOOKUP_UP_THRESHOLD * (-1));
-
-                vosStatus = WLANTL_DeregRSSIIndicationCB(pMac->roam.gVosContext,
-                        (v_S7_t)NEIGHBOR_ROAM_LOOKUP_UP_THRESHOLD * (-1),
-                        WLANTL_HO_THRESHOLD_UP,
-                        csrNeighborRoamNeighborLookupUPCallback,
-                        VOS_MODULE_ID_SME);
-                
-                if(!VOS_IS_STATUS_SUCCESS(vosStatus))
-                {
-                    smsLog(pMac, LOGW,
-                        FL("Couldn't deregister lookup UP callback with TL: Status = %d"), vosStatus);
-                }
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
                 csrNeighborRoamTriggerHandoff(pMac, pNeighborRoamInfo);
                 return eHAL_STATUS_SUCCESS;
@@ -2047,7 +1926,6 @@ static eHalStatus csrNeighborRoamProcessScanComplete (tpAniSirGlobal pMac)
  
         }
 
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 if (csrRoamIsRoamOffloadScanEnabled(pMac))
    {
@@ -2060,8 +1938,6 @@ if (csrRoamIsRoamOffloadScanEnabled(pMac))
     }
    }
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return eHAL_STATUS_SUCCESS;
 
 }
@@ -2093,7 +1969,6 @@ static eHalStatus csrNeighborRoamScanRequestCallback(tHalHandle halHandle, void 
     tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
     tANI_U8                         currentChanIndex;
     eHalStatus              hstatus;
-<<<<<<< HEAD
 #ifdef FEATURE_WLAN_LFR
     tANI_U32 sessionId = CSR_SESSION_ID_INVALID;
 
@@ -2108,20 +1983,14 @@ static eHalStatus csrNeighborRoamScanRequestCallback(tHalHandle halHandle, void 
         }
     }
 #endif
-=======
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pMac->roam.neighborRoamInfo.scanRspPending = eANI_BOOLEAN_FALSE;
     
     /* This can happen when we receive a UP event from TL in any of the scan states. Silently ignore it */
     if (eCSR_NEIGHBOR_ROAM_STATE_CONNECTED == pNeighborRoamInfo->neighborRoamState)
     {
         smsLog(pMac, LOGE, FL("Received in CONNECTED state. Must be because a UP event from TL after issuing scan request. Ignore it"));
-<<<<<<< HEAD
         if (NULL != pContext)
            vos_mem_free(pContext);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eHAL_STATUS_SUCCESS;
     }
 
@@ -2136,11 +2005,8 @@ static eHalStatus csrNeighborRoamScanRequestCallback(tHalHandle halHandle, void 
     else
     {
         smsLog(pMac, LOG1, FL("Received during clean-up. Silently ignore scan completion event."));
-<<<<<<< HEAD
         if (NULL != pContext)
            vos_mem_free(pContext);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eHAL_STATUS_SUCCESS;
     }
 
@@ -2158,11 +2024,8 @@ static eHalStatus csrNeighborRoamScanRequestCallback(tHalHandle halHandle, void 
         if (eHAL_STATUS_SUCCESS != hstatus)
         {
             smsLog(pMac, LOGE, FL("Neighbor scan process complete failed with status %d"), hstatus);
-<<<<<<< HEAD
             if (NULL != pContext)
                 vos_mem_free(pContext);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return eHAL_STATUS_FAILURE;
         }
     }
@@ -2181,11 +2044,8 @@ static eHalStatus csrNeighborRoamScanRequestCallback(tHalHandle halHandle, void 
             vos_mem_free(pNeighborRoamInfo->roamChannelInfo.currentChannelListInfo.ChannelList);
             pNeighborRoamInfo->roamChannelInfo.currentChannelListInfo.ChannelList = NULL;
             pNeighborRoamInfo->roamChannelInfo.currentChannelListInfo.numOfChannels = 0;
-<<<<<<< HEAD
             if (NULL != pContext)
                 vos_mem_free(pContext);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return eHAL_STATUS_FAILURE;
         }
     }
@@ -2195,7 +2055,6 @@ static eHalStatus csrNeighborRoamScanRequestCallback(tHalHandle halHandle, void 
     return eHAL_STATUS_SUCCESS;
 }
 
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 /* ---------------------------------------------------------------------------
 
@@ -2244,8 +2103,6 @@ static eHalStatus csrNeighborRoamScanResultRequestCallback(tHalHandle halHandle,
 }
 #endif //WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #ifdef FEATURE_WLAN_LFR
 static eHalStatus csrNeighborRoamContiguousScanRequestCallback(tHalHandle halHandle, 
         void *pContext, tANI_U32 scanId, eCsrScanStatus status)
@@ -2253,7 +2110,6 @@ static eHalStatus csrNeighborRoamContiguousScanRequestCallback(tHalHandle halHan
     tpAniSirGlobal                  pMac = (tpAniSirGlobal) halHandle;
     tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
     eHalStatus hstatus = eHAL_STATUS_SUCCESS;
-<<<<<<< HEAD
     tANI_U32 sessionId = CSR_SESSION_ID_INVALID;
 
     if (NULL != pContext)
@@ -2266,8 +2122,6 @@ static eHalStatus csrNeighborRoamContiguousScanRequestCallback(tHalHandle halHan
             return eHAL_STATUS_SUCCESS;
         }
     }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     pMac->roam.neighborRoamInfo.scanRspPending = eANI_BOOLEAN_FALSE;
     
@@ -2275,22 +2129,16 @@ static eHalStatus csrNeighborRoamContiguousScanRequestCallback(tHalHandle halHan
     if (eCSR_NEIGHBOR_ROAM_STATE_CONNECTED == pNeighborRoamInfo->neighborRoamState)
     {
         smsLog(pMac, LOGE, FL("Received in CONNECTED state. Must be because a UP event from TL after issuing scan request. Ignore it"));
-<<<<<<< HEAD
         if (NULL != pContext)
            vos_mem_free(pContext);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eHAL_STATUS_SUCCESS;
     }
 
     if (eCSR_NEIGHBOR_ROAM_STATE_INIT == pNeighborRoamInfo->neighborRoamState)
     {
         smsLog(pMac, LOGE, FL("Received in INIT state. Must have disconnected. Ignore it"));
-<<<<<<< HEAD
         if (NULL != pContext)
            vos_mem_free(pContext);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         return eHAL_STATUS_SUCCESS;
     }
 
@@ -2302,12 +2150,9 @@ static eHalStatus csrNeighborRoamContiguousScanRequestCallback(tHalHandle halHan
         smsLog(pMac, LOGE, FL("Neighbor scan process complete failed with status %d"), hstatus);
     }
     
-<<<<<<< HEAD
     if (NULL != pContext)
         vos_mem_free(pContext);
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return hstatus;
 }
 #endif
@@ -2327,10 +2172,7 @@ static eHalStatus csrNeighborRoamContiguousScanRequestCallback(tHalHandle halHan
 ---------------------------------------------------------------------------*/
 eHalStatus csrNeighborRoamIssueBgScanRequest(tpAniSirGlobal pMac, 
                                              tCsrBGScanRequest *pBgScanParams,
-<<<<<<< HEAD
                                              tANI_U32 sessionId,
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                              csrScanCompleteCallback callbackfn)
 {
     eHalStatus status = eHAL_STATUS_SUCCESS;
@@ -2387,11 +2229,7 @@ eHalStatus csrNeighborRoamIssueBgScanRequest(tpAniSirGlobal pMac,
     }
     *((tANI_U32*)userData) = sessionId;
     status = csrScanRequest(pMac, CSR_SESSION_ID_INVALID, &scanReq,
-<<<<<<< HEAD
                         &scanId, callbackfn, (void *) userData);
-=======
-                        &scanId, callbackfn, NULL);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     if (eHAL_STATUS_SUCCESS != status)
     {
         smsLog(pMac, LOGE, FL("CSR Scan Request failed with status %d"), status);
@@ -2408,25 +2246,6 @@ eHalStatus csrNeighborRoamIssueBgScanRequest(tpAniSirGlobal pMac,
                 pMac->roam.neighborRoamInfo.roamChannelInfo.currentChanIndex);
 
     return status;
-<<<<<<< HEAD
-=======
-}
-
-static void csrNeighborRoamFillNonChannelBgScanParams (tpAniSirGlobal pMac, 
-                                                       tpCsrBGScanRequest bgScanParams)
-{
-    tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
-    tANI_U8             broadcastBssid[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-
-    vos_mem_copy(bgScanParams->bssid, broadcastBssid, sizeof(tCsrBssid));
-    bgScanParams->SSID.length = pMac->roam.roamSession[pNeighborRoamInfo->csrSessionId].connectedProfile.SSID.length;
-    vos_mem_copy(bgScanParams->SSID.ssId, 
-        pMac->roam.roamSession[pNeighborRoamInfo->csrSessionId].connectedProfile.SSID.ssId,
-        pMac->roam.roamSession[pNeighborRoamInfo->csrSessionId].connectedProfile.SSID.length);
-
-    bgScanParams->minChnTime = pNeighborRoamInfo->cfgParams.minChannelScanTime;
-    bgScanParams->maxChnTime = pNeighborRoamInfo->cfgParams.maxChannelScanTime;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }
 
 static void csrNeighborRoamFillNonChannelBgScanParams (tpAniSirGlobal pMac, 
@@ -2501,13 +2320,8 @@ eHalStatus csrNeighborRoamPerformBgScan(tpAniSirGlobal pMac, tANI_U32 sessionId)
    
     csrNeighborRoamFillNonChannelBgScanParams(pMac, &bgScanParams);
 
-<<<<<<< HEAD
     status = csrNeighborRoamIssueBgScanRequest(pMac, &bgScanParams,
                                                sessionId, csrNeighborRoamScanRequestCallback);
-=======
-    status = csrNeighborRoamIssueBgScanRequest(pMac, &bgScanParams, 
-                csrNeighborRoamScanRequestCallback);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     if (eHAL_STATUS_SUCCESS != status)
     {
         smsLog(pMac, LOGE, FL("Issue of BG Scan request failed: Status = %d"), status);
@@ -2539,89 +2353,8 @@ eHalStatus csrNeighborRoamPerformBgScan(tpAniSirGlobal pMac, tANI_U32 sessionId)
         csrNeighborRoamScanRequestCallback(pMac, NULL, 0, eCSR_SCAN_FAILURE);
     }
 
-<<<<<<< HEAD
-=======
     return status;
 }
-
-#ifdef FEATURE_WLAN_LFR
-eHalStatus csrNeighborRoamPerformContiguousBgScan(tpAniSirGlobal pMac)
-{
-    eHalStatus      status = eHAL_STATUS_SUCCESS;
-    tCsrBGScanRequest   bgScanParams;
-    int numOfChannels = 0, i = 0;
-    tANI_U8   *channelList = NULL;
-    tANI_U8   *pInChannelList = NULL;
-    tANI_U8   tmpChannelList[WNI_CFG_VALID_CHANNEL_LIST_LEN];
-
-    palZeroMemory(pMac->hHdd, &bgScanParams, sizeof(tCsrBGScanRequest));
-
-    /* Contiguously scan all channels from valid list */
-    NEIGHBOR_ROAM_DEBUG(pMac, LOG2, "%s: get valid channel list", __func__);
-
-    if (NULL != pMac->roam.neighborRoamInfo.cfgParams.countryChannelInfo.countryValidChannelList.ChannelList)
-    {
-        /* this list is filled only if the country code is set to KR */
-        numOfChannels = pMac->roam.neighborRoamInfo.cfgParams.countryChannelInfo.countryValidChannelList.numOfChannels;
-        pInChannelList = pMac->roam.neighborRoamInfo.cfgParams.countryChannelInfo.countryValidChannelList.ChannelList;
-    }
-    else
-    {
-        numOfChannels = sizeof(pMac->roam.validChannelList);
-
-        if(!HAL_STATUS_SUCCESS(csrGetCfgValidChannels(pMac,
-                              (tANI_U8 *)pMac->roam.validChannelList,
-                              (tANI_U32 *) &numOfChannels)))
-        {
-            smsLog(pMac, LOGE, FL("Could not get valid channel list"));
-            return eHAL_STATUS_FAILURE;
-        }
-        pInChannelList = pMac->roam.validChannelList;
-    }
-
-    if (CSR_IS_ROAM_INTRA_BAND_ENABLED(pMac))
-    {
-        csrNeighborRoamChannelsFilterByCurrentBand(
-                             pMac,
-                             pInChannelList,
-                             numOfChannels,
-                             tmpChannelList,
-                             &numOfChannels);
-        pInChannelList = tmpChannelList;
-    }
-
-    channelList = vos_mem_malloc( numOfChannels );
-    if( NULL == channelList )
-    {
-        smsLog(pMac, LOGE, FL("could not allocate memory for channelList"));
-        return eHAL_STATUS_FAILURE;
-    }
-    vos_mem_copy(channelList, (tANI_U8 *)pInChannelList,
-                 numOfChannels * sizeof(tANI_U8));
-
-    bgScanParams.ChannelInfo.numOfChannels = numOfChannels;
-    bgScanParams.ChannelInfo.ChannelList = channelList;
-    for (i = 0; i < numOfChannels; i++)
-    {
-        NEIGHBOR_ROAM_DEBUG(pMac, LOGW, "%s: valid channel list = %d",
-                __func__, bgScanParams.ChannelInfo.ChannelList[i]);
-    }
-    csrNeighborRoamFillNonChannelBgScanParams(pMac, &bgScanParams);
-
-    status = csrNeighborRoamIssueBgScanRequest(pMac, &bgScanParams,
-                csrNeighborRoamContiguousScanRequestCallback);
-
-    vos_mem_free( channelList );
-
-    if (eHAL_STATUS_SUCCESS != status)
-    {
-        smsLog(pMac, LOGE, FL("Issue of BG Scan request failed: Status = %d"), status);
-    }
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
-    return status;
-}
-#endif
 
 #ifdef FEATURE_WLAN_LFR
 eHalStatus csrNeighborRoamPerformContiguousBgScan(tpAniSirGlobal pMac, tANI_U32 sessionId)
@@ -2924,7 +2657,6 @@ VOS_STATUS csrNeighborRoamChannelsFilterByCurrentBand(
     int numChannels = 0;
     tANI_U8   currAPoperationChannel = pMac->roam.neighborRoamInfo.currAPoperationChannel;
     // Check for NULL pointer
-<<<<<<< HEAD
     if (!pInputChannelList) return VOS_STATUS_E_INVAL;
 
     // Check for NULL pointer
@@ -2937,13 +2669,6 @@ VOS_STATUS csrNeighborRoamChannelsFilterByCurrentBand(
              __func__, inputNumOfChannels);
          return VOS_STATUS_E_INVAL;
     }
-=======
-    if (!pInputChannelList) return eHAL_STATUS_E_NULL_VALUE;
-
-    // Check for NULL pointer
-    if (!pOutputChannelList) return eHAL_STATUS_E_NULL_VALUE;
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     for (i = 0; i < inputNumOfChannels; i++)
     {
         if (GetRFBand(currAPoperationChannel) == GetRFBand(pInputChannelList[i]))
@@ -2956,11 +2681,7 @@ VOS_STATUS csrNeighborRoamChannelsFilterByCurrentBand(
     // Return final number of channels
     *pMergedOutputNumOfChannels = numChannels;
 
-<<<<<<< HEAD
     return VOS_STATUS_SUCCESS;
-=======
-    return eHAL_STATUS_SUCCESS;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }
 
 /* ---------------------------------------------------------------------------
@@ -3518,15 +3239,11 @@ VOS_STATUS csrNeighborRoamTransitToCFGChanScan(tpAniSirGlobal pMac)
                              channelList,
                              &numOfChannels);
             }
-<<<<<<< HEAD
             if(numOfChannels > WNI_CFG_VALID_CHANNEL_LIST_LEN)
             {
                 smsLog(pMac, LOGE, FL("Received wrong number of Channel list"));
                 return VOS_STATUS_E_INVAL;
             }
-=======
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             currChannelListInfo->ChannelList =
                 vos_mem_malloc(numOfChannels*sizeof(tANI_U8));
             if (NULL == currChannelListInfo->ChannelList)
@@ -3534,10 +3251,6 @@ VOS_STATUS csrNeighborRoamTransitToCFGChanScan(tpAniSirGlobal pMac)
                 smsLog(pMac, LOGE, FL("Memory allocation for Channel list failed"));
                 return VOS_STATUS_E_RESOURCES;
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             vos_mem_copy(currChannelListInfo->ChannelList,
                   channelList, numOfChannels * sizeof(tANI_U8));
         } 
@@ -3564,21 +3277,12 @@ VOS_STATUS csrNeighborRoamTransitToCFGChanScan(tpAniSirGlobal pMac)
             /* We are about to start a fresh scan cycle, 
              * purge non-P2P results from the past */
             csrScanFlushSelectiveResult(pMac, VOS_FALSE);
-<<<<<<< HEAD
 
             csrNeighborRoamPerformContiguousBgScan(pMac, sessionId);
 
             /* Transition to CFG_CHAN_LIST_SCAN */
             CSR_NEIGHBOR_ROAM_STATE_TRANSITION(eCSR_NEIGHBOR_ROAM_STATE_CFG_CHAN_LIST_SCAN);
 
-=======
-    
-            csrNeighborRoamPerformContiguousBgScan(pMac);
-
-            /* Transition to CFG_CHAN_LIST_SCAN */
-            CSR_NEIGHBOR_ROAM_STATE_TRANSITION(eCSR_NEIGHBOR_ROAM_STATE_CFG_CHAN_LIST_SCAN);
-            
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             return VOS_STATUS_SUCCESS;
         }
 #endif
@@ -3615,13 +3319,10 @@ VOS_STATUS csrNeighborRoamTransitToCFGChanScan(tpAniSirGlobal pMac)
                 }
                 else
                 {
-<<<<<<< HEAD
                     if (numOfChannels > WNI_CFG_VALID_CHANNEL_LIST_LEN)
                     {
                         numOfChannels = WNI_CFG_VALID_CHANNEL_LIST_LEN;
                     }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     vos_mem_copy(channelList,
                             pMac->scan.occupiedChannels.channelList,
                             numOfChannels * sizeof(tANI_U8));
@@ -3635,13 +3336,10 @@ VOS_STATUS csrNeighborRoamTransitToCFGChanScan(tpAniSirGlobal pMac)
                     smsLog(pMac, LOGE, FL("Memory allocation for Channel list failed"));
                     return VOS_STATUS_E_RESOURCES;
                 }
-<<<<<<< HEAD
                 if (numOfChannels > WNI_CFG_VALID_CHANNEL_LIST_LEN)
                 {
                     numOfChannels = WNI_CFG_VALID_CHANNEL_LIST_LEN;
                 }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 vos_mem_copy(currChannelListInfo->ChannelList,
                         channelList,
                         numOfChannels * sizeof(tANI_U8));
@@ -3707,13 +3405,10 @@ VOS_STATUS csrNeighborRoamTransitToCFGChanScan(tpAniSirGlobal pMac)
             vos_mem_copy(currChannelListInfo->ChannelList,
                     channelList, numOfChannels * sizeof(tANI_U8));
 #else
-<<<<<<< HEAD
             if (numOfChannels > WNI_CFG_VALID_CHANNEL_LIST_LEN)
             {
                 numOfChannels = WNI_CFG_VALID_CHANNEL_LIST_LEN;
             }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             vos_mem_copy(currChannelListInfo->ChannelList,
                     (tANI_U8 *)pMac->roam.validChannelList,
                     numOfChannels * sizeof(tANI_U8));
@@ -4021,14 +3716,8 @@ eHalStatus csrNeighborRoamIndicateDisconnect(tpAniSirGlobal pMac, tANI_U8 sessio
 #endif
     tCsrRoamSession *pSession = CSR_GET_SESSION( pMac, sessionId);
 
-<<<<<<< HEAD
     smsLog(pMac, LOGE, FL("Disconnect indication on session %d in state %d"),
            sessionId, pNeighborRoamInfo->neighborRoamState);
-=======
-    smsLog(pMac, LOGE, FL("Disconnect indication on session %d in state %d (sub-state %d)"),
-           sessionId, pNeighborRoamInfo->neighborRoamState,
-           pMac->roam.curSubState[sessionId]);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
  
 #ifdef FEATURE_WLAN_LFR
     /*Free the current previous profile and move the current profile to prev profile.*/
@@ -4104,7 +3793,6 @@ eHalStatus csrNeighborRoamIndicateDisconnect(tpAniSirGlobal pMac, tANI_U8 sessio
         case eCSR_NEIGHBOR_ROAM_STATE_CONNECTED:
             CSR_NEIGHBOR_ROAM_STATE_TRANSITION(eCSR_NEIGHBOR_ROAM_STATE_INIT)
             csrNeighborRoamResetConnectedStateControlInfo(pMac);
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
             if(!pMac->roam.configParam.isRoamOffloadScanEnabled)
             {
@@ -4113,9 +3801,6 @@ eHalStatus csrNeighborRoamIndicateDisconnect(tpAniSirGlobal pMac, tANI_U8 sessio
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
             }
 #endif
-=======
-            csrNeighborRoamDeregAllRssiIndication(pMac);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             break;
 
         case eCSR_NEIGHBOR_ROAM_STATE_CFG_CHAN_LIST_SCAN:
@@ -4852,7 +4537,6 @@ tANI_BOOLEAN csrNeighborMiddleOfRoaming (tHalHandle hHal)
                        (eCSR_NEIGHBOR_ROAM_STATE_CFG_CHAN_LIST_SCAN == pMac->roam.neighborRoamInfo.neighborRoamState);
     return (val);
 }
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 /* ---------------------------------------------------------------------------
 
@@ -4893,7 +4577,4 @@ eHalStatus csrNeighborRoamCandidateFoundIndHdlr(tpAniSirGlobal pMac, void* pMsg)
     return status;
 }
 #endif //WLAN_FEATURE_ROAM_SCAN_OFFLOAD
-=======
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif /* WLAN_FEATURE_NEIGHBOR_ROAMING */

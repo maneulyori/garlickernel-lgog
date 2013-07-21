@@ -170,11 +170,7 @@ WLAN_BAPReadLocalVersionInfo
     }
 
 
-<<<<<<< HEAD
     VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %p", __func__,  btampHandle);
-=======
-    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %x", __func__,  btampHandle); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
     /* Format the command complete event to return... */ 
@@ -250,11 +246,7 @@ WLAN_BAPReadLocalSupportedCmds
     }
 
 
-<<<<<<< HEAD
     VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %p", __func__,  btampHandle);
-=======
-    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %x", __func__,  btampHandle); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
     /* Format the command complete event to return... */ 
@@ -320,11 +312,7 @@ WLAN_BAPReadBufferSize
     }
 
 
-<<<<<<< HEAD
     VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %p", __func__,  btampHandle);
-=======
-    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %x", __func__,  btampHandle); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
     /* Format the command complete event to return... */ 
@@ -394,11 +382,7 @@ WLAN_BAPReadDataBlockSize
    }
 
 
-<<<<<<< HEAD
    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %p", __func__,  btampHandle);
-=======
-   VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %x", __func__,  btampHandle); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
    /* Format the command complete event to return... */ 
@@ -559,11 +543,7 @@ WLAN_BAPDisconnect
     VOS_STATUS  vosStatus;
     /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
-<<<<<<< HEAD
     VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_FATAL, "%s: btampHandle value: %p", __func__,  btampHandle);
-=======
-    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_FATAL, "%s: btampHandle value: %x", __func__,  btampHandle); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     /* Validate params */ 
     if (btampHandle == NULL) 
@@ -629,11 +609,7 @@ v_BOOL_t WLAN_BAPSessionOn
    ptBtampContext btampContext = (ptBtampContext) btampHandle;
    /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
-<<<<<<< HEAD
    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %p", __func__,  btampHandle);
-=======
-   VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampHandle value: %x", __func__,  btampHandle); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    /* Validate params */ 
    if (btampHandle == NULL) 

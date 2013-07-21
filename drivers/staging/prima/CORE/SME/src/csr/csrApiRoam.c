@@ -953,12 +953,8 @@ static void initConfigParam(tpAniSirGlobal pMac)
     pMac->roam.configParam.nPassiveMaxChnTimeConc = CSR_PASSIVE_MAX_CHANNEL_TIME_CONC;
     pMac->roam.configParam.nPassiveMinChnTimeConc = CSR_PASSIVE_MIN_CHANNEL_TIME_CONC;
     pMac->roam.configParam.nRestTimeConc = CSR_REST_TIME_CONC;
-<<<<<<< HEAD
     pMac->roam.configParam.nNumStaChanCombinedConc = CSR_NUM_STA_CHAN_COMBINED_CONC;
     pMac->roam.configParam.nNumP2PChanCombinedConc = CSR_NUM_P2P_CHAN_COMBINED_CONC;
-=======
-    pMac->roam.configParam.nNumChanCombinedConc = CSR_NUM_CHAN_COMBINED_CONC;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
     pMac->roam.configParam.IsIdleScanEnabled = TRUE; //enable the idle scan by default
     pMac->roam.configParam.nTxPowerCap = CSR_MAX_TX_POWER;
@@ -1037,18 +1033,9 @@ void csr_SetRevision(tpAniSirGlobal pMac, tANI_U8 revision)
 }
 
 /*
-<<<<<<< HEAD
  This function flushes the roam scan cache
 */
 eHalStatus csrFlushBgScanRoamChannelList(tpAniSirGlobal pMac)
-=======
- This function flushes the roam scan cache and creates fresh cache
- based on the input channel list
-*/
-eHalStatus csrFlushAndCreateBgScanRoamChannelList(tpAniSirGlobal pMac,
-                                                  const tANI_U8 *pChannelList,
-                                                  const tANI_U8 numChannels)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 {
     eHalStatus status = eHAL_STATUS_SUCCESS;
     tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
@@ -1058,7 +1045,6 @@ eHalStatus csrFlushAndCreateBgScanRoamChannelList(tpAniSirGlobal pMac,
     {
         vos_mem_free(pNeighborRoamInfo->cfgParams.channelInfo.ChannelList);
         pNeighborRoamInfo->cfgParams.channelInfo.ChannelList = NULL;
-<<<<<<< HEAD
         pNeighborRoamInfo->cfgParams.channelInfo.numOfChannels = 0;
     }
     return status;
@@ -1077,9 +1063,6 @@ eHalStatus csrCreateBgScanRoamChannelList(tpAniSirGlobal pMac,
     eHalStatus status = eHAL_STATUS_SUCCESS;
     tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
 
-=======
-    }
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     pNeighborRoamInfo->cfgParams.channelInfo.numOfChannels = numChannels;
 
     pNeighborRoamInfo->cfgParams.channelInfo.ChannelList =
@@ -1137,12 +1120,8 @@ eHalStatus csrUpdateBgScanConfigIniChannelList(tpAniSirGlobal pMac,
                 ChannelList[outNumChannels++] = inPtr[i];
             }
         }
-<<<<<<< HEAD
         csrFlushBgScanRoamChannelList(pMac);
         csrCreateBgScanRoamChannelList(pMac, ChannelList, outNumChannels);
-=======
-        csrFlushAndCreateBgScanRoamChannelList(pMac, ChannelList, outNumChannels);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
     else if (eCSR_BAND_5G == eBand)
     {
@@ -1156,12 +1135,8 @@ eHalStatus csrUpdateBgScanConfigIniChannelList(tpAniSirGlobal pMac,
                ChannelList[outNumChannels++] = inPtr[i];
             }
         }
-<<<<<<< HEAD
         csrFlushBgScanRoamChannelList(pMac);
         csrCreateBgScanRoamChannelList(pMac, ChannelList, outNumChannels);
-=======
-        csrFlushAndCreateBgScanRoamChannelList(pMac, ChannelList, outNumChannels);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
     else if (eCSR_BAND_ALL == eBand)
     {
@@ -1173,12 +1148,8 @@ eHalStatus csrUpdateBgScanConfigIniChannelList(tpAniSirGlobal pMac,
                ChannelList[outNumChannels++] = inPtr[i];
             }
         }
-<<<<<<< HEAD
         csrFlushBgScanRoamChannelList(pMac);
         csrCreateBgScanRoamChannelList(pMac, ChannelList, outNumChannels);
-=======
-        csrFlushAndCreateBgScanRoamChannelList(pMac, ChannelList, outNumChannels);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
     else
     {
@@ -1198,11 +1169,7 @@ eHalStatus csrInitCountryValidChannelList(tpAniSirGlobal pMac,
 {
     eHalStatus status = eHAL_STATUS_SUCCESS;
     tpCsrNeighborRoamControlInfo    pNeighborRoamInfo = &pMac->roam.neighborRoamInfo;
-<<<<<<< HEAD
     tANI_U8 **pOutChannelList = &pNeighborRoamInfo->cfgParams.countryChannelInfo.countryValidChannelList.ChannelList;
-=======
-    tANI_U8 *pOutChannelList = pNeighborRoamInfo->cfgParams.countryChannelInfo.countryValidChannelList.ChannelList;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     tANI_U8 *pNumChannels = &pNeighborRoamInfo->cfgParams.countryChannelInfo.countryValidChannelList.numOfChannels;
     const tANI_U8 *pChannelList = NULL;
 
@@ -1224,38 +1191,19 @@ eHalStatus csrInitCountryValidChannelList(tpAniSirGlobal pMac,
     else
         return eHAL_STATUS_INVALID_PARAMETER;
 
-<<<<<<< HEAD
     /* Free any existing channel list */
     vos_mem_free(*pOutChannelList);
 
     *pOutChannelList = vos_mem_malloc(*pNumChannels);
 
     if (NULL == *pOutChannelList)
-=======
-    /* Free up the memory first */
-    if (NULL != pOutChannelList)
-    {
-        vos_mem_free(pOutChannelList);
-        pOutChannelList = NULL;
-    }
-
-    pOutChannelList = vos_mem_malloc(*pNumChannels);
-
-    if (NULL == pOutChannelList)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     {
         smsLog(pMac, LOGE, FL("Memory Allocation for CFG Channel List failed"));
         *pNumChannels = 0;
         return eHAL_STATUS_RESOURCES;
     }
-<<<<<<< HEAD
     /* Update the roam global structure */
     palCopyMemory(pMac->hHdd, *pOutChannelList, pChannelList, *pNumChannels);
-=======
-
-    /* Update the roam global structure */
-    palCopyMemory(pMac->hHdd, pOutChannelList, pChannelList, *pNumChannels);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return status;
 }
 
@@ -1503,7 +1451,6 @@ eHalStatus csrChangeDefaultConfigParam(tpAniSirGlobal pMac, tCsrConfigParam *pPa
         {
             pMac->roam.configParam.nRestTimeConc = pParam->nRestTimeConc;
         }
-<<<<<<< HEAD
         if (pParam->nNumStaChanCombinedConc)
         {
             pMac->roam.configParam.nNumStaChanCombinedConc = pParam->nNumStaChanCombinedConc;
@@ -1511,11 +1458,6 @@ eHalStatus csrChangeDefaultConfigParam(tpAniSirGlobal pMac, tCsrConfigParam *pPa
         if (pParam->nNumP2PChanCombinedConc)
         {
             pMac->roam.configParam.nNumP2PChanCombinedConc = pParam->nNumP2PChanCombinedConc;
-=======
-        if (pParam->nNumChanCombinedConc)
-        {
-            pMac->roam.configParam.nNumChanCombinedConc = pParam->nNumChanCombinedConc;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
 #endif
         //if upper layer wants to disable idle scan altogether set it to 0
@@ -1604,10 +1546,7 @@ eHalStatus csrChangeDefaultConfigParam(tpAniSirGlobal pMac, tCsrConfigParam *pPa
                 pMac->roam.configParam.nImmediateRoamRssiDiff );
         pMac->roam.configParam.nRoamPrefer5GHz = pParam->nRoamPrefer5GHz;
         pMac->roam.configParam.nRoamIntraBand = pParam->nRoamIntraBand;
-<<<<<<< HEAD
         pMac->roam.configParam.isWESModeEnabled = pParam->isWESModeEnabled;
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
         pMac->roam.configParam.isRoamOffloadScanEnabled = pParam->isRoamOffloadScanEnabled;
@@ -1661,10 +1600,6 @@ eHalStatus csrChangeDefaultConfigParam(tpAniSirGlobal pMac, tCsrConfigParam *pPa
         pMac->roam.configParam.txBFEnable= pParam->enableTxBF;
         pMac->roam.configParam.txBFCsnValue = pParam->txBFCsnValue;
 #endif
-<<<<<<< HEAD
-=======
-        pMac->scan.fIgnore_chan165 = pParam->fIgnore_chan165;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         pMac->roam.configParam.txLdpcEnable = pParam->enableTxLdpc;
     }
     
@@ -1706,12 +1641,8 @@ eHalStatus csrGetConfigParam(tpAniSirGlobal pMac, tCsrConfigParam *pParam)
         pParam->nPassiveMaxChnTimeConc = pMac->roam.configParam.nPassiveMaxChnTimeConc;
         pParam->nPassiveMinChnTimeConc = pMac->roam.configParam.nPassiveMinChnTimeConc;
         pParam->nRestTimeConc = pMac->roam.configParam.nRestTimeConc;
-<<<<<<< HEAD
         pParam->nNumStaChanCombinedConc = pMac->roam.configParam.nNumStaChanCombinedConc;
         pParam->nNumP2PChanCombinedConc = pMac->roam.configParam.nNumP2PChanCombinedConc;
-=======
-        pParam->nNumChanCombinedConc = pMac->roam.configParam.nNumChanCombinedConc;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
         //Change the unit from microsecond to second
         pParam->impsSleepTime = pMac->roam.configParam.impsSleepTime / PAL_TIMER_TO_SEC_UNIT;
@@ -2008,16 +1939,11 @@ eHalStatus csrGet5GChannels(tpAniSirGlobal pMac)
         {
             if(pMac->scan.defaultPowerTable[Index].chanId >= 36 && pMac->scan.defaultPowerTable[Index].chanId <= 165)
             {
-<<<<<<< HEAD
                 if (channelList < WNI_CFG_VALID_CHANNEL_LIST_LEN)
                 {
                     pMac->scan.base20MHzChannels.channelList[ channelList ] = pMac->scan.defaultPowerTable[Index].chanId;
                     channelList++;
                 }
-=======
-                pMac->scan.base20MHzChannels.channelList[ channelList ] = pMac->scan.defaultPowerTable[Index].chanId;
-                channelList++;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             }
         }
 
@@ -2031,8 +1957,6 @@ eHalStatus csrGet5GChannels(tpAniSirGlobal pMac)
 }
 
 eHalStatus csrGet24GChannels(tpAniSirGlobal pMac)
-<<<<<<< HEAD
-=======
 {
     eHalStatus status = eHAL_STATUS_SUCCESS;
     tANI_U8 num20MHzChannelsFound = 0;
@@ -2069,68 +1993,6 @@ eHalStatus csrGet24GChannels(tpAniSirGlobal pMac)
                 channelList5GBackup[nuum5GchannelListBackup] = pMac->scan.base20MHzChannels.channelList[ channelList ];
                 nuum5GchannelListBackup++;
             }
-        }
-        // Updating the 2.4GHz list
-        for ( Index = 0; Index < num20MHzChannelsFound; Index++)
-        {
-            if(pMac->scan.defaultPowerTable[Index].chanId > 0 && pMac->scan.defaultPowerTable[Index].chanId <= 14)
-                pMac->scan.base20MHzChannels.channelList[ Index ] = pMac->scan.defaultPowerTable[Index].chanId;
-        }
-        // Restoring the Backed up 5 GHZ channels
-        for(channelList = 0;channelList < nuum5GchannelListBackup; channelList++ )
-        {
-            pMac->scan.base20MHzChannels.channelList[ Index ] = channelList5GBackup[channelList];
-            Index++;
-        }
-
-        pMac->scan.numChannelsDefault = (num20MHzChannelsFound > Index) ? num20MHzChannelsFound : Index;
-        pMac->scan.base20MHzChannels.numChannels = (num20MHzChannelsFound > Index) ? num20MHzChannelsFound : Index;
-    }
-    return (status);
-}
-
-eHalStatus csrInitGetChannels(tpAniSirGlobal pMac)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
-{
-    eHalStatus status = eHAL_STATUS_SUCCESS;
-    tANI_U8 num20MHzChannelsFound = 0;
-    VOS_STATUS vosStatus;
-    tANI_U8 Index = 0;
-    tANI_U8 num40MHzChannelsFound = 0;
-    tANI_U8 channelList5GBackup[WNI_CFG_VALID_CHANNEL_LIST_LEN] = {0}, nuum5GchannelListBackup;
-    tANI_U8 channelList = 0;
-
-    // Read the scan channel list (including the power limit) from EEPROM
-    vosStatus = vos_nv_getChannelListWithPower( pMac->scan.defaultPowerTable, &num20MHzChannelsFound,
-                                                pMac->scan.defaultPowerTable40MHz, &num40MHzChannelsFound);
-
-    if ( (VOS_STATUS_SUCCESS != vosStatus) || (num20MHzChannelsFound == 0) )
-    {
-        smsLog( pMac, LOGE, FL("failed to get channels "));
-        status = eHAL_STATUS_FAILURE;
-    }
-    else
-    {
-        if ( num20MHzChannelsFound > WNI_CFG_VALID_CHANNEL_LIST_LEN )
-        {
-            num20MHzChannelsFound = WNI_CFG_VALID_CHANNEL_LIST_LEN;
-        }
-
-        // Move the 2.4GHZ channel list only to the global data,
-        // As 5GHz list been provided by AP as part of 11d IE
-        // structure -- this will be used as the scan list
-        for(channelList = 0, nuum5GchannelListBackup = 0; channelList < WNI_CFG_VALID_CHANNEL_LIST_LEN; channelList++)
-        {
-<<<<<<< HEAD
-            if(pMac->scan.base20MHzChannels.channelList[ channelList ] >= 36 && pMac->scan.base20MHzChannels.channelList[ channelList ] <= 165)
-            {
-                // First taking the 5GHz channel list backup
-                channelList5GBackup[nuum5GchannelListBackup] = pMac->scan.base20MHzChannels.channelList[ channelList ];
-                nuum5GchannelListBackup++;
-            }
-=======
-            pMac->scan.base20MHzChannels.channelList[ Index ] = pMac->scan.defaultPowerTable[ Index ].chanId;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
         // Updating the 2.4GHz list
         for ( Index = 0; Index < num20MHzChannelsFound; Index++)
@@ -5302,10 +5164,7 @@ static tANI_BOOLEAN csrRoamProcessResults( tpAniSirGlobal pMac, tSmeCmd *pComman
                         pSession->connectedProfile.modifyProfileFields.uapsd_mask);
                     pmcStartUapsd( pMac, NULL, NULL );
                 }
-<<<<<<< HEAD
                 pSession->connectedProfile.dot11Mode = pSession->bssParams.uCfgDot11Mode;
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 roamInfo.u.pConnectedProfile = &pSession->connectedProfile;
                 if( pSession->bRefAssocStartCnt > 0 )
                 {
@@ -5503,10 +5362,7 @@ static tANI_BOOLEAN csrRoamProcessResults( tpAniSirGlobal pMac, tSmeCmd *pComman
                     roamInfo.pBssDesc = pSirBssDesc;
                 }
                 roamInfo.staId = (tANI_U8)pSmeStartBssRsp->staId;
-<<<<<<< HEAD
                 vos_mem_copy (roamInfo.bssid, pSirBssDesc->bssId, sizeof(tCsrBssid));
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                  //Remove this code once SLM_Sessionization is supported 
                  //BMPS_WORKAROUND_NOT_NEEDED
                 if(!IS_FEATURE_SUPPORTED_BY_FW(SLM_SESSIONIZATION) &&
@@ -8682,7 +8538,6 @@ static void csrUpdateRssi(tpAniSirGlobal pMac, void* pMsg)
 #if defined WLAN_FEATURE_VOWIFI_11R || defined FEATURE_WLAN_CCX || defined(FEATURE_WLAN_LFR)
 void csrRoamRssiRspProcessor(tpAniSirGlobal pMac, void* pMsg)
 {
-<<<<<<< HEAD
     tAniGetRoamRssiRsp* pRoamRssiRsp = (tAniGetRoamRssiRsp*)pMsg;
 
     if (NULL != pRoamRssiRsp)
@@ -8693,18 +8548,6 @@ void csrRoamRssiRspProcessor(tpAniSirGlobal pMac, void* pMsg)
         v_S7_t rssi = pRoamRssiRsp->rssi;
 
         if ((NULL != reqBkp) && (NULL != reqBkp->rssiCallback))
-=======
-    v_S7_t  rssi = 0;
-    tAniGetRoamRssiRsp* pRoamRssiRsp = (tAniGetRoamRssiRsp*)pMsg;
-
-    /* Get roam Rssi request is backed up and passed back to the response,
-       Extract the request message to fetch callback */
-    tpAniGetRssiReq reqBkp = (tAniGetRssiReq*)pRoamRssiRsp->rssiReq;
-    if(pRoamRssiRsp)
-    {
-        rssi = pRoamRssiRsp->rssi;
-        if((reqBkp) && (NULL != reqBkp->rssiCallback))
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         {
             ((tCsrRssiCallback)(reqBkp->rssiCallback))(rssi, pRoamRssiRsp->staId, reqBkp->pDevContext);
             reqBkp->rssiCallback = NULL;
@@ -11185,11 +11028,7 @@ static void csrRoamPrepareBssParams(tpAniSirGlobal pMac, tANI_U32 sessionId, tCs
             {
                 cbMode = pMac->roam.configParam.channelBondingMode5GHz;
             }
-<<<<<<< HEAD
             smsLog(pMac, LOG1, "## cbMode %d", cbMode);
-=======
-            smsLog(pMac, LOG1, "##softap cbMode %d", cbMode);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             pBssConfig->cbMode = cbMode;
             pSession->bssParams.cbMode = cbMode;
         }
@@ -12067,7 +11906,6 @@ eHalStatus csrSendJoinReqMsg( tpAniSirGlobal pMac, tANI_U32 sessionId, tSirBssDe
 #endif /* FEATURE_WLAN_CCX */
         // addIEScan
         if(pProfile->nAddIEScanLength && pProfile->pAddIEScan)
-<<<<<<< HEAD
         {
             ieLen = pProfile->nAddIEScanLength;
             if(ieLen > pSession->nAddIEScanLength)
@@ -12240,180 +12078,6 @@ eHalStatus csrSendJoinReqMsg( tpAniSirGlobal pMac, tANI_U32 sessionId, tSirBssDe
             palCopyMemory( pMac->hHdd, pBuf, &ccxTspec, sizeof(tCCXTspecInfo));
             pBuf += sizeof(tCCXTspecInfo);
         }
-=======
-        {
-            ieLen = pProfile->nAddIEScanLength;
-            if(ieLen > pSession->nAddIEScanLength)
-            {
-                if(pSession->pAddIEScan && pSession->nAddIEScanLength)
-                {
-                    palFreeMemory(pMac->hHdd, pSession->pAddIEScan);
-                }
-                status = palAllocateMemory(pMac->hHdd,
-                                 (void **)&pSession->pAddIEScan, ieLen);
-                if(!HAL_STATUS_SUCCESS(status)) break;
-            }
-            pSession->nAddIEScanLength = ieLen;
-            palCopyMemory(pMac->hHdd, pSession->pAddIEScan, 
-                                      pProfile->pAddIEScan, ieLen);
-            wTmp = pal_cpu_to_be16( ieLen );
-            palCopyMemory( pMac->hHdd, pBuf, &wTmp, sizeof(tANI_U16) );
-            pBuf += sizeof(tANI_U16);
-            palCopyMemory( pMac->hHdd, pBuf, pProfile->pAddIEScan, ieLen );
-            pBuf += ieLen;
-        }
-        else
-        {
-            pSession->nAddIEScanLength = 0;
-            if(pSession->pAddIEScan)
-            {
-                palFreeMemory(pMac->hHdd, pSession->pAddIEScan);
-                pSession->pAddIEScan = NULL;
-            }
-            *pBuf = 0;
-            *(pBuf + 1) = 0;
-            pBuf += 2;
-        }
-        // addIEAssoc
-        if(pProfile->nAddIEAssocLength && pProfile->pAddIEAssoc)
-        {
-            ieLen = pProfile->nAddIEAssocLength;
-            if(ieLen > pSession->nAddIEAssocLength)
-            {
-                if(pSession->pAddIEAssoc && pSession->nAddIEAssocLength)
-        {
-                    palFreeMemory(pMac->hHdd, pSession->pAddIEAssoc);
-        }
-                status = palAllocateMemory(pMac->hHdd,
-                                 (void **)&pSession->pAddIEAssoc, ieLen);
-                if(!HAL_STATUS_SUCCESS(status)) break;
-        }
-            pSession->nAddIEAssocLength = ieLen;
-            palCopyMemory(pMac->hHdd, pSession->pAddIEAssoc,
-                                      pProfile->pAddIEAssoc, ieLen);
-            wTmp = pal_cpu_to_be16( ieLen );
-            palCopyMemory( pMac->hHdd, pBuf, &wTmp, sizeof(tANI_U16) );
-            pBuf += sizeof(tANI_U16);
-            palCopyMemory( pMac->hHdd, pBuf, pProfile->pAddIEAssoc, ieLen );
-            pBuf += ieLen;
-        }
-        else
-        {
-            pSession->nAddIEAssocLength = 0;
-            if(pSession->pAddIEAssoc)
-            {
-                palFreeMemory(pMac->hHdd, pSession->pAddIEAssoc);
-                pSession->pAddIEAssoc = NULL;
-            }
-            *pBuf = 0;
-            *(pBuf + 1) = 0;
-            pBuf += 2;
-        }
-
-        if(eWNI_SME_REASSOC_REQ == messageType )
-        {
-            //Unmask any AC in reassoc that is ACM-set
-            uapsd_mask = (v_U8_t)pProfile->uapsd_mask;
-            if( uapsd_mask && ( NULL != pBssDescription ) )
-            {
-                if( CSR_IS_QOS_BSS(pIes) && CSR_IS_UAPSD_BSS(pIes) )
-                {
-#ifndef WLAN_MDM_CODE_REDUCTION_OPT
-                    acm_mask = sme_QosGetACMMask(pMac, pBssDescription, pIes);
-#endif /* WLAN_MDM_CODE_REDUCTION_OPT*/
-                    uapsd_mask &= ~(acm_mask);
-                }
-                else
-                {
-                    uapsd_mask = 0;
-                }
-            }
-        }
-
-        dwTmp = pal_cpu_to_be32( csrTranslateEncryptTypeToEdType( pProfile->negotiatedUCEncryptionType) );
-        palCopyMemory( pMac->hHdd, pBuf, &dwTmp, sizeof(tANI_U32) );
-        pBuf += sizeof(tANI_U32);
-
-        dwTmp = pal_cpu_to_be32( csrTranslateEncryptTypeToEdType( pProfile->negotiatedMCEncryptionType) );
-        palCopyMemory( pMac->hHdd, pBuf, &dwTmp, sizeof(tANI_U32) );
-        pBuf += sizeof(tANI_U32);
-#ifdef WLAN_FEATURE_11W
-        //MgmtEncryption
-        if (pProfile->MFPEnabled)
-        {
-            dwTmp = pal_cpu_to_be32(eSIR_ED_AES_128_CMAC);
-        }
-        else
-        {
-            dwTmp = pal_cpu_to_be32(eSIR_ED_NONE);
-        }
-        palCopyMemory(pMac->hHdd, pBuf, &dwTmp, sizeof(tANI_U32));
-        pBuf += sizeof(tANI_U32);
-#endif
-#ifdef WLAN_FEATURE_VOWIFI_11R
-        pProfile->MDID.mdiePresent = pBssDescription->mdiePresent;
-        if (csrIsProfile11r( pProfile )
-#ifdef FEATURE_WLAN_CCX
-           && !((pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_OPEN_SYSTEM) &&
-                (pIes->CCXVersion.present) && (pMac->roam.configParam.isCcxIniFeatureEnabled))
-#endif
-        )
-        {
-            // is11Rconnection;
-            dwTmp = pal_cpu_to_be32(TRUE);
-            palCopyMemory( pMac->hHdd, pBuf, &dwTmp, sizeof(tAniBool) );
-            pBuf += sizeof(tAniBool);
-        }
-        else
-        {
-            // is11Rconnection;
-            dwTmp = pal_cpu_to_be32(FALSE);
-            palCopyMemory( pMac->hHdd, pBuf, &dwTmp, sizeof(tAniBool) );
-            pBuf += sizeof(tAniBool);
-        }
-#endif
-#ifdef FEATURE_WLAN_CCX
-        /* A profile can not be both CCX and 11R. But an 802.11R AP
-         * may be advertising support for CCX as well. So if we are
-         * associating Open or explicitly CCX then we will get CCX.
-         * If we are associating explictly 11R only then we will get
-         * 11R.
-         */
-        if ((csrIsProfileCCX(pProfile) ||
-                  ((pIes->CCXVersion.present)
-                   && ((pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_OPEN_SYSTEM)
-                       || (pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_WPA)
-                       || (pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_WPA_PSK)
-                       || (pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_RSN)
-#ifdef WLAN_FEATURE_11W
-                       || (pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_RSN_PSK_SHA256)
-#endif
-                       || (pProfile->negotiatedAuthType == eCSR_AUTH_TYPE_RSN_PSK))))
-                 && (pMac->roam.configParam.isCcxIniFeatureEnabled))
-        {
-            // isCCXconnection;
-            dwTmp = pal_cpu_to_be32(TRUE);
-            palCopyMemory( pMac->hHdd, pBuf, &dwTmp, sizeof(tAniBool) );
-            pBuf += sizeof(tAniBool);
-        }
-        else
-        {
-            //isCCXconnection;
-            dwTmp = pal_cpu_to_be32(FALSE);
-            palCopyMemory( pMac->hHdd, pBuf, &dwTmp, sizeof(tAniBool) );
-            pBuf += sizeof(tAniBool);
-        }
-
-        if (eWNI_SME_JOIN_REQ == messageType)
-        {
-            tCCXTspecInfo ccxTspec;
-            // CCX-Tspec IEs in the ASSOC request is presently not supported
-            // so nullify the TSPEC parameters
-            palZeroMemory(pMac->hHdd, &ccxTspec, sizeof(tCCXTspecInfo));
-            palCopyMemory( pMac->hHdd, pBuf, &ccxTspec, sizeof(tCCXTspecInfo));
-            pBuf += sizeof(tCCXTspecInfo);
-        }
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         else if (eWNI_SME_REASSOC_REQ == messageType)
         {
         if ((csrIsProfileCCX(pProfile) ||
@@ -14517,13 +14181,8 @@ eHalStatus csrGetRoamRssi(tpAniSirGlobal pMac,
    status = palSendMBMessage(pMac->hHdd, pMsg );
    if(!HAL_STATUS_SUCCESS(status))
    {
-<<<<<<< HEAD
       smsLog(pMac, LOG1, " csrGetRoamRssi: failed to send down the rssi req");
       //pMsg is freed by palSendMBMessage
-=======
-      smsLog(pMac, LOG1, " csrGetRoamRssi: failed to send down the stats req");
-      palFreeMemory(pMac->hHdd, (void *)pMsg);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       status = eHAL_STATUS_FAILURE;
    }
    return status;
@@ -16129,16 +15788,11 @@ eHalStatus csrSetTxPower(tpAniSirGlobal pMac, v_U8_t sessionId, v_U8_t mW)
        if (!HAL_STATUS_SUCCESS(status))
        {
            smsLog(pMac, LOGE, FL(" csr set TX Power Post MSG Fail %d "), status);
-<<<<<<< HEAD
            //pMsg is freed by palSendMBMessage
-=======
-           palFreeMemory(pMac->hHdd, pMsg);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
        }
    }
    return status;
 }
-<<<<<<< HEAD
 
 /* Returns whether a session is in VOS_STA_MODE...or not */
 tANI_BOOLEAN csrRoamIsStaMode(tpAniSirGlobal pMac, tANI_U32 sessionId)
@@ -16179,5 +15833,3 @@ tANI_BOOLEAN csrRoamIsStaMode(tpAniSirGlobal pMac, tANI_U32 sessionId)
 
   return eANI_BOOLEAN_FALSE;
 }
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17

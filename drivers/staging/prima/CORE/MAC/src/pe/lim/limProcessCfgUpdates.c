@@ -523,7 +523,6 @@ limHandleCFGparamUpdate(tpAniSirGlobal pMac, tANI_U32 cfgId)
         {
             tANI_U16 sessionId;
             pMac->sys.gSysEnableLinkMonitorMode = 1;
-            PELOGE(limLog(pMac, LOGE, "Reactivating heartbeat link monitoring\n");)
             for(sessionId = 0; sessionId < pMac->lim.maxBssId; sessionId++)
             {
                 if( (pMac->lim.gpSession[sessionId].valid )&&
@@ -533,22 +532,15 @@ limHandleCFGparamUpdate(tpAniSirGlobal pMac, tANI_U32 cfgId)
                 {
                     PELOG2(limLog(pMac, LOG2, "HB link monitoring reactivated"
                            " for session=%d", sessionId);)
-<<<<<<< HEAD
                     PELOGW(limLog(pMac, LOGW, "Before reactivating HB timer; parameters are"
                            " session=%d limMlmState=%d pmmState=%d", sessionId,
                              pMac->lim.gpSession[sessionId].limMlmState,
                              pMac->pmm.gPmmState);)
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     limReactivateHeartBeatTimer(pMac, &pMac->lim.gpSession[sessionId]);
                 }
                 else if ( pMac->lim.gpSession[sessionId].valid )
                 {
-<<<<<<< HEAD
                     PELOGW(limLog(pMac, LOGW, "HB link monitoring not reactivated-"
-=======
-                    PELOG2(limLog(pMac, LOG2, "HB link monitoring not reactivated-"
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                            "session=%d, limMlmState=%d, gPmmState=%d", 
                            sessionId, pMac->lim.gpSession[sessionId].limMlmState,
                            pMac->pmm.gPmmState);)
@@ -771,11 +763,7 @@ limUpdateConfig(tpAniSirGlobal pMac,tpPESession psessionEntry)
         if(ccmCfgSetInt(pMac, WNI_CFG_ASSOC_STA_LIMIT, WNI_CFG_ASSOC_STA_LIMIT_STADEF,
             NULL, eANI_BOOLEAN_FALSE) != eHAL_STATUS_SUCCESS)
         {
-<<<<<<< HEAD
            limLog( pMac, LOGP, FL( "cfg get assoc sta limit failed" ));
-=======
-           limLog( pMac, LOGP, FL( "cfg get assoc sta limit failed" )); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
         val = WNI_CFG_ASSOC_STA_LIMIT_STADEF;
     }

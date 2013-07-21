@@ -1110,10 +1110,7 @@ static int iw_set_mode(struct net_device *dev,
         // Set the phymode correctly for IBSS.
         pConfig  = (WLAN_HDD_GET_CTX(pAdapter))->cfg_ini;
         pWextState->roamProfile.phyMode = hdd_cfg_xlate_to_csr_phy_mode(pConfig->dot11Mode);
-<<<<<<< HEAD
         pAdapter->device_mode = WLAN_HDD_IBSS;
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         wdev->iftype = NL80211_IFTYPE_ADHOC;
         break;
     case IW_MODE_INFRA:
@@ -3324,7 +3321,6 @@ static int iw_set_encodeext(struct net_device *dev,
        is done. Save the key in the UMAC and include it in the ADD
        BSS request */
     halStatus = sme_FTUpdateKey( WLAN_HDD_GET_HAL_CTX(pAdapter), &setKey);
-<<<<<<< HEAD
     if ( halStatus == eHAL_STATUS_FT_PREAUTH_KEY_SUCCESS )
     {
         hddLog(VOS_TRACE_LEVEL_INFO_MED,
@@ -3336,11 +3332,6 @@ static int iw_set_encodeext(struct net_device *dev,
         hddLog(VOS_TRACE_LEVEL_ERROR,
                "%s: Update PreAuth Key failed", __func__);
         return -EINVAL;
-=======
-    if( halStatus == eHAL_STATUS_FT_PREAUTH_KEY_WAIT )
-    {
-       return -EINVAL;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     }
 #endif /* WLAN_FEATURE_VOWIFI_11R */
 
@@ -4551,11 +4542,7 @@ int iw_set_var_ints_getnone(struct net_device *dev, struct iw_request_info *info
                 }
                 else
                 {
-<<<<<<< HEAD
                      hddLog(LOGE, "%s : Enter valid MccCredential value between MIN :40 and MAX:160\n", __func__);
-=======
-                     hddLog(LOGE, "%s : Enter valid MccCredential value between MIN :40 and MAX:160\n");
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                      return 0;
                 }
             }
@@ -4950,11 +4937,7 @@ static int iw_qcom_set_wapi_key(struct net_device *dev, struct iw_request_info *
     hddLog(LOG1, "%s: Received data %s", __func__, (char*)wrqu->data.pointer);
     hddLog(LOG1, "%s: Received data %s", __func__, (char*)extra);
 
-<<<<<<< HEAD
     hddLog(LOG1,":%s: INPUT DATA:\nKey Type:0x%02x Key Direction:0x%02x KEY ID:0x%02x\n", __func__, pWapiKey->keyType, pWapiKey->keyDirection, pWapiKey->keyId);
-=======
-    hddLog(LOG1,":s: INPUT DATA:\nKey Type:0x%02x Key Direction:0x%02x KEY ID:0x%02x\n", __func__,pWapiKey->keyType,pWapiKey->keyDirection,pWapiKey->keyId);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     hddLog(LOG1,"Add Index:0x");
     for(i =0 ; i < 12 ; i++)
         hddLog(LOG1,"%02x",pWapiKey->addrIndex[i]);
@@ -5205,24 +5188,12 @@ static int iw_set_dynamic_mcbc_filter(struct net_device *dev,
                __func__, pRequest->mcastBcastFilterSetting,
                pHddCtx->hdd_wlan_suspended);
 
-<<<<<<< HEAD
-=======
-        wlanRxpFilterParam = vos_mem_malloc(sizeof(tSirWlanSetRxpFilters));
-        if (NULL == wlanRxpFilterParam)
-        {
-            hddLog(VOS_TRACE_LEVEL_FATAL,
-                   "%s: vos_mem_alloc failed", __func__);
-            return -EINVAL;
-        }
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         pHddCtx->dynamic_mcbc_filter.mcastBcastFilterSetting =
             pRequest->mcastBcastFilterSetting;
         pHddCtx->dynamic_mcbc_filter.enableCfg = TRUE;
 
         if (pHddCtx->hdd_wlan_suspended)
         {
-<<<<<<< HEAD
             wlanRxpFilterParam = vos_mem_malloc(sizeof(tSirWlanSetRxpFilters));
             if (NULL == wlanRxpFilterParam)
             {
@@ -5231,8 +5202,6 @@ static int iw_set_dynamic_mcbc_filter(struct net_device *dev,
                 return -EINVAL;
             }
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             wlanRxpFilterParam->configuredMcstBcstFilterSetting =
                 pRequest->mcastBcastFilterSetting;
             wlanRxpFilterParam->setMcstBcstFilter = TRUE;
@@ -5270,7 +5239,6 @@ static int iw_set_dynamic_mcbc_filter(struct net_device *dev,
                    pHddCtx->dynamic_mcbc_filter.mcastBcastFilterSetting,
                    wlanRxpFilterParam->configuredMcstBcstFilterSetting,
                    wlanRxpFilterParam->setMcstBcstFilter);
-<<<<<<< HEAD
 
             mcastBcastFilterSetting = wlanRxpFilterParam->configuredMcstBcstFilterSetting;
 
@@ -5284,21 +5252,6 @@ static int iw_set_dynamic_mcbc_filter(struct net_device *dev,
                 return -EINVAL;
             }
 
-=======
-
-            mcastBcastFilterSetting = wlanRxpFilterParam->configuredMcstBcstFilterSetting;
-
-            if (eHAL_STATUS_SUCCESS != sme_ConfigureRxpFilter(WLAN_HDD_GET_HAL_CTX(pAdapter),
-                                                              wlanRxpFilterParam))
-            {
-                hddLog(VOS_TRACE_LEVEL_ERROR,
-                       "%s: Failure to execute set HW MC/BC Filter request",
-                       __func__);
-                vos_mem_free(wlanRxpFilterParam);
-                return -EINVAL;
-            }
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             pHddCtx->dynamic_mcbc_filter.mcBcFilterSuspend =
                 mcastBcastFilterSetting;
         }
@@ -6210,7 +6163,7 @@ int hdd_setBand_helper(struct net_device *dev, tANI_U8* ptr)
                      &pAdapter->disconnect_comp_var,
                      msecs_to_jiffies(WLAN_WAIT_TIME_DISCONNECT));
 
-             if (lrc <= 0) {
+             if(lrc <= 0) {
 
                 hddLog(VOS_TRACE_LEVEL_ERROR,"%s: %s while while waiting for csrRoamDisconnect ",
                  __func__, (0 == lrc) ? "Timeout" : "Interrupt");
@@ -6224,11 +6177,7 @@ int hdd_setBand_helper(struct net_device *dev, tANI_U8* ptr)
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
         sme_UpdateBgScanConfigIniChannelList(hHal, (eCsrBand) band);
 #endif
-<<<<<<< HEAD
         if(eHAL_STATUS_SUCCESS != sme_SetFreqBand(hHal, (eCsrBand)band))
-=======
-        if (eHAL_STATUS_SUCCESS != sme_SetFreqBand(hHal, (eCsrBand)band))
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         {
              VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,
                      "%s: failed to set the band value to %u ",
@@ -6293,13 +6242,6 @@ VOS_STATUS iw_set_power_params(struct net_device *dev, struct iw_request_info *i
             "Power Params data len %d data %s",
             wrqu->data.length,
             (char *)wrqu->data.pointer);
-
-  if ((WLAN_HDD_GET_CTX(pAdapter))->isLogpInProgress)
-  {
-    VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,
-                                  "%s:LOGP in Progress. Ignore!!!", __func__);
-    return -EBUSY;
-  }
 
   if ((WLAN_HDD_GET_CTX(pAdapter))->isLogpInProgress)
   {

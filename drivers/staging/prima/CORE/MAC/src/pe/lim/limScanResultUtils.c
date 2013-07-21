@@ -1,5 +1,4 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
@@ -39,12 +38,6 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-=======
-* Copyright (c) 2011-2013 Qualcomm Atheros, Inc.
-* All Rights Reserved.
-* Qualcomm Atheros Confidential and Proprietary.
-*/
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 /*
  * Airgo Networks, Inc proprietary. All rights reserved.

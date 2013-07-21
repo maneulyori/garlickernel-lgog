@@ -401,13 +401,8 @@ limDeletePreAuthNode(tpAniSirGlobal pMac, tSirMacAddr macAddr)
 
             pPrevNode->next = pTempNode->next;
 
-<<<<<<< HEAD
             PELOG1(limLog(pMac, LOG1, FL("=====> limDeletePreAuthNode : subsequent node to delete"));
             limLog(pMac, LOG1, FL("Release data entry: %x id %d peer "),
-=======
-            PELOG1(limLog(pMac, LOG1, FL("=====> limDeletePreAuthNode : subsequent node to delete\n"));
-            limLog(pMac, LOG1, FL("Release data entry: %x id %d peer \n"),
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                          pTempNode, pTempNode->authNodeIdx);
             limPrintMacAddr(pMac, macAddr, LOG1);)
             limReleasePreAuthNode(pMac, pTempNode);

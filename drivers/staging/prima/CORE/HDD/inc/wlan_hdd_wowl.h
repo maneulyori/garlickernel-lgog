@@ -179,7 +179,6 @@ v_BOOL_t hdd_exit_wowl (hdd_adapter_t*pAdapter);
                     : TRUE otherwise
   ===========================================================================*/
 v_BOOL_t hdd_init_wowl (hdd_adapter_t* pAdapter);
-<<<<<<< HEAD
 
 /**============================================================================
   @brief hdd_parse_hex() - function returns integer equivalent of hexa decimal
@@ -187,7 +186,5 @@ v_BOOL_t hdd_init_wowl (hdd_adapter_t* pAdapter);
   @return           : integer equivalent of hexa decimal
   ===========================================================================*/
 int hdd_parse_hex(unsigned char c);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #endif /* #ifndef _WLAN_HDD_WOWL_H */

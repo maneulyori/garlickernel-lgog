@@ -2766,11 +2766,7 @@ sme_QosStatusType sme_QosSetup(tpAniSirGlobal pMac,
       VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, 
                 "%s: %d: Session %d has an Invalid BSS Descriptor",
                 __func__, __LINE__,
-<<<<<<< HEAD
                 sessionId);
-=======
-                sessionId, ac);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return status;
    }
    hstatus = csrGetParsedBssDescriptionIEs(pMac,
@@ -2781,11 +2777,7 @@ sme_QosStatusType sme_QosSetup(tpAniSirGlobal pMac,
       VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR,
                 "%s: %d: On session %d unable to parse BSS IEs",
                 __func__, __LINE__,
-<<<<<<< HEAD
                 sessionId);
-=======
-                sessionId, ac);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return status;
    }
 
@@ -3606,11 +3598,7 @@ eHalStatus sme_QosProcessAggrQosRsp(tpAniSirGlobal pMac, void *pMsgBuf)
                 addtsRsp.rsp.tspec = pAggrRsp->aggrInfo.aggrRsp[i].tspec;
 
                 VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_INFO,
-<<<<<<< HEAD
                         FL("Processing Addts rsp from LIM AC=%d, flow=%d"), i, j);
-=======
-                        FL("%s: Processing Addts rsp from LIM AC=%d, flow=%d"), i, j);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 /* post ADD TS response for each */
                 if (sme_QosProcessAddTsRsp(pMac, &addtsRsp) != eHAL_STATUS_SUCCESS)
                 {
@@ -3819,10 +3807,7 @@ eHalStatus sme_QosAddTsReq(tpAniSirGlobal pMac,
       VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, 
                 "%s: %d: BSS descriptor is NULL so we don't send request to PE",
                 __func__, __LINE__);
-<<<<<<< HEAD
       vos_mem_free(pMsg);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       return eHAL_STATUS_FAILURE;
    }
    vos_mem_copy( &pMsg->bssId[ 0 ], 
@@ -4428,29 +4413,19 @@ eHalStatus sme_QosProcessReassocSuccessEv(tpAniSirGlobal pMac, v_U8_t sessionId,
 #ifdef WLAN_FEATURE_VOWIFI_11R
    if (pSession->ftHandoffInProgress)
    {
-<<<<<<< HEAD
        if (csrRoamIs11rAssoc(pMac))
        {
            if (pCsrRoamSession && pCsrRoamSession->connectedInfo.nRICRspLength)
            {
-=======
-       if (csrRoamIs11rAssoc(pMac)) {
-           if (pCsrRoamSession->connectedInfo.nRICRspLength) {
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                status = sme_QosProcessFTReassocRspEv(pMac, sessionId, pEvent_info);
            }
        }
 #ifdef FEATURE_WLAN_CCX
        // If CCX association check for TSPEC IEs in the reassoc rsp frame
-<<<<<<< HEAD
        if (csrRoamIsCCXAssoc(pMac))
        {
            if (pCsrRoamSession && pCsrRoamSession->connectedInfo.nTspecIeLength)
            {
-=======
-       if (csrRoamIsCCXAssoc(pMac)) {
-           if (pCsrRoamSession->connectedInfo.nTspecIeLength) {
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                status = sme_QosCCXProcessReassocTspecRsp(pMac, sessionId, pEvent_info);
            }
        }

@@ -456,7 +456,6 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
     tANI_BOOLEAN fNoCmdPending;
     tSmeCmd *pQueueScanCmd=NULL;
     tSmeCmd *pSendScanCmd=NULL;
-<<<<<<< HEAD
     tANI_U8  nNumChanCombinedConc = 0;
     if (NULL == pScanCmd)
     {
@@ -492,33 +491,6 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
          (pScanCmd->u.scanCmd.u.scanRequest.p2pSearch != 1)) ||
             (csrIsP2pSessionConnected(pMac)) )
     {
-=======
-
-    if (NULL == pScanCmd)
-    {
-        smsLog (pMac, LOGE, FL("Scan Req cmd is NULL"));
-        return eHAL_STATUS_FAILURE;
-    }
-    /* split scan if any one of the following:
-     * - STA session is connected and the scan is not a P2P search
-     * - any P2P session is connected
-     * Do not split scans if no concurrent infra connections are 
-     * active and if the scan is a BG scan triggered by LFR (OR)
-     * any scan if LFR is in the middle of a BG scan. Splitting
-     * the scan is delaying the time it takes for LFR to find
-     * candidates and resulting in disconnects.
-     */
-    if ( (csrIsStaSessionConnected(pMac) && 
-#ifdef FEATURE_WLAN_LFR
-         (csrIsConcurrentInfraConnected(pMac) ||
-          ((pScanCmd->u.scanCmd.reason != eCsrScanBgScan) &&
-           (pMac->roam.neighborRoamInfo.neighborRoamState != 
-            eCSR_NEIGHBOR_ROAM_STATE_CFG_CHAN_LIST_SCAN))) &&
-#endif
-         (pScanCmd->u.scanCmd.u.scanRequest.p2pSearch != 1)) ||
-            (csrIsP2pSessionConnected(pMac)) )
-    {
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         tCsrScanRequest scanReq;
         tANI_U8 numChn = pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels;
         tCsrChannelInfo *pChnInfo = &scanReq.ChannelInfo;
@@ -529,7 +501,6 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
         {
 
             numChn = pMac->scan.baseChannels.numChannels;
-<<<<<<< HEAD
 
             status = palAllocateMemory( pMac->hHdd, (void **)&pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList, numChn );
             if( !HAL_STATUS_SUCCESS( status ) )
@@ -553,31 +524,6 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
         //Whenever we get a scan request with multiple channels we break it up into 2 requests
         //First request  for first channel to scan and second request to scan remaining channels
         if ( numChn > nNumChanCombinedConc)
-=======
-
-            status = palAllocateMemory( pMac->hHdd, (void **)&pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList, numChn );
-            if( !HAL_STATUS_SUCCESS( status ) )
-            {
-                smsLog( pMac, LOGE, FL(" Failed to get memory for channel list ") );
-                return eHAL_STATUS_FAILURE;
-            }
-            bMemAlloc = eANI_BOOLEAN_TRUE;
-            status = palCopyMemory( pMac->hHdd, pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList,
-                    pMac->scan.baseChannels.channelList, numChn );
-            if( !HAL_STATUS_SUCCESS( status ) )
-            {
-                palFreeMemory( pMac->hHdd, pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList );
-                pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList = NULL;
-                smsLog( pMac, LOGE, FL(" Failed to copy memory to channel list ") );
-                return eHAL_STATUS_FAILURE;
-            }
-            pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels = numChn;
-        }
-
-        //Whenever we get a scan request with multiple channels we break it up into 2 requests
-        //First request  for first channel to scan and second request to scan remaining channels
-        if (numChn > pMac->roam.configParam.nNumChanCombinedConc)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         {
             palZeroMemory(pMac->hHdd, &scanReq, sizeof(tCsrScanRequest));
 
@@ -610,7 +556,6 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
                 scanReq.ChannelInfo.ChannelList = NULL;
             }
 
-<<<<<<< HEAD
             pChnInfo->numOfChannels = pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels - nNumChanCombinedConc;
 
             VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_WARN,
@@ -619,16 +564,6 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
                     pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList, numChn);
 
             palCopyMemory(pMac->hHdd, &channelToScan[0], &pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList[nNumChanCombinedConc],
-=======
-            pChnInfo->numOfChannels = pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels - pMac->roam.configParam.nNumChanCombinedConc;
-
-            VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_WARN,
-                    FL(" &channelToScan %0x pScanCmd(0x%X) pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList(0x%X)numChn(%d)"),
-                    &channelToScan[0], (unsigned int)pScanCmd,
-                    (unsigned int)pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList, numChn);
-
-            palCopyMemory(pMac->hHdd, &channelToScan[0], &pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList[pMac->roam.configParam.nNumChanCombinedConc],
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     pChnInfo->numOfChannels * sizeof(tANI_U8));
 
             pChnInfo->ChannelList = &channelToScan[0];
@@ -665,11 +600,7 @@ eHalStatus csrQueueScanRequest( tpAniSirGlobal pMac, tSmeCmd *pScanCmd )
 
             /* setup the command to scan 2 channels */
             pSendScanCmd = pScanCmd;
-<<<<<<< HEAD
             pSendScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels = nNumChanCombinedConc;
-=======
-            pSendScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels = pMac->roam.configParam.nNumChanCombinedConc;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             pSendScanCmd->u.scanCmd.u.scanRequest.BSSType = eCSR_BSS_TYPE_ANY;
             pSendScanCmd->u.scanCmd.u.scanRequest.scanType = eSIR_ACTIVE_SCAN;
             //Use concurrency values for min/maxChnTime.
@@ -3191,22 +3122,7 @@ eHalStatus csrSaveToChannelPower2G_5G( tpAniSirGlobal pMac, tANI_U32 tableSize, 
     return eHAL_STATUS_SUCCESS;
 }
 
-static  void csrClearDfsChannelList( tpAniSirGlobal pMac )
-{
-    tSirMbMsg *pMsg;
-    tANI_U16 msgLen;
-    eHalStatus status = eHAL_STATUS_SUCCESS;
 
-    msgLen = (tANI_U16)(sizeof( tSirMbMsg ));
-    status = palAllocateMemory(pMac->hHdd, (void **)&pMsg, msgLen);
-    if(HAL_STATUS_SUCCESS(status))
-    {
-       palZeroMemory(pMac->hHdd, (void *)pMsg, msgLen);
-       pMsg->type = pal_cpu_to_be16((tANI_U16)eWNI_SME_CLEAR_DFS_CHANNEL_LIST);
-       pMsg->msgLen = pal_cpu_to_be16(msgLen);
-       palSendMBMessage(pMac->hHdd, pMsg);
-    }
-}
 
 void csrApplyPower2Current( tpAniSirGlobal pMac )
 {
@@ -3250,7 +3166,6 @@ void csrApplyChannelPowerCountryInfo( tpAniSirGlobal pMac, tCsrChannel *pChannel
             else
             {
                 channelEnabledType = NV_CHANNEL_ENABLE;
-<<<<<<< HEAD
             }
             if( NV_CHANNEL_ENABLE == channelEnabledType )
             {
@@ -3272,36 +3187,12 @@ void csrApplyChannelPowerCountryInfo( tpAniSirGlobal pMac, tCsrChannel *pChannel
                    numChannels++;
                 }
             }
-=======
-             }
-             if( NV_CHANNEL_ENABLE ==  channelEnabledType)
-             {
-                // Ignore the channel 165 for the country INDONESIA 
-                if (( pChannelList->channelList[i] == 165 )
-                      && ( pMac->scan.fIgnore_chan165 == VOS_TRUE )
-                      && vos_mem_compare(countryCode, "ID", VOS_COUNTRY_CODE_LEN ))
-                 {
-                     continue;
-                 }
-                 else
-                 {
-                     ChannelList.channelList[numChannels] = pChannelList->channelList[i];
-                     numChannels++;
-                 }
-             }
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
         ChannelList.numChannels = numChannels;
         csrSetCfgValidChannelList(pMac, ChannelList.channelList, ChannelList.numChannels);
         // extend scan capability
-<<<<<<< HEAD
         //  build a scan list based on the channel list : channel# + active/passive scan
         csrSetCfgScanControlList(pMac, countryCode, &ChannelList);
-=======
-        csrSetCfgScanControlList(pMac, countryCode, &ChannelList);     //  build a scan list based on the channel list : channel# + active/passive scan
-        /*Send msg to Lim to clear DFS channel list */
-        csrClearDfsChannelList(pMac);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #ifdef FEATURE_WLAN_SCAN_PNO
         if (updateRiva)
         {
@@ -3565,12 +3456,8 @@ void csrApplyCountryInformation( tpAniSirGlobal pMac, tANI_BOOLEAN fForce )
                 {
                    smsLog(pMac, LOGW, FL("Domain Changed Old %d, new %d"),
                                       pMac->scan.domainIdCurrent, domainId);
-<<<<<<< HEAD
-=======
-                   csrScanFilter11dResult(pMac);
-                   status = WDA_SetRegDomain(pMac, domainId);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 }
+                status = WDA_SetRegDomain(pMac, domainId);
                 if (status != eHAL_STATUS_SUCCESS)
                 {
                     smsLog( pMac, LOGE, FL("  fail to set regId %d"), domainId );
@@ -3937,12 +3824,8 @@ tANI_BOOLEAN csrLearnCountryInformation( tpAniSirGlobal pMac, tSirBssDescription
         if ( domainId != pMac->scan.domainIdCurrent )
         {
             tSirMacChanInfo* pMacChnSet = (tSirMacChanInfo *)(&pIesLocal->Country.triplets[0]);
-<<<<<<< HEAD
             WDA_SetRegDomain(pMac, domainId);
             // Check weather AP provided the 2.4GHZ list or 5GHZ list
-=======
-            // Check whether AP provided the 2.4GHZ list or 5GHZ list
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             if(CSR_IS_CHANNEL_24GHZ(pMacChnSet[0].firstChanNum))
             {
                 // AP Provided the 2.4 Channels, Update the 5GHz channels from nv.bin
@@ -3953,12 +3836,6 @@ tANI_BOOLEAN csrLearnCountryInformation( tpAniSirGlobal pMac, tSirBssDescription
                 // AP Provided the 5G Channels, Update the 2.4GHZ channel list from nv.bin
                 csrGet24GChannels(pMac );
             }
-<<<<<<< HEAD
-=======
-            csrSetCfgCountryCode(pMac, pIesLocal->Country.country);
-            WDA_SetRegDomain(pMac, domainId);
-            pMac->scan.domainIdCurrent = domainId;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         }
         // Populate both band channel lists based on what we found in the country information...
         csrSetOppositeBandChannelInfo( pMac );
@@ -5964,10 +5841,7 @@ static void csrStaApConcTimerHandler(void *pv)
         tCsrScanRequest scanReq;
         tSmeCmd *pSendScanCmd = NULL;
         tANI_U8 numChn = 0;
-<<<<<<< HEAD
         tANI_U8 nNumChanCombinedConc = 0;
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
         tANI_U8 i, j;
         tCsrChannelInfo *pChnInfo = &scanReq.ChannelInfo;
         tANI_U8    channelToScan[WNI_CFG_VALID_CHANNEL_LIST_LEN];
@@ -5991,7 +5865,6 @@ static void csrStaApConcTimerHandler(void *pv)
          * the scan is delaying the time it takes for LFR to find
          * candidates and resulting in disconnects.
          */
-<<<<<<< HEAD
 
         if((csrIsStaSessionConnected(pMac) &&
            !csrIsP2pSessionConnected(pMac)))
@@ -6004,9 +5877,6 @@ static void csrStaApConcTimerHandler(void *pv)
         }
 
         if ( (numChn > nNumChanCombinedConc) &&
-=======
-        if ( (numChn > pMac->roam.configParam.nNumChanCombinedConc) &&
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 ((csrIsStaSessionConnected(pMac) && 
 #ifdef FEATURE_WLAN_LFR
                   (csrIsConcurrentInfraConnected(pMac) ||
@@ -6043,30 +5913,18 @@ static void csrStaApConcTimerHandler(void *pv)
                  scanReq.ChannelInfo.ChannelList = NULL;
              }
              
-<<<<<<< HEAD
              pChnInfo->numOfChannels = nNumChanCombinedConc;
-=======
-             pChnInfo->numOfChannels = pMac->roam.configParam.nNumChanCombinedConc;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
              palCopyMemory(pMac->hHdd, &channelToScan[0], &pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList[0],
                      pChnInfo->numOfChannels * sizeof(tANI_U8)); //just send one channel
              pChnInfo->ChannelList = &channelToScan[0];
 
-<<<<<<< HEAD
              for (i = 0, j = nNumChanCombinedConc; i < (numChn-nNumChanCombinedConc); i++, j++)
-=======
-             for (i = 0, j = pMac->roam.configParam.nNumChanCombinedConc; i < (numChn-pMac->roam.configParam.nNumChanCombinedConc); i++, j++)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
              {
                  pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList[i] = 
                  pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.ChannelList[j]; //Move all the channels one step
              }
           
-<<<<<<< HEAD
              pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels = numChn - nNumChanCombinedConc; //reduce outstanding # of channels to be scanned
-=======
-             pScanCmd->u.scanCmd.u.scanRequest.ChannelInfo.numOfChannels = numChn - pMac->roam.configParam.nNumChanCombinedConc; //reduce outstanding # of channels to be scanned
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
              scanReq.BSSType = eCSR_BSS_TYPE_ANY;
              //Modify callers parameters in case of concurrency
@@ -7259,7 +7117,15 @@ void csrSetCfgScanControlList( tpAniSirGlobal pMac, tANI_U8 *countryCode, tCsrCh
                    
                 if (found)    // insert a pair(channel#, flag)
                 {
+                    if (CSR_IS_CHANNEL_5GHZ(pControlList[j]))
+                    {
                         pControlList[j+1] = csrGetScanType(pMac, pControlList[j]);     
+                    }
+                    else  
+                    {
+                        pControlList[j+1]  = eSIR_ACTIVE_SCAN;  
+                    }
+
                     found = FALSE;  // reset the flag
                 }
                        

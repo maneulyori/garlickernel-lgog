@@ -208,11 +208,7 @@ bapSetKey( v_PVOID_t pvosGCtx, tCsrRoamSetKey *pSetKeyInfo )
         return VOS_STATUS_E_FAULT;
     }
 
-<<<<<<< HEAD
     VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampContext value: %p", __func__,  btampContext);
-=======
-    VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH, "%s: btampContext value: %x", __func__,  btampContext); 
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     /* Fill in the event structure */ 
     bapEvent.event = eWLAN_BAP_RSN_SUCCESS;
@@ -1419,11 +1415,7 @@ signalHCIPhysLinkDiscEvent
 #ifdef BAP_DEBUG
   /* Trace the tBtampCtx being passed in. */
   VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO_HIGH,
-<<<<<<< HEAD
             "WLAN BAP Context Monitor: btampContext value = %p in %s:%d", btampContext, __func__, __LINE__ );
-=======
-            "WLAN BAP Context Monitor: btampContext value = %x in %s:%d", btampContext, __func__, __LINE__ );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif //BAP_DEBUG
 
     /* Loop disconnecting all Logical Links on this Physical Link */

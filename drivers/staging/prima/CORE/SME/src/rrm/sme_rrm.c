@@ -264,11 +264,7 @@ static eHalStatus sme_RrmSendBeaconReportXmitInd( tpAniSirGlobal pMac, tCsrScanR
        smsLog(pMac, LOGW, "SME Sending BcnRepXmit to PE numBss %d",
               pBeaconRep->numBssDesc);
 
-<<<<<<< HEAD
        status = palSendMBMessage(pMac->hHdd, pBeaconRep);
-=======
-       smsLog( pMac, LOGW, "SME Sent BcnRepXmit to PE numBss %d", pBeaconRep->numBssDesc);
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
    } while (pCurResult);
 
@@ -934,10 +930,7 @@ eHalStatus sme_RrmProcessNeighborReport(tpAniSirGlobal pMac, void *pMsgBuf)
        if (NULL == pNeighborReportDesc->pNeighborBssDescription)
        {
            smsLog( pMac, LOGE, "Failed to allocate memory for RRM Neighbor report BSS Description");
-<<<<<<< HEAD
            vos_mem_free(pNeighborReportDesc);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
            status = eHAL_STATUS_FAILED_ALLOC;
            goto end;
        }

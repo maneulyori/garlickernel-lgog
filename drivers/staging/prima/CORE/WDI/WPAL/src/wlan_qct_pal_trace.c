@@ -284,11 +284,7 @@ void wpalTrace( wpt_moduleid module, wpt_tracelevel level, char *strFormat, ... 
 
       // print the formatted log message after the prefix string.
       // note we reserve space for the terminating NUL
-<<<<<<< HEAD
       if ((n >= 0) && (n < WPAL_TRACE_BUFFER_SIZE))
-=======
-      if (n < WPAL_TRACE_BUFFER_SIZE)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
       {
          vsnprintf(strBuffer + n, WPAL_TRACE_BUFFER_SIZE - n - 1, strFormat, val);
          wpalOutput(level, strBuffer);

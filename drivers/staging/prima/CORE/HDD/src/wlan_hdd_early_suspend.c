@@ -1202,7 +1202,6 @@ VOS_STATUS hdd_wlan_reset_initialization(void)
    }
 
    hddLog(VOS_TRACE_LEVEL_FATAL, "%s: Preventing the phone from going to suspend",__func__);
-<<<<<<< HEAD
 
    // Prevent the phone from going to sleep
    hdd_prevent_suspend();
@@ -1235,40 +1234,6 @@ static void hdd_ssr_timer_del(void)
     ssr_timer_started = false;
 }
 
-=======
-
-   // Prevent the phone from going to sleep
-   hdd_prevent_suspend();
-
-   return VOS_STATUS_SUCCESS;
-}
-
-
-/*
- * Based on the ioctl command recieved by HDD, put WLAN driver
- * into the quiet mode. This is the same as the early suspend
- * notification that driver used to listen
- */
-void hdd_set_wlan_suspend_mode(bool suspend)
-{
-    if (suspend)
-        hdd_suspend_wlan();
-    else
-        hdd_resume_wlan();
-}
-
-static void hdd_ssr_timer_init(void)
-{
-    init_timer(&ssr_timer);
-}
-
-static void hdd_ssr_timer_del(void)
-{
-    del_timer(&ssr_timer);
-    ssr_timer_started = false;
-}
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 static void hdd_ssr_timer_cb(unsigned long data)
 {
     hddLog(VOS_TRACE_LEVEL_FATAL, "%s: HDD SSR timer expired", __func__);
@@ -1458,7 +1423,6 @@ VOS_STATUS hdd_wlan_re_init(void)
    hdd_ssr_timer_del();
    hdd_prevent_suspend();
 
-<<<<<<< HEAD
 #ifdef HAVE_WCNSS_CAL_DOWNLOAD
    /* wait until WCNSS driver downloads NV */
    while (!wcnss_device_ready() && 5 >= ++max_retries) {
@@ -1470,8 +1434,6 @@ VOS_STATUS hdd_wlan_re_init(void)
    }
 #endif
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
    /* The driver should always be initialized in STA mode after SSR */
    hdd_set_conparam(0);
 

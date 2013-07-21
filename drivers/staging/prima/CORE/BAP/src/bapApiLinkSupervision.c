@@ -537,11 +537,7 @@ static VOS_STATUS WLANBAP_TxLinkSupervisionCB
         }
     }
     VOS_TRACE( VOS_MODULE_ID_BAP, VOS_TRACE_LEVEL_INFO,
-<<<<<<< HEAD
                "%s:Returned Vos Packet:%p\n", __func__, pPacket );
-=======
-               "%s:Returned Vos Packet:%x\n",__func__, pPacket );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
     vos_pkt_return_packet( pPacket );
 

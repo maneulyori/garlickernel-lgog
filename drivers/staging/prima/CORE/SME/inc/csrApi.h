@@ -265,13 +265,9 @@ typedef struct tagCsrStaParams
     tANI_U8    extn_capability[SIR_MAC_MAX_EXTN_CAP];
     tANI_U8    supported_rates_len;
     tANI_U8    supported_rates[SIR_MAC_MAX_SUPP_RATES];
-<<<<<<< HEAD
     tANI_U8    htcap_present;
     tSirHTCap  HTCap;
     tANI_U8    vhtcap_present;
-=======
-    tSirHTCap  HTCap;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     tSirVHTCap VHTCap;
     tANI_U8    uapsd_queues;
     tANI_U8    max_sp;
@@ -559,12 +555,9 @@ typedef enum
     eCSR_ROAM_RESULT_DELETE_TDLS_PEER,
     eCSR_ROAM_RESULT_TEARDOWN_TDLS_PEER_IND,
     eCSR_ROAM_RESULT_DELETE_ALL_TDLS_PEER_IND,
-<<<<<<< HEAD
 #ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
     eCSR_ROAM_RESULT_TDLS_DISAPPEAR_AP_IND,
 #endif
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
 }eCsrRoamResult;
@@ -1032,15 +1025,10 @@ typedef struct tagCsrConfigParam
     tANI_U32  nActiveMinChnTimeConc;     //in units of milliseconds
     tANI_U32  nActiveMaxChnTimeConc;     //in units of milliseconds
     tANI_U32  nRestTimeConc;             //in units of milliseconds
-<<<<<<< HEAD
     tANI_U8   nNumStaChanCombinedConc;   //number of channels combined for
                                          //STA in each split scan operation
     tANI_U8   nNumP2PChanCombinedConc;   //number of channels combined for
                                          //P2P in each split scan operation
-=======
-    tANI_U8   nNumChanCombinedConc;      //number of channels combined
-                                         //in each split scan operation
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
     tANI_BOOLEAN IsIdleScanEnabled;
@@ -1061,16 +1049,10 @@ typedef struct tagCsrConfigParam
 #endif
 
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
-<<<<<<< HEAD
     tANI_U8        isFastTransitionEnabled;
     tANI_U8        RoamRssiDiff;
     tANI_U8        nImmediateRoamRssiDiff;
     tANI_BOOLEAN   isWESModeEnabled;
-=======
-    tANI_U8   isFastTransitionEnabled;
-    tANI_U8   RoamRssiDiff;
-    tANI_U8   nImmediateRoamRssiDiff;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
 #ifdef WLAN_FEATURE_NEIGHBOR_ROAMING
@@ -1111,22 +1093,15 @@ typedef struct tagCsrConfigParam
     */
     tANI_BOOLEAN fFirstScanOnly2GChnl;
 
-<<<<<<< HEAD
-=======
-    tANI_BOOLEAN fIgnore_chan165;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_CCX) || defined(FEATURE_WLAN_LFR)
     tANI_BOOLEAN nRoamPrefer5GHz;
     tANI_BOOLEAN nRoamIntraBand;
 #endif
 
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     tANI_BOOLEAN isRoamOffloadScanEnabled;
 #endif
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     tANI_U8 scanCfgAgingTime;
 
     tANI_U8   enableTxLdpc;

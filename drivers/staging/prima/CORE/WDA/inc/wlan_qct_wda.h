@@ -154,15 +154,6 @@ typedef enum
  */
 #define IS_MCC_SUPPORTED (WDA_IsWcnssWlanReportedVersionGreaterThanOrEqual( 0, 1, 1, 0))
 #define IS_FEATURE_SUPPORTED_BY_FW(featEnumValue) (!!WDA_getFwWlanFeatCaps(featEnumValue))
-<<<<<<< HEAD
-=======
-
-#ifdef WLAN_ACTIVEMODE_OFFLOAD_FEATURE
-#define IS_ACTIVEMODE_OFFLOAD_FEATURE_ENABLE ((WDA_getFwWlanFeatCaps(WLANACTIVE_OFFLOAD)) & (WDI_getHostWlanFeatCaps(WLANACTIVE_OFFLOAD)))
-#else
-#define IS_ACTIVEMODE_OFFLOAD_FEATURE_ENABLE 0
-#endif
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 #ifdef WLAN_ACTIVEMODE_OFFLOAD_FEATURE
 #define IS_ACTIVEMODE_OFFLOAD_FEATURE_ENABLE ((WDA_getFwWlanFeatCaps(WLANACTIVE_OFFLOAD)) & (WDI_getHostWlanFeatCaps(WLANACTIVE_OFFLOAD)))
@@ -679,16 +670,12 @@ tBssSystemRole wdaGetGlobalSystemRole(tpAniSirGlobal pMac);
 
 /* WDA_IS_RX_IN_SCAN *********************************************************/
 #  define WDA_IS_RX_IN_SCAN(pRxMeta)  (((WDI_DS_RxMetaInfoType*)(pRxMeta))->scan)
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 /* WDA_GET_OFFLOADSCANLEARN **************************************************/
 #  define WDA_GET_OFFLOADSCANLEARN(pRxMeta) (((WDI_DS_RxMetaInfoType*)(pRxMeta))->offloadScanLearn)
 /* WDA_GET_ROAMCANDIDATEIND **************************************************/
 #  define WDA_GET_ROAMCANDIDATEIND(pRxMeta) (((WDI_DS_RxMetaInfoType*)(pRxMeta))->roamCandidateInd)
 #endif
-=======
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 /* WDA_GET_RX_RSSI_DB ********************************************************/
 // Volans RF
 #  define WDA_RSSI_OFFSET             100
@@ -1852,7 +1839,6 @@ void WDA_TransportChannelDebug
 ===========================================================================*/
 void WDA_TrafficStatsTimerActivate(wpt_boolean activate);
 
-<<<<<<< HEAD
 /*==========================================================================
   FUNCTION   WDA_SetEnableSSR
 
@@ -1868,6 +1854,4 @@ void WDA_TrafficStatsTimerActivate(wpt_boolean activate);
 ===========================================================================*/
 void WDA_SetEnableSSR(v_BOOL_t enableSSR);
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif

@@ -76,12 +76,8 @@
 
 #define CSR_REST_TIME_CONC                  100
 
-<<<<<<< HEAD
 #define CSR_NUM_STA_CHAN_COMBINED_CONC      3
 #define CSR_NUM_P2P_CHAN_COMBINED_CONC      1
-=======
-#define CSR_NUM_CHAN_COMBINED_CONC          1
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
 #define CSR_MAX_NUM_SUPPORTED_CHANNELS 55

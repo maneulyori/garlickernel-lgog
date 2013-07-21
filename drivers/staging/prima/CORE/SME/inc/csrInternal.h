@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -21,8 +20,6 @@
  */
 /*
  * Copyright (c) 2012, The Linux Foundation. All rights reserved.
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -41,7 +38,6 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-<<<<<<< HEAD
 
 /** ------------------------------------------------------------------------- *
     ------------------------------------------------------------------------- *
@@ -53,8 +49,6 @@
 
     Copyright (C) 2006 Airgo Networks, Incorporated
    ========================================================================== */
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #ifndef CSRINTERNAL_H__
 #define CSRINTERNAL_H__
 
@@ -111,7 +105,6 @@
 )
 #endif
 
-<<<<<<< HEAD
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 #define CSR_IS_ROAM_SCAN_OFFLOAD_ENABLED( pMac ) \
 ( \
@@ -119,8 +112,6 @@
 )
 #endif
 
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 //Support for "Fast roaming" (i.e., CCX, LFR, or 802.11r.)
 #define CSR_BG_SCAN_OCCUPIED_CHANNEL_LIST_LEN 15
 
@@ -182,12 +173,8 @@ typedef enum
     eCsrScanProbeBss, // directed probe on an entry from the candidate list - HO
     eCsrScanAbortBgScan,    //aborting a BG scan (meaning the scan is triggered by LIM timer)
     eCsrScanAbortNormalScan, //aborting a normal scan (the scan is trigger by eWNI_SME_SCAN_REQ)
-<<<<<<< HEAD
     eCsrScanP2PFindPeer,
     eCsrScanGetLfrResult, // get the LFR candidates from PE scan cache
-=======
-    eCsrScanP2PFindPeer
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }eCsrScanReason;
 
 typedef enum
@@ -593,15 +580,10 @@ typedef struct tagCsrConfig
     tANI_U32  nActiveMinChnTimeConc;     //in units of milliseconds
     tANI_U32  nActiveMaxChnTimeConc;     //in units of milliseconds
     tANI_U32  nRestTimeConc;             //in units of milliseconds
-<<<<<<< HEAD
     tANI_U8   nNumStaChanCombinedConc;   //number of channels combined for
                                          //Sta in each split scan operation
     tANI_U8   nNumP2PChanCombinedConc;   //number of channels combined for
                                          //P2P in each split scan operation
-=======
-    tANI_U8   nNumChanCombinedConc;      //number of channels combined
-                                         //in each split scan operation
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 #endif
 
     tANI_BOOLEAN IsIdleScanEnabled;
@@ -770,11 +752,6 @@ typedef struct tagCsrScanStruct
     tDblLinkList scanCmdPendingList;
 #endif
     tCsrChannel occupiedChannels;   //This includes all channels on which candidate APs are found
-<<<<<<< HEAD
-=======
-
-    tANI_BOOLEAN fIgnore_chan165;
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }tCsrScanStruct;
 
 #ifdef FEATURE_WLAN_TDLS_INTERNAL

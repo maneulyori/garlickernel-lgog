@@ -1,5 +1,4 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
@@ -39,12 +38,6 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-=======
-* Copyright (c) 2011-2013 Qualcomm Atheros, Inc.
-* All Rights Reserved.
-* Qualcomm Atheros Confidential and Proprietary.
-*/
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 
 
 
@@ -3070,11 +3063,7 @@ eHalStatus csrValidateMCCBeaconInterval(tpAniSirGlobal pMac, tANI_U8 channelId,
                              */
                             //Calculate beacon Interval for P2P-GO incase of MCC
                             new_beaconInterval = csrCalculateMCCBeaconInterval(pMac, 
-<<<<<<< HEAD
                                                 pMac->roam.roamSession[sessionId].bssParams.beaconInterval,
-=======
-                                                pMac->roam.roamSession[sessionId].connectedProfile.beaconInterval,
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                                                 *beaconInterval );
                             if(*beaconInterval != new_beaconInterval)
                                 *beaconInterval = new_beaconInterval;
@@ -3393,13 +3382,6 @@ static tANI_BOOLEAN csrIsAuthRSN( tpAniSirGlobal pMac, tANI_U8 AllSuites[][CSR_R
                                   tANI_U8 cAllSuites,
                                   tANI_U8 Oui[] )
 {
-<<<<<<< HEAD
-=======
-#ifdef WLAN_FEATURE_11W
-    return( csrIsOuiMatch( pMac, AllSuites, cAllSuites, csrRSNOui[01], Oui ) ||
-            csrIsOuiMatch( pMac, AllSuites, cAllSuites, csrRSNOui[06], Oui ));
-#else
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
     return( csrIsOuiMatch( pMac, AllSuites, cAllSuites, csrRSNOui[01], Oui ) );
 }
 static tANI_BOOLEAN csrIsAuthRSNPsk( tpAniSirGlobal pMac, tANI_U8 AllSuites[][CSR_RSN_OUI_SIZE],
@@ -3414,11 +3396,7 @@ static tANI_BOOLEAN csrIsAuthRSNPskSha256( tpAniSirGlobal pMac, tANI_U8 AllSuite
                                       tANI_U8 cAllSuites,
                                       tANI_U8 Oui[] )
 {
-<<<<<<< HEAD
     return csrIsOuiMatch( pMac, AllSuites, cAllSuites, csrRSNOui[07], Oui );
-=======
-    return csrIsOuiMatch( pMac, AllSuites, cAllSuites, csrRSNOui[06], Oui );
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
 }
 #endif
 

@@ -783,10 +783,7 @@ void limIbssDeleteAllPeers( tpAniSirGlobal pMac ,tpPESession psessionEntry)
             ibss_status_chg_notify( pMac, pCurrNode->peerMacAddr, pStaDs->staIndex, 
                                     pStaDs->ucUcastSig, pStaDs->ucBcastSig,
                                     eWNI_SME_IBSS_PEER_DEPARTED_IND, psessionEntry->smeSessionId );
-<<<<<<< HEAD
             limReleasePeerIdx(pMac, peerIdx, psessionEntry);
-=======
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
             dphDeleteHashEntry(pMac, pStaDs->staAddr, peerIdx, &psessionEntry->dph.dphHashTable);
         }
 
@@ -1121,7 +1118,6 @@ limIbssStaAdd(
             prevState = pStaDs->mlmStaContext.mlmState;
             pStaDs->erpEnabled = pPeerNode->erpIePresent;
 
-<<<<<<< HEAD
             ibss_sta_info_update(pMac, pStaDs, pPeerNode, psessionEntry);
             PELOGW(limLog(pMac, LOGW, FL("initiating ADD STA for the IBSS peer."));)
             retCode = limAddSta(pMac, pStaDs, false, psessionEntry);
@@ -1129,14 +1125,6 @@ limIbssStaAdd(
             {
                 PELOGE(limLog(pMac, LOGE, FL("ibss-sta-add failed (reason %x)"),
                               retCode);)
-=======
-            ibss_sta_info_update(pMac, pStaDs, pPeerNode,psessionEntry);
-            PELOGW(limLog(pMac, LOGW, FL("initiating ADD STA for the IBSS peer."));)
-            retCode = limAddSta(pMac, pStaDs, false, psessionEntry);
-            if(retCode != eSIR_SUCCESS)
-            {
-                PELOGE(limLog(pMac, LOGE, FL("ibss-sta-add failed (reason %x)"), retCode);)
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                 limPrintMacAddr(pMac, *pPeerAddr, LOGE);
                 pStaDs->mlmStaContext.mlmState = prevState;
                 dphDeleteHashEntry(pMac, pStaDs->staAddr, pStaDs->assocId,
@@ -1596,11 +1584,7 @@ void limIbssHeartBeatHandle(tpAniSirGlobal pMac,tpPESession psessionEntry)
 
                     (void) limDelSta(pMac, pStaDs, false /*asynchronous*/,psessionEntry);
                     limDeleteDphHashEntry(pMac, pStaDs->staAddr, peerIdx,psessionEntry);
-<<<<<<< HEAD
                     limReleasePeerIdx(pMac, peerIdx, psessionEntry);
-=======
-
->>>>>>> 6c2c6a1... prima: release v3.2.2.17
                     //Send indication.
                     ibss_status_chg_notify( pMac, pTempNode->peerMacAddr, staIndex, 
                                             ucUcastSig, ucBcastSig,
