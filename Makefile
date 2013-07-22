@@ -1,8 +1,8 @@
 VERSION = 3
 PATCHLEVEL = 4
-SUBLEVEL = 53
+SUBLEVEL = 54
 EXTRAVERSION = +
-NAME = AK+
+NAME =
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
